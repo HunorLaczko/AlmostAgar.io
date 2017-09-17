@@ -1,2 +1,2 @@
 Bálint teszt
-ide irtam valamit
+innen toroltem valamit
