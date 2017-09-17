@@ -1,4 +1,5 @@
 Bálint teszt
+mi ez? :D
 <<<<<<< HEAD
 innen toroltem valamit
 =======
