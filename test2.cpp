@@ -1,2 +1,0 @@
-Bálint teszt
-na most?
