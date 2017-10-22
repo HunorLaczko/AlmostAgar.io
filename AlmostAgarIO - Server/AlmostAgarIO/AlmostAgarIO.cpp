@@ -11,8 +11,9 @@
 
 int main()
 {
-	
-
+	Server server;
+	server.run();
+	/*
 	Windows window_first(sf::VideoMode(1000, 600), "szerver");
 
 	lambdaButton *g1 = new lambdaButton(100 + 300, 200, 200, 50, "Uj szerver",
@@ -25,6 +26,6 @@ int main()
 	window_first.add(g1);
 
 	window_first.event_loop();
-	
+	*/
 	return 0;
 }
