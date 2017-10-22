@@ -24,8 +24,8 @@ void Button::draw(sf::RenderWindow & window)
 	sf::Text text(_value, font);
 	//text.setString(_value);
 	text.setCharacterSize(_size_y*0.5);
-	//std::cout << text.getPosition << text.getLocalBounds().width << rectangle.getLocalBounds().width << std::endl;
-	text.setPosition(_x + 10, _y + _size_y*0.25);
+	float x_padding = rectangle.getLocalBounds().width - text.getLocalBounds().width;
+	text.setPosition(_x + x_padding/2, _y + _size_y*0.25);
 	/*if (_mousedown) {
 		text.setCharacterSize(40);
 		text.setPosition(_x + 5, _y + 5);

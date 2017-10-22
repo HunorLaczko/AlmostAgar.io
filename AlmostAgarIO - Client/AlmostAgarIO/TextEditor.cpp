@@ -92,11 +92,11 @@ void TextEditor::draw(sf::RenderWindow & window)
 		text.setColor(szin);
 		if (_cursor_posxid == 0) {
 			//Kurzor az elejére
-			line.setPosition(text.getPosition().x + 3 -2, text.getPosition().y);
+			line.setPosition(text.getPosition().x + 3, text.getPosition().y);
 		}
 		else if (_cursor_posxid == _value.size()) {
 			//Kurzor a végére
-			line.setPosition(text.getPosition().x + text.getLocalBounds().width + 5 - 2, text.getPosition().y);
+			line.setPosition(text.getPosition().x + text.getLocalBounds().width + 7, text.getPosition().y);
 		}
 		else {
 			//Kurzor egy betü után

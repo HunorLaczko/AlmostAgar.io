@@ -14,15 +14,18 @@ int main()
 {
 	Windows window_first(sf::VideoMode(1000, 600), "almostagar.io");
 
-	TextEditor *textinput = new TextEditor(300, 100, 400, 65, "", "Írd be a neved!");
-	window_first.add(textinput);
+	TextEditor *textinput1 = new TextEditor(300, 100, 400, 65, "", "Szerver IP");
+	window_first.add(textinput1);
 
-	lambdaButton *g1 = new lambdaButton(100 + 300, 200, 200, 50, "Játék",
+	TextEditor *textinput2 = new TextEditor(300, 200, 400, 65, "", "Írd be a neved!");
+	window_first.add(textinput2);
+
+	lambdaButton *g1 = new lambdaButton(100 + 300, 300, 200, 50, "Játék",
 		[&]//mindent akarok használni
 	()
 	{
-		if (!textinput->isempty())
-			std::cout << textinput->getValue() << std::endl;
+		if (!textinput2->isempty())
+			std::cout << textinput2->getValue() << std::endl;
 	}
 	);
 	window_first.add(g1);
