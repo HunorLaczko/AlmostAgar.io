@@ -19,5 +19,6 @@ public:
 	void add(Widget *w);
 private:
 	std::vector<Widget*> widgets;
+	unsigned int size_x, size_y;
 };
 

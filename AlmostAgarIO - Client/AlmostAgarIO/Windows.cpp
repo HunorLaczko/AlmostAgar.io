@@ -11,6 +11,8 @@ Windows::Windows()
 Windows::Windows(sf::VideoMode mode, const sf::String &title, sf::Uint32 style, const sf::ContextSettings &settings)
 	: sf::RenderWindow(mode, title, style, settings)
 {
+	size_x=mode.width;
+	size_y=mode.height;
 }
 
 Windows::Windows(sf::WindowHandle handle, const sf::ContextSettings & settings)
@@ -45,6 +47,20 @@ void Windows::event_loop(){
 
 			if (event.type == sf::Event::Resized) {
 				setView(sf::View(sf::FloatRect(0, 0, event.size.width, event.size.height)));
+				float r = 1;
+				float r_x = (float)event.size.width/ (float)size_x;
+				float r_y = (float)event.size.height / (float)size_y;
+				if (r_x == 1)
+					r = r_y;
+				else if (r_y = 1)
+					r = r_x;
+				else
+					r = std::min(r_x,r_y);
+				for (unsigned i = 0; i < widgets.size(); i++) {
+					widgets[i]->resize(r);
+				}
+				size_x = event.size.width;
+				size_y = event.size.height;
 			}
 
 			if (event.type == sf::Event::KeyPressed) {

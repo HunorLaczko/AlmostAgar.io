@@ -16,6 +16,7 @@ public:
 	~Widget();
 	virtual void draw(sf::RenderWindow & window);
 	virtual void handle(sf::Event event);
+	void resize(float r);
 	//virtual bool is_selected(int mouse_x, int mouse_y) const;
 };
 

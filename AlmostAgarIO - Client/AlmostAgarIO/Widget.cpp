@@ -26,6 +26,14 @@ void Widget::handle(sf::Event event)
 {
 }
 
+void Widget::resize(float r)
+{
+	_x = r*_x;
+	_y = r*_y;
+	_size_x = r*_size_x;
+	_size_y = r*_size_y;
+}
+
 /*bool Widget::is_selected(int mouse_x, int mouse_y) const
 {
 	return mouse_x>_x && mouse_x<_x + _size_x && mouse_y>_y && mouse_y<_y + _size_y;
