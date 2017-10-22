@@ -2,27 +2,26 @@
 //
 
 #include "stdafx.h"
+#include "Button.h"
+#include "Windows.h"
 #include <SFML/Graphics.hpp>
+
+#include "iostream"
 
 int main()
 {
-	sf::RenderWindow window(sf::VideoMode(200, 200), "SFML works!");
-	sf::CircleShape shape(100.f);
-	shape.setFillColor(sf::Color::Green);
+	Windows window_first(sf::VideoMode(1000, 600), "szerver");
 
-	while (window.isOpen())
+	lambdaButton *g1 = new lambdaButton(100 + 300, 200, 200, 50, "Uj szerver",
+		[&]//mindent akarok használni
+	()
 	{
-		sf::Event event;
-		while (window.pollEvent(event))
-		{
-			if (event.type == sf::Event::Closed)
-				window.close();
-		}
-
-		window.clear();
-		window.draw(shape);
-		window.display();
+		
 	}
+	);
+	window_first.add(g1);
 
+	window_first.event_loop();
+	
 	return 0;
 }
