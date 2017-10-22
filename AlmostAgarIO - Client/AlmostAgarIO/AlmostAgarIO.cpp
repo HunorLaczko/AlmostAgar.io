@@ -4,6 +4,7 @@
 #include "stdafx.h"
 #include "Button.h"
 #include "Windows.h"
+#include "Game.h"
 
 #include "iostream"
 
@@ -52,11 +53,21 @@ int main()
 
 		if (start) {
 			fut = true;
-			Windows window_game(sf::VideoMode(1000, 600), textinput1->getValue());
+			static const float WIDTH = 1000.0f;
+			static const float HEIGHT = 563.0f;
+			float ZOOM = 1.1f; //10%-os zoom
+			float radius = 30;
+			float radius2 = 7;
 
-			TextEditor *textinput3 = new TextEditor(300, 100, 400, 65, textinput2->getValue(), "Neved");
-			window_game.add(textinput3);
-			window_game.event_loop();
+			srand(time(0));
+			sf::CircleShape circle(radius);
+
+			sf::ContextSettings settings;
+			settings.antialiasingLevel = 4;
+
+			Game window(sf::VideoMode(WIDTH, HEIGHT), "Teszteles alatt...", sf::Style::Default, settings);
+
+			window.event_loop();
 		}
 	}
 	return 0;
