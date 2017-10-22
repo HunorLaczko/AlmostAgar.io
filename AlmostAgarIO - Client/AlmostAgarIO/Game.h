@@ -1,5 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include "FoodGenerator.h"
 //#include "C:\SFML\include\SFML\Graphics\RenderWindow.hpp"
 class Game :
 	public sf::RenderWindow
@@ -12,7 +13,8 @@ public:
 	void add();
 private:
 	sf::View view;
-	std::vector<sf::CircleShape> kaja;
+	//std::vector<sf::CircleShape> kaja;
+	FoodGenerator gen;
 	sf::CircleShape circle;
 	sf::Sprite map, background;
 	sf::Texture texture, texture2;

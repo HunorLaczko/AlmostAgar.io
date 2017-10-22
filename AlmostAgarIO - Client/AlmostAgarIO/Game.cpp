@@ -24,19 +24,22 @@ Game::Game(sf::VideoMode mode, const sf::String &title, sf::Uint32 style, const 
 	circle.setOrigin(radius, radius);
 	circle.setPosition(texture2.getSize().x / 2, texture2.getSize().y / 2);
 	view.reset((sf::FloatRect(circle.getPosition().x - getSize().x / 2, circle.getPosition().y - getSize().y / 2, getSize().x, getSize().y)));
-	
-	for (int i = 0; i <1000; i++) {
-		sf::CircleShape tmp(radius2);
-		tmp.setPosition(sf::Vector2f((texture2.getSize().x - texture.getSize().x) / 2 + rand() % texture.getSize().x, (texture2.getSize().y - texture.getSize().y) / 2 + rand() % texture.getSize().y));
-		tmp.setFillColor(sf::Color(rand() % 255, rand() % 255, rand() % 255));
-		tmp.setOrigin(radius2 / 2, radius2 / 2);
-		kaja.push_back(tmp);
-	}
 	map.setTexture(texture);
 	background.setTexture(texture2);
 	map.scale(1, 1);
 	background.scale(1, 1);
 	map.setPosition(1000, 750);
+
+	gen.generateFood(1000, sf::Vector2f(background.getLocalBounds().width, background.getLocalBounds().height), sf::Vector2f(map.getLocalBounds().width, map.getLocalBounds().height));
+
+	/*for (int i = 0; i <1000; i++) {
+		sf::CircleShape tmp(radius2);
+		tmp.setPosition(sf::Vector2f((texture2.getSize().x - texture.getSize().x) / 2 + rand() % texture.getSize().x, (texture2.getSize().y - texture.getSize().y) / 2 + rand() % texture.getSize().y));
+		tmp.setFillColor(sf::Color(rand() % 255, rand() % 255, rand() % 255));
+		tmp.setOrigin(radius2 / 2, radius2 / 2);
+		kaja.push_back(tmp);
+	}*/
+
 }
 
 /*
@@ -85,6 +88,7 @@ void Game::event_loop() {
 	while (isOpen())
 	{
 		sf::Event event;
+		std::vector<sf::CircleShape> food = gen.getFood();
 		while (pollEvent(event))
 		{
 
@@ -140,15 +144,17 @@ void Game::event_loop() {
 			vec.y = 0;
 		}
 		circle.move(vec);
-
-		for (int i = 0; i < kaja.size(); i++) {
-			sf::Vector2f distance2(circle.getPosition().x - kaja[i].getPosition().x, circle.getPosition().y - kaja[i].getPosition().y);
+		bool changed = false;
+		for (int i = 0; i < food.size(); i++) {
+			sf::Vector2f distance2(circle.getPosition().x - food[i].getPosition().x, circle.getPosition().y - food[i].getPosition().y);
 			float lenght2 = sqrt(distance2.x*distance2.x + distance2.y*distance2.y);
 
-			if (lenght2 < (circle.getRadius() + kaja[i].getRadius())) {
-				kaja.erase(kaja.begin() + i);
+			if (lenght2 < (circle.getRadius() + food[i].getRadius())) {
+				food.erase(food.begin() + i);
+				changed = true;
 				circle.setRadius(circle.getRadius() + 0.5);
 				circle.setOrigin(circle.getRadius(), circle.getRadius());
+				
 				//std::cout << circle.getRadius() - 30 << std::endl;
 				if ((int)(circle.getRadius() - 30) % 5 == 0 && (circle.getRadius() - 30) == (int)(circle.getRadius() - 30)) {
 					view.zoom(ZOOM);
@@ -156,6 +162,7 @@ void Game::event_loop() {
 
 			}
 		}
+		if(changed) gen.setFood(food);
 
 		sf::Vector2f distFromCenter(circle.getPosition().x - view.getCenter().x, circle.getPosition().y - view.getCenter().y);
 		float lenght2 = sqrt(distFromCenter.x * distFromCenter.x + distFromCenter.y*distFromCenter.y);
@@ -182,10 +189,10 @@ void Game::event_loop() {
 		setView(view);
 		draw(background);
 		draw(map);
-		for (int i = 0; i < kaja.size(); i++) {
-			if ((mapPixelToCoords(sf::Vector2i(0, 0)).x + view.getSize().x) > kaja[i].getPosition().x && mapPixelToCoords(sf::Vector2i(0, 0)).x < kaja[i].getPosition().x &&
-				(mapPixelToCoords(sf::Vector2i(0, 0)).y + view.getSize().y) > kaja[i].getPosition().y && mapPixelToCoords(sf::Vector2i(0, 0)).y < kaja[i].getPosition().y) {
-				draw(kaja[i]);
+		for (int i = 0; i < food.size(); i++) {
+			if ((mapPixelToCoords(sf::Vector2i(0, 0)).x + view.getSize().x) > food[i].getPosition().x && mapPixelToCoords(sf::Vector2i(0, 0)).x < food[i].getPosition().x &&
+				(mapPixelToCoords(sf::Vector2i(0, 0)).y + view.getSize().y) > food[i].getPosition().y && mapPixelToCoords(sf::Vector2i(0, 0)).y < food[i].getPosition().y) {
+				draw(food[i]);
 
 			}
 		}
