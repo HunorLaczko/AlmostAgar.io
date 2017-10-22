@@ -14,6 +14,7 @@ private:
 	sf::View view;
 	std::vector<sf::CircleShape> kaja;
 	sf::CircleShape circle;
+	sf::Sprite map, background;
 	sf::Texture texture, texture2;
 };
 

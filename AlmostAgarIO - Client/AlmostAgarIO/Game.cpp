@@ -2,12 +2,13 @@
 #include "Game.h"
 #include "iostream"
 
+float ZOOM = 1.01f; //1%-os zoom
+float radius = 30;
+const float radius2 = 7;
+
 Game::Game(sf::VideoMode mode, const sf::String &title, sf::Uint32 style, const sf::ContextSettings &settings)
 	: sf::RenderWindow(mode, title, style, settings)
 {
-	float ZOOM = 1.01f; //1%-os zoom
-	float radius = 30;
-	const float radius2 = 7;
 	if (!texture.loadFromFile("palya.jpg") || !texture2.loadFromFile("background.png"))
 	{
 		close();
@@ -30,7 +31,11 @@ Game::Game(sf::VideoMode mode, const sf::String &title, sf::Uint32 style, const 
 		tmp.setOrigin(radius2 / 2, radius2 / 2);
 		kaja.push_back(tmp);
 	}
-	std::cout << "Kész a kost" << std::endl;
+	map.setTexture(texture);
+	background.setTexture(texture2);
+	map.scale(1, 1);
+	background.scale(1, 1);
+	map.setPosition(1000, 750);
 }
 
 /*
@@ -74,20 +79,8 @@ Game::~Game()
 
 
 void Game::event_loop() {
-	float ZOOM = 1.01f; //1%-os zoom
-	float radius = 30;
-	const float radius2 = 7;
-
-
 	sf::Vector2f vec(0, 0);
 	sf::Vector2f movement(0, 0);
-
-	sf::Sprite map(texture);
-	sf::Sprite background(texture2);
-	map.scale(1, 1);
-	background.scale(1, 1);
-	map.setPosition(1000, 750);
-
 	while (isOpen())
 	{
 		sf::Event event;
@@ -139,10 +132,10 @@ void Game::event_loop() {
 		vec.x = speed * distance.x / lenght;
 		vec.y = speed * distance.y / lenght;
 
-		if (abs(distance.x) < 2 || ((circle.getPosition().x - vec.x) <= map.getPosition().x && vec.x <= 0) || ((circle.getPosition().x + vec.x) >= (map.getPosition().x + texture.getSize().x) && vec.x >= 0) /*|| !(window.mapPixelToCoords(sf::Mouse::getPosition(window)).x > background.getPosition().x && window.mapPixelToCoords(sf::Mouse::getPosition(window)).x < (background.getPosition().x + texture.getSize().x))*/) {
+		if (abs(distance.x) < 2 || ((circle.getPosition().x - vec.x) <= map.getPosition().x && vec.x <= 0) || ((circle.getPosition().x + vec.x) >= (map.getPosition().x + map.getLocalBounds().width) && vec.x >= 0) /*|| !(window.mapPixelToCoords(sf::Mouse::getPosition(window)).x > background.getPosition().x && window.mapPixelToCoords(sf::Mouse::getPosition(window)).x < (background.getPosition().x + texture.getSize().x))*/) {
 			vec.x = 0;
 		}
-		if (abs(distance.y) < 2 || ((circle.getPosition().y - vec.y) <= map.getPosition().y && vec.y <= 0) || ((circle.getPosition().y - vec.y) >= (map.getPosition().y + texture.getSize().y) && vec.y >= 0)/*|| !(window.mapPixelToCoords(sf::Mouse::getPosition(window)).y > background.getPosition().y && window.mapPixelToCoords(sf::Mouse::getPosition(window)).y < (background.getPosition().y + texture.getSize().y))*/) {
+		if (abs(distance.y) < 2 || ((circle.getPosition().y - vec.y) <= map.getPosition().y && vec.y <= 0) || ((circle.getPosition().y - vec.y) >= (map.getPosition().y + map.getLocalBounds().height) && vec.y >= 0)/*|| !(window.mapPixelToCoords(sf::Mouse::getPosition(window)).y > background.getPosition().y && window.mapPixelToCoords(sf::Mouse::getPosition(window)).y < (background.getPosition().y + texture.getSize().y))*/) {
 			vec.y = 0;
 		}
 		circle.move(vec);
