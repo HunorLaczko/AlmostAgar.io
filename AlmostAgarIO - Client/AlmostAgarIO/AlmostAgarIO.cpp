@@ -20,12 +20,13 @@ int main()
 	TextEditor *textinput2 = new TextEditor(300, 200, 400, 65, "", "Írd be a neved!");
 	window_first.add(textinput2);
 
-	lambdaButton *g1 = new lambdaButton(100 + 300, 300, 200, 50, "Játék",
+	lambdaButton *g1 = new lambdaButton(300+100, 300, 200, 50, "Játék",
 		[&]//mindent akarok használni
 	()
 	{
-		if (!textinput2->isempty())
-			std::cout << textinput2->getValue() << std::endl;
+		if (!textinput1->isempty() && !textinput2->isempty())
+			std::cout << "IP: " <<  textinput1->getValue() << std::endl;
+			std::cout << "Nev: " << textinput2->getValue() << std::endl;
 	}
 	);
 	window_first.add(g1);
