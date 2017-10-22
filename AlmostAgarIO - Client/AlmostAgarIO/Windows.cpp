@@ -47,6 +47,12 @@ void Windows::event_loop(){
 				setView(sf::View(sf::FloatRect(0, 0, event.size.width, event.size.height)));
 			}
 
+			if (event.type == sf::Event::KeyPressed) {
+				if(event.key.code == sf::Keyboard::Escape) {
+					close();
+				}
+			}
+
 			/*if (event.type == sf::Event::Resized)
 			{
 				std::cout << "new width: " << event.size.width << std::endl;
