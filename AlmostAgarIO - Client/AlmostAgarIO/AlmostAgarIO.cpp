@@ -2,27 +2,31 @@
 //
 
 #include "stdafx.h"
+#include "Button.h"
+#include "Windows.h"
+
+#include "iostream"
+
 #include <SFML/Graphics.hpp>
+
 
 int main()
 {
-	sf::RenderWindow window(sf::VideoMode(200, 200), "SFML works!");
-	sf::CircleShape shape(100.f);
-	shape.setFillColor(sf::Color::Green);
+	Windows window_first(sf::VideoMode(1000, 600), "almostagar.io");
 
-	while (window.isOpen())
+	TextEditor *textinput = new TextEditor(300, 100, 400, 65, "", "Írd be a neved!");
+	window_first.add(textinput);
+
+	lambdaButton *g1 = new lambdaButton(100 + 300, 200, 200, 50, "Játék",
+		[&]//mindent akarok használni
+	()
 	{
-		sf::Event event;
-		while (window.pollEvent(event))
-		{
-			if (event.type == sf::Event::Closed)
-				window.close();
-		}
-
-		window.clear();
-		window.draw(shape);
-		window.display();
+		if (!textinput->isempty())
+			std::cout << textinput->getValue() << std::endl;
 	}
+	);
+	window_first.add(g1);
 
+	window_first.event_loop();
 	return 0;
 }
