@@ -24,7 +24,8 @@ Game::Game(sf::VideoMode mode, const sf::String &title, sf::Uint32 style, const 
 	circle.setOrigin(radius, radius);
 	circle.setPosition(texture2.getSize().x / 2, texture2.getSize().y / 2);
 	view.reset((sf::FloatRect(circle.getPosition().x - getSize().x / 2, circle.getPosition().y - getSize().y / 2, getSize().x, getSize().y)));
-	for (int i = 0; i <700; i++) {
+	
+	for (int i = 0; i <1000; i++) {
 		sf::CircleShape tmp(radius2);
 		tmp.setPosition(sf::Vector2f((texture2.getSize().x - texture.getSize().x) / 2 + rand() % texture.getSize().x, (texture2.getSize().y - texture.getSize().y) / 2 + rand() % texture.getSize().y));
 		tmp.setFillColor(sf::Color(rand() % 255, rand() % 255, rand() % 255));
@@ -146,20 +147,16 @@ void Game::event_loop() {
 
 			if (lenght2 < (circle.getRadius() + kaja[i].getRadius())) {
 				kaja.erase(kaja.begin() + i);
-				circle.setRadius(circle.getRadius() + 1);
+				circle.setRadius(circle.getRadius() + 0.5);
 				circle.setOrigin(circle.getRadius(), circle.getRadius());
-				if (circle.getRadius() - 30 == 50) {
-					view.zoom(ZOOM);
-				}
-				else if (circle.getRadius() - 30 == 100) {
-					view.zoom(ZOOM);
-				}
-				else if (circle.getRadius() - 30 == 150) {
+				//std::cout << circle.getRadius() - 30 << std::endl;
+				if ((int)(circle.getRadius() - 30) % 5 == 0 && (circle.getRadius() - 30) == (int)(circle.getRadius() - 30)) {
 					view.zoom(ZOOM);
 				}
 
 			}
 		}
+
 		sf::Vector2f distFromCenter(circle.getPosition().x - view.getCenter().x, circle.getPosition().y - view.getCenter().y);
 		float lenght2 = sqrt(distFromCenter.x * distFromCenter.x + distFromCenter.y*distFromCenter.y);
 		movement.x = speed * distFromCenter.x / lenght2;
@@ -175,7 +172,7 @@ void Game::event_loop() {
 		view.move(movement);
 
 
-		circle.setFillColor(sf::Color(0, 250, 0, 150));
+		circle.setFillColor(sf::Color(0, 250, 0));
 		circle.setOutlineThickness(-5);
 		circle.setOutlineColor(sf::Color(0, 150, 0));
 
@@ -186,7 +183,11 @@ void Game::event_loop() {
 		draw(background);
 		draw(map);
 		for (int i = 0; i < kaja.size(); i++) {
-			draw(kaja[i]);
+			if ((mapPixelToCoords(sf::Vector2i(0, 0)).x + view.getSize().x) > kaja[i].getPosition().x && mapPixelToCoords(sf::Vector2i(0, 0)).x < kaja[i].getPosition().x &&
+				(mapPixelToCoords(sf::Vector2i(0, 0)).y + view.getSize().y) > kaja[i].getPosition().y && mapPixelToCoords(sf::Vector2i(0, 0)).y < kaja[i].getPosition().y) {
+				draw(kaja[i]);
+
+			}
 		}
 		draw(circle);
 		display();
