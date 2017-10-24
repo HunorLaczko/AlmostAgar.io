@@ -26,7 +26,7 @@ void FoodGenerator::generateFood(const int number, const sf::Vector2f background
 	}
 }
 
-void FoodGenerator::setFood(std::vector<sf::CircleShape> newFood) {
+void FoodGenerator::setFood(const std::vector<sf::CircleShape>& newFood) {
 	food = newFood;
 }
 
@@ -35,4 +35,7 @@ std::vector<sf::CircleShape> FoodGenerator::getFood()
 	return food;
 }
 
+void FoodGenerator::delElement(int index) {
+	food.erase(food.begin() + index);
+}
 

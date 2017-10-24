@@ -69,6 +69,7 @@ int main()
 
 			window.event_loop();
 		}
+		start = false;
 	}
 	return 0;
 }

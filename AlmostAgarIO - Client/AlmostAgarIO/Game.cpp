@@ -30,15 +30,16 @@ Game::Game(sf::VideoMode mode, const sf::String &title, sf::Uint32 style, const 
 	background.scale(1, 1);
 	map.setPosition(1000, 750);
 
-	gen.generateFood(1000, sf::Vector2f(background.getLocalBounds().width, background.getLocalBounds().height), sf::Vector2f(map.getLocalBounds().width, map.getLocalBounds().height));
+	//lassu a generator
+	//gen.generateFood(1000, sf::Vector2f(background.getLocalBounds().width, background.getLocalBounds().height), sf::Vector2f(map.getLocalBounds().width, map.getLocalBounds().height));
 
-	/*for (int i = 0; i <1000; i++) {
+	for (int i = 0; i <1000; i++) {
 		sf::CircleShape tmp(radius2);
 		tmp.setPosition(sf::Vector2f((texture2.getSize().x - texture.getSize().x) / 2 + rand() % texture.getSize().x, (texture2.getSize().y - texture.getSize().y) / 2 + rand() % texture.getSize().y));
 		tmp.setFillColor(sf::Color(rand() % 255, rand() % 255, rand() % 255));
 		tmp.setOrigin(radius2 / 2, radius2 / 2);
-		kaja.push_back(tmp);
-	}*/
+		food.push_back(tmp);
+	}
 
 }
 
@@ -88,7 +89,7 @@ void Game::event_loop() {
 	while (isOpen())
 	{
 		sf::Event event;
-		std::vector<sf::CircleShape> food = gen.getFood();
+		//std::vector<sf::CircleShape> food = gen.getFood();
 		while (pollEvent(event))
 		{
 
@@ -132,7 +133,10 @@ void Game::event_loop() {
 
 		}
 		sf::Vector2f distance(mapPixelToCoords(sf::Mouse::getPosition(*this)).x - circle.getPosition().x, mapPixelToCoords(sf::Mouse::getPosition(*this)).y - circle.getPosition().y);
-		float speed = 2;
+		float speed = 2.2 - (0.005*circle.getRadius());
+		if (speed <= 0.6) speed = 0.6;
+
+		std::cout <<"Size: " <<circle.getRadius() << " Speed: " << speed << std::endl;
 		float lenght = sqrt(distance.x*distance.x + distance.y*distance.y);
 		vec.x = speed * distance.x / lenght;
 		vec.y = speed * distance.y / lenght;
@@ -151,18 +155,18 @@ void Game::event_loop() {
 
 			if (lenght2 < (circle.getRadius() + food[i].getRadius())) {
 				food.erase(food.begin() + i);
-				changed = true;
+				//changed = true;
 				circle.setRadius(circle.getRadius() + 0.5);
 				circle.setOrigin(circle.getRadius(), circle.getRadius());
-				
-				//std::cout << circle.getRadius() - 30 << std::endl;
+				//gen.delElement(i);
 				if ((int)(circle.getRadius() - 30) % 5 == 0 && (circle.getRadius() - 30) == (int)(circle.getRadius() - 30)) {
 					view.zoom(ZOOM);
 				}
 
 			}
 		}
-		if(changed) gen.setFood(food);
+		//food = gen.getFood();
+		//if(changed) gen.setFood(food);
 
 		sf::Vector2f distFromCenter(circle.getPosition().x - view.getCenter().x, circle.getPosition().y - view.getCenter().y);
 		float lenght2 = sqrt(distFromCenter.x * distFromCenter.x + distFromCenter.y*distFromCenter.y);

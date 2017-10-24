@@ -14,6 +14,7 @@ public:
 
 	void generateFood(const int number, const sf::Vector2f background, const sf::Vector2f map);
 	std::vector<sf::CircleShape> getFood();
-	void setFood(std::vector<sf::CircleShape> newFood);
+	void setFood(const std::vector<sf::CircleShape>& newFood);
+	void delElement(int index);
 };
 

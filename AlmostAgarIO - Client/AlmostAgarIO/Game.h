@@ -13,8 +13,8 @@ public:
 	void add();
 private:
 	sf::View view;
-	//std::vector<sf::CircleShape> kaja;
-	FoodGenerator gen;
+	std::vector<sf::CircleShape> food;
+	//FoodGenerator gen;
 	sf::CircleShape circle;
 	sf::Sprite map, background;
 	sf::Texture texture, texture2;
