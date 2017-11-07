@@ -6,7 +6,7 @@ float ZOOM = 1.01f; //1%-os zoom
 float radius = 30;
 const float radius2 = 7;
 
-Game::Game(sf::VideoMode mode, const sf::String &title, sf::Uint32 style, const sf::ContextSettings &settings)
+Game::Game(sf::VideoMode mode, const sf::String &title, sf::IpAddress _serverIp, sf::Uint32 style, const sf::ContextSettings &settings)
 	: sf::RenderWindow(mode, title, style, settings)
 {
 	if (!texture.loadFromFile("palya.jpg") || !texture2.loadFromFile("background.png"))
@@ -31,6 +31,10 @@ Game::Game(sf::VideoMode mode, const sf::String &title, sf::Uint32 style, const 
 	map.setPosition(1000, 750);
 
 	gen.generateFood(1000, sf::Vector2f(background.getLocalBounds().width, background.getLocalBounds().height), sf::Vector2f(map.getLocalBounds().width, map.getLocalBounds().height));
+
+	network = new Network(_serverIp, &player);
+	network->connectPlayer();
+
 
 	/*for (int i = 0; i <1000; i++) {
 		sf::CircleShape tmp(radius2);

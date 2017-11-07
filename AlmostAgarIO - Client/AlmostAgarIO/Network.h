@@ -1,6 +1,6 @@
 #pragma once
 #include<SFML/Network.hpp>
-
+#include "Player.h"
 
 class Network
 {
@@ -11,12 +11,19 @@ class Network
 	sf::TcpSocket tcpSocket;
 	sf::UdpSocket udpSocket;
 
+	Player* player;
+	sf::Vector2f position;
+
 public:
-	Network(sf::IpAddress _serverIp);
+	Network(sf::IpAddress _serverIp, Player* player);
 	~Network();
+
+	void setPosition(sf::Vector2f _position);
 
 	void connectPlayer();
 	void sendPosition(sf::Vector2f position);
 	void sendKey(char key);
+
+	void run();
 };
 

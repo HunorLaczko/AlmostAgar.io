@@ -15,3 +15,18 @@ unsigned int Player::getId()
 {
 	return id;
 }
+
+void Player::setId(unsigned int _id)
+{
+	id = _id;
+}
+
+sf::Vector2f Player::getPosition()
+{
+	return position;
+}
+
+void Player::setPosition(sf::Vector2f _position)
+{
+	position = _position;
+}

@@ -65,7 +65,7 @@ int main()
 			sf::ContextSettings settings;
 			settings.antialiasingLevel = 4;
 
-			Game window(sf::VideoMode(WIDTH, HEIGHT), "Teszteles alatt...", sf::Style::Default, settings);
+			Game window(sf::VideoMode(WIDTH, HEIGHT), "Teszteles alatt...", sf::IpAddress("127.0.0.1"), sf::Style::Default, settings);
 
 			window.event_loop();
 		}

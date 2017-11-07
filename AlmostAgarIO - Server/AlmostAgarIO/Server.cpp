@@ -38,12 +38,13 @@ void Server::run()
 				{
 					std::cout << client->getRemotePort();
 					// Add the new client to the clients list
-					//players.emplace_back(id++, sf::Vector2f(300, 300), &client);
+					///TODO: should randomize start position
 					players.push_back((Player(id++, sf::Vector2f(300, 300), client)));
 					// Add the new client to the selector so that we will
 					// be notified when he sends something
 					selector.add(*players.back().getTcpSocket());
 
+					//should check if player name aleady exists?
 					sf::Packet packet;
 					packet << 0;
 					packet << players.back().getId();
@@ -54,17 +55,16 @@ void Server::run()
 						std::cout << "\nId sent to " << client->getRemoteAddress() << " on port " << client->getRemotePort() << "\n";
 				}
 
-			}
-			
-				//check udp socket
-				//player locations should arrive here
-				else if (selector.isReady(udpSocket))
+			}			
+			//check udp socket
+			//player locations should arrive here
+			else if (selector.isReady(udpSocket))
+			{
+				//std::cout << "udp socket received something\n";
+				sf::Packet packet;
+				sf::IpAddress sender;
+				if (udpSocket.receive(packet, sender, udpPortReceive) == sf::Socket::Done)
 				{
-					//std::cout << "udp socket received something\n";
-					sf::Packet packet;
-					sf::IpAddress sender;
-					udpSocket.receive(packet, sender, udpPortReceive);
-
 					int type;
 					packet >> type;
 
@@ -77,22 +77,20 @@ void Server::run()
 						packet >> id >> pos.x >> pos.y;
 
 						sf::Packet outPacket;
-						outPacket << 2 << id << pos.x + 1 << pos.y +1;
-						std::cout<<"responding: "<<udpSocket.send(outPacket, sender, udpPortSend)<<std::endl;
+						outPacket << 2 << id << pos.x + 1 << pos.y + 1;
+						std::cout << "responding: " << udpSocket.send(outPacket, sender, udpPortSend) << std::endl;
 						break;
 					}
-
-					std::cout << type << std::endl;
 				}
+				else
+				{
+
+				}
+
 			
+			}
 			else
 			{
-
-
-
-				
-
-
 				// The listener socket is not ready, test all other sockets (the clients)
 				for (size_t i = 0; i < players.size(); i++)
 				{
@@ -108,12 +106,14 @@ void Server::run()
 						}
 						else
 						{
-							
+							//not sure when this occours
 							std::cout << status;
 							if (sf::Socket::Disconnected == status)
 							{
 								players[i].getTcpSocket()->disconnect();
+								selector.remove(*players[i].getTcpSocket());
 								players.erase(players.begin() + i);
+								
 							}
 							
 						}
