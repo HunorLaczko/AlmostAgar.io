@@ -23,6 +23,4 @@ private:
 	sf::Texture texture, texture2;
 	Network *network;
 	Player player;
-
 };
-
