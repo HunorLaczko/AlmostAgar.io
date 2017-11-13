@@ -16,21 +16,21 @@ int main()
 	bool start = false;
 	bool fut = true;
 
-	TextEditor *textinput1 = new TextEditor(300, 100, 400, 65, "", "Szerver IP");
-	TextEditor *textinput2 = new TextEditor(300, 200, 400, 65, "", "Írd be a neved!");
+	TextEditor *serverIp = new TextEditor(300, 100, 400, 65, "127.0.0.1", "Szerver IP");
+	TextEditor *playerName = new TextEditor(300, 200, 400, 65, "", "Írd be a neved!");
 	while (fut) {
 		Windows window_first(sf::VideoMode(1000, 600), "almostagar.io");
-		window_first.add(textinput1);
+		window_first.add(serverIp);
 
-		window_first.add(textinput2);
+		window_first.add(playerName);
 
 		lambdaButton *g1 = new lambdaButton(300 + 100, 300, 200, 50, "Játék",
 			[&]//mindent akarok használni
 		()
 		{
-			if (!textinput1->isempty() && !textinput2->isempty()) {
-				std::cout << "IP: " << textinput1->getValue() << std::endl;
-				std::cout << "Nev: " << textinput2->getValue() << std::endl;
+			if (!serverIp->isempty() && !playerName->isempty()) {
+				std::cout << "IP: " << serverIp->getValue() << std::endl;
+				std::cout << "Nev: " << playerName->getValue() << std::endl;
 			}
 			window_first.close();
 			start = true;
@@ -65,7 +65,7 @@ int main()
 			sf::ContextSettings settings;
 			settings.antialiasingLevel = 4;
 
-			Game window(sf::VideoMode(WIDTH, HEIGHT), "Teszteles alatt...", sf::IpAddress("127.0.0.1"), sf::Style::Default, settings);
+			Game window(sf::VideoMode(WIDTH, HEIGHT), "Teszteles alatt...", sf::IpAddress(serverIp->getValue()), sf::Style::Default, settings);
 
 			window.event_loop();
 		}
