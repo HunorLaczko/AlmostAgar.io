@@ -44,6 +44,7 @@ Game::Game(sf::VideoMode mode, const sf::String &title, sf::IpAddress _serverIp,
 
 	network = new Network(_serverIp, &player);
 	network->connectPlayer();
+	network->init(sf::Vector2f(map.getLocalBounds().width, map.getLocalBounds().height), (sf::Vector2f)map.getPosition(), (sf::Vector2f)this->getSize());
 
 }
 
@@ -134,13 +135,12 @@ void Game::event_loop() {
 				break;
 			}
 			}
-
 		}
 		sf::Vector2f distance(mapPixelToCoords(sf::Mouse::getPosition(*this)).x - circle.getPosition().x, mapPixelToCoords(sf::Mouse::getPosition(*this)).y - circle.getPosition().y);
 		float speed = 2.2 - (0.005*circle.getRadius());
 		if (speed <= 0.6) speed = 0.6;
 
-		std::cout << "Size: " << circle.getRadius() << " Speed: " << speed << std::endl;
+		//std::cout << "Size: " << circle.getRadius() << " Speed: " << speed << std::endl;
 		float lenght = sqrt(distance.x*distance.x + distance.y*distance.y);
 		vec.x = speed * distance.x / lenght;
 		vec.y = speed * distance.y / lenght;
@@ -151,7 +151,16 @@ void Game::event_loop() {
 		if (abs(distance.y) < 2 || ((circle.getPosition().y - vec.y) <= map.getPosition().y && vec.y <= 0) || ((circle.getPosition().y - vec.y) >= (map.getPosition().y + map.getLocalBounds().height) && vec.y >= 0)/*|| !(window.mapPixelToCoords(sf::Mouse::getPosition(window)).y > background.getPosition().y && window.mapPixelToCoords(sf::Mouse::getPosition(window)).y < (background.getPosition().y + texture.getSize().y))*/) {
 			vec.y = 0;
 		}
-		circle.move(vec);
+		
+		//circle.move(vec);
+		//player.setPosition(circle.getPosition());
+		network->sendPosition(sf::Vector2f(mapPixelToCoords(sf::Mouse::getPosition(*this)).x, mapPixelToCoords(sf::Mouse::getPosition(*this)).y));
+		network->getResponse();
+		
+		//circle.setPosition(player.getPosition());
+		circle.setPosition(circle.getPosition() + vec);
+
+		
 		bool changed = false;
 		for (int i = 0; i < food.size(); i++) {
 			sf::Vector2f distance2(circle.getPosition().x - food[i].getPosition().x, circle.getPosition().y - food[i].getPosition().y);

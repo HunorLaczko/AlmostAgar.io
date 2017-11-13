@@ -58,6 +58,50 @@ void Network::connectPlayer()
 	}
 }
 
+void Network::init(sf::Vector2f _mapSize, sf::Vector2f _mapPosition, sf::Vector2f _windowSize)
+{
+	sf::Packet outPacket;
+	outPacket << 3 << player->getId() << _mapSize.x << _mapSize.y << _mapPosition.x << _mapPosition.y << _windowSize.x << _windowSize.y;;
+	//std::cout << udpSocket.send(outPacket, serverIp, serverUdpPortSend) << std::endl;
+	tcpSocket.send(outPacket);
+}
+
+void Network::sendPosition(sf::Vector2f position)
+{
+	sf::Packet outPacket;
+	outPacket << 1 << player->getId() << position.x << position.y;
+	//std::cout << udpSocket.send(outPacket, serverIp, serverUdpPortSend) << std::endl;
+	udpSocket.send(outPacket, serverIp, serverUdpPortSend);
+}
+
+void Network::getResponse()
+{
+	sf::Packet packet;
+	sf::IpAddress sender;
+	if (udpSocket.receive(packet, sender, serverUdpPortReceive) == sf::Socket::Done)
+	{
+		//std::cout << "getResponse: received something\n";
+		int type, id;
+		packet >> type;
+		switch (type)
+		{
+			//received new pos
+		case 2:
+		{
+			sf::Vector2f pos;
+			packet >> id >> pos.x >> pos.y;
+			std::cout << "oldPos: " << player->getPosition().x << "," << player->getPosition().y << " newPos: " << pos.x << "," << pos.y << "\n";
+			player->setPosition(pos);
+			std::cout << "received new location\n";
+			break;
+		}
+			
+		}
+	}
+	//outPacket << 1 << player->getId() << position.x << position.y;
+	//std::cout << udpSocket.send(outPacket, serverIp, serverUdpPortSend) << std::endl;
+}
+
 void Network::run()
 {
 
@@ -105,7 +149,8 @@ void Network::run()
 			//sending current location
 			sf::Packet outPacket;
 			outPacket << 1 << player->getId() << position.x << position.y;
-			std::cout << udpSocket.send(outPacket, serverIp, serverUdpPortSend) << std::endl;
+			//std::cout << udpSocket.send(outPacket, serverIp, serverUdpPortSend) << std::endl;
+			udpSocket.send(outPacket, serverIp, serverUdpPortSend);
 		}
 
 
