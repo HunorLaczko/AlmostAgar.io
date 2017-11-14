@@ -1,5 +1,5 @@
 #pragma once
-#include <SFML/Graphics.hpp>
+/*#include <SFML/Graphics.hpp>
 #include "FoodGenerator.h"
 #include "Network.h"
 #include "Player.h"
@@ -23,4 +23,4 @@ private:
 	sf::Texture texture, texture2;
 	Network *network;
 	Player player;
-};
+};*/

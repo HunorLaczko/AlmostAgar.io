@@ -1,4 +1,5 @@
 ﻿#include "stdafx.h"
+/*
 #include "Game.h"
 #include "iostream"
 
@@ -48,7 +49,7 @@ Game::Game(sf::VideoMode mode, const sf::String &title, sf::IpAddress _serverIp,
 	network->init(sf::Vector2f(map.getLocalBounds().width, map.getLocalBounds().height), (sf::Vector2f)map.getPosition(), (sf::Vector2f)this->getSize());
 
 }
-
+*/
 /*
 Game::Game(sf::WindowHandle handle, const sf::ContextSettings & settings)
 : RenderWindow(handle, settings)
@@ -81,7 +82,7 @@ kaja.push_back(tmp);
 std::cout << "K�sz a kost" << std::endl;
 }
 */
-
+/*
 Game::~Game()
 {
 
@@ -147,13 +148,13 @@ void Game::event_loop() {
 		vec.x = speed * distance.x / length;
 		vec.y = speed * distance.y / length;
 
-		if (abs(distance.x) < 2 || ((circle.getPosition().x - vec.x) <= map.getPosition().x && vec.x <= 0) || ((circle.getPosition().x + vec.x) >= (map.getPosition().x + map.getLocalBounds().width) && vec.x >= 0) /*|| !(window.mapPixelToCoords(sf::Mouse::getPosition(window)).x > background.getPosition().x && window.mapPixelToCoords(sf::Mouse::getPosition(window)).x < (background.getPosition().x + texture.getSize().x))*/) {
+		if (abs(distance.x) < 2 || ((circle.getPosition().x - vec.x) <= map.getPosition().x && vec.x <= 0) || ((circle.getPosition().x + vec.x) >= (map.getPosition().x + map.getLocalBounds().width) && vec.x >= 0) *//*|| !(window.mapPixelToCoords(sf::Mouse::getPosition(window)).x > background.getPosition().x && window.mapPixelToCoords(sf::Mouse::getPosition(window)).x < (background.getPosition().x + texture.getSize().x))*//*) {
 			vec.x = 0;
 		}
-		if (abs(distance.y) < 2 || ((circle.getPosition().y - vec.y) <= map.getPosition().y && vec.y <= 0) || ((circle.getPosition().y - vec.y) >= (map.getPosition().y + map.getLocalBounds().height) && vec.y >= 0)/*|| !(window.mapPixelToCoords(sf::Mouse::getPosition(window)).y > background.getPosition().y && window.mapPixelToCoords(sf::Mouse::getPosition(window)).y < (background.getPosition().y + texture.getSize().y))*/) {
+		if (abs(distance.y) < 2 || ((circle.getPosition().y - vec.y) <= map.getPosition().y && vec.y <= 0) || ((circle.getPosition().y - vec.y) >= (map.getPosition().y + map.getLocalBounds().height) && vec.y >= 0)*//*|| !(window.mapPixelToCoords(sf::Mouse::getPosition(window)).y > background.getPosition().y && window.mapPixelToCoords(sf::Mouse::getPosition(window)).y < (background.getPosition().y + texture.getSize().y))*//*) {
 			vec.y = 0;
 		}
-		
+
 		//circle.move(vec);
 		//player.setPosition(circle.getPosition());
 		if (clock.getElapsedTime() > sf::milliseconds(33)) {
@@ -165,11 +166,11 @@ void Game::event_loop() {
 			circle.setPosition(player.getPosition());
 			clock.restart();
 		}
-		
-		
+
+
 		//circle.setPosition(circle.getPosition() + vec);
 
-		
+
 		bool changed = false;
 		for (int i = 0; i < food.size(); i++) {
 			sf::Vector2f distance2(circle.getPosition().x - food[i].getPosition().x, circle.getPosition().y - food[i].getPosition().y);
@@ -231,4 +232,4 @@ void Game::event_loop() {
 void Game::add()
 {
 
-}
+}*/
