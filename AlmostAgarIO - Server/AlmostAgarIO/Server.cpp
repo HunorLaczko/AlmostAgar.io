@@ -87,8 +87,8 @@ void Server::run()
 
 						sf::Vector2f vec;
 						sf::Vector2f distance(pos.x - player->getPosition().x, pos.y - player->getPosition().y);
-						float speed = 0.02 - (0.0005 * player->getRadius());
-						if (speed <= 0.001) speed = 0.001;
+						float speed = 2.2 - (0.005 * player->getRadius());
+						if (speed <= 0.06) speed = 0.06;
 
 						//std::cout << "Size: " << circle.getRadius() << " Speed: " << speed << std::endl;
 						float length = sqrt(distance.x*distance.x + distance.y*distance.y);
@@ -96,20 +96,20 @@ void Server::run()
 						vec.y = speed * distance.y / length;
 
 						if (abs(distance.x) < 2 || ((player->getPosition().x - vec.x) <= player->getMapPosition().x && vec.x <= 0) || ((player->getPosition().x + vec.x) >= (player->getMapPosition().x + player->getMapSize().x) && vec.x >= 0) /*|| !(window.mapPixelToCoords(sf::Mouse::getPosition(window)).x > background.getPosition().x && window.mapPixelToCoords(sf::Mouse::getPosition(window)).x < (background.getPosition().x + texture.getSize().x))*/) {
-							vec.x = 0;
+						//	vec.x = 0;
 						}
 						if (abs(distance.y) < 2 || ((player->getPosition().y - vec.y) <= player->getMapPosition().y && vec.y <= 0) || ((player->getPosition().y - vec.y) >= (player->getMapPosition().y + player->getMapSize().y) && vec.y >= 0)/*|| !(window.mapPixelToCoords(sf::Mouse::getPosition(window)).y > background.getPosition().y && window.mapPixelToCoords(sf::Mouse::getPosition(window)).y < (background.getPosition().y + texture.getSize().y))*/) {
-							vec.y = 0;
+						//	vec.y = 0;
 						}
 
 						
 
-						
-						pos += vec;
+						std::cout << "playerPos: " << player->getPosition().x << "," << player->getPosition().y << "\n";
+						pos = player->getPosition() + vec;
 						std::cout << "vec: " << vec.x << "," << vec.y << " dist: " << distance.x << "," << distance.y << " length: " << length << "\n";
 						//std::cout << "vec: " << vec.x << "," << vec.y << " pos: " << pos.x << "," << pos.y << "\n";
 						player->setPosition(pos);
-						//std::cout << "playerPos: " << player->getPosition().x << "," << player->getPosition().y << "\n";
+						std::cout << "playerPos: " << player->getPosition().x << "," << player->getPosition().y << "\n";
 
 						//std::cout << "received player location: (" << pos.x << "," << pos.y << ")\n";
 
