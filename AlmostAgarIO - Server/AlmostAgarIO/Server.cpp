@@ -87,13 +87,13 @@ void Server::run()
 
 						sf::Vector2f vec;
 						sf::Vector2f distance(pos.x - player->getPosition().x, pos.y - player->getPosition().y);
-						float speed = 0.2 - (0.005 * player->getRadius());
-						if (speed <= 0.01) speed = 0.01;
+						float speed = 0.02 - (0.0005 * player->getRadius());
+						if (speed <= 0.001) speed = 0.001;
 
 						//std::cout << "Size: " << circle.getRadius() << " Speed: " << speed << std::endl;
-						float lenght = sqrt(distance.x*distance.x + distance.y*distance.y);
-						vec.x = speed * distance.x / lenght;
-						vec.y = speed * distance.y / lenght;
+						float length = sqrt(distance.x*distance.x + distance.y*distance.y);
+						vec.x = speed * distance.x / length;
+						vec.y = speed * distance.y / length;
 
 						if (abs(distance.x) < 2 || ((player->getPosition().x - vec.x) <= player->getMapPosition().x && vec.x <= 0) || ((player->getPosition().x + vec.x) >= (player->getMapPosition().x + player->getMapSize().x) && vec.x >= 0) /*|| !(window.mapPixelToCoords(sf::Mouse::getPosition(window)).x > background.getPosition().x && window.mapPixelToCoords(sf::Mouse::getPosition(window)).x < (background.getPosition().x + texture.getSize().x))*/) {
 							vec.x = 0;
@@ -106,9 +106,10 @@ void Server::run()
 
 						
 						pos += vec;
+						std::cout << "vec: " << vec.x << "," << vec.y << " dist: " << distance.x << "," << distance.y << " length: " << length << "\n";
 						//std::cout << "vec: " << vec.x << "," << vec.y << " pos: " << pos.x << "," << pos.y << "\n";
 						player->setPosition(pos);
-						std::cout << "playerPos: " << player->getPosition().x << "," << player->getPosition().y << "\n";
+						//std::cout << "playerPos: " << player->getPosition().x << "," << player->getPosition().y << "\n";
 
 						//std::cout << "received player location: (" << pos.x << "," << pos.y << ")\n";
 

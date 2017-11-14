@@ -5,6 +5,7 @@
 float ZOOM = 1.01f; //1%-os zoom
 float radius = 30;
 const float radius2 = 7;
+sf::Vector2f oldPos(0, 0);
 
 Game::Game(sf::VideoMode mode, const sf::String &title, sf::IpAddress _serverIp, sf::Uint32 style, const sf::ContextSettings &settings)
 	: sf::RenderWindow(mode, title, style, settings)
@@ -91,6 +92,7 @@ Game::~Game()
 void Game::event_loop() {
 	sf::Vector2f vec(0, 0);
 	sf::Vector2f movement(0, 0);
+	sf::Clock clock;
 	while (isOpen())
 	{
 		sf::Event event;
@@ -141,9 +143,9 @@ void Game::event_loop() {
 		if (speed <= 0.6) speed = 0.6;
 
 		//std::cout << "Size: " << circle.getRadius() << " Speed: " << speed << std::endl;
-		float lenght = sqrt(distance.x*distance.x + distance.y*distance.y);
-		vec.x = speed * distance.x / lenght;
-		vec.y = speed * distance.y / lenght;
+		float length = sqrt(distance.x*distance.x + distance.y*distance.y);
+		vec.x = speed * distance.x / length;
+		vec.y = speed * distance.y / length;
 
 		if (abs(distance.x) < 2 || ((circle.getPosition().x - vec.x) <= map.getPosition().x && vec.x <= 0) || ((circle.getPosition().x + vec.x) >= (map.getPosition().x + map.getLocalBounds().width) && vec.x >= 0) /*|| !(window.mapPixelToCoords(sf::Mouse::getPosition(window)).x > background.getPosition().x && window.mapPixelToCoords(sf::Mouse::getPosition(window)).x < (background.getPosition().x + texture.getSize().x))*/) {
 			vec.x = 0;
@@ -154,11 +156,18 @@ void Game::event_loop() {
 		
 		//circle.move(vec);
 		//player.setPosition(circle.getPosition());
-		network->sendPosition(sf::Vector2f(mapPixelToCoords(sf::Mouse::getPosition(*this)).x, mapPixelToCoords(sf::Mouse::getPosition(*this)).y));
-		network->getResponse();
+		if (clock.getElapsedTime() > sf::milliseconds(33)) {
+			network->sendPosition(sf::Vector2f(mapPixelToCoords(sf::Mouse::getPosition(*this)).x, mapPixelToCoords(sf::Mouse::getPosition(*this)).y));
+			oldPos = player.getPosition();
+			network->getResponse();
+			sf::Vector2f vecFromServer = player.getPosition() - oldPos;
+			std::cout << "vec\fromServer: " << vecFromServer.x << "," << vecFromServer.y << " vecFromClient: " << vec.x << "," << vec.y << " dist: " << distance.x << "," << distance.y << " length: " << length << "\n";
+			circle.setPosition(player.getPosition());
+			clock.restart();
+		}
 		
-		//circle.setPosition(player.getPosition());
-		circle.setPosition(circle.getPosition() + vec);
+		
+		//circle.setPosition(circle.getPosition() + vec);
 
 		
 		bool changed = false;
