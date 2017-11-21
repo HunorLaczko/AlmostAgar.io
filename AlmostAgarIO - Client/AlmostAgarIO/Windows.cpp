@@ -46,7 +46,7 @@ Windows::Windows(sf::VideoMode mode, const sf::String &title, sf::Uint32 style, 
 	circle.scale(1, 1);
 	circle.setOrigin(radius, radius);
 	circle.setPosition(texture2.getSize().x / 2, texture2.getSize().y / 2);
-	view.reset((sf::FloatRect(circle.getPosition().x - getSize().x / 2, circle.getPosition().y - getSize().y / 2, getSize().x, getSize().y)));
+	///view.reset((sf::FloatRect(circle.getPosition().x - getSize().x / 2, circle.getPosition().y - getSize().y / 2, getSize().x, getSize().y)));
 	map.setTexture(texture);
 	background.setTexture(texture2);
 	map.scale(1, 1);
@@ -83,6 +83,7 @@ void Windows::event_loop(){
 		sf::Vector2f vec(0, 0);
 		sf::Vector2f movement(0, 0);
 		sf::Clock clock;
+		bool first = true;
 		while (isOpen() && !viewChanged)
 		{
 			sf::Event event;
@@ -152,12 +153,16 @@ void Windows::event_loop(){
 				network->sendPosition(sf::Vector2f(mapPixelToCoords(sf::Mouse::getPosition(*this)).x, mapPixelToCoords(sf::Mouse::getPosition(*this)).y));
 				oldPos = player.getPosition();
 				network->getResponse();
+				if (first) {
+					view.reset((sf::FloatRect(player.getPosition().x - getSize().x / 2, player.getPosition().y - getSize().y / 2, getSize().x, getSize().y)));
+					first = false;
+				}
 				sf::Vector2f vecFromServer = player.getPosition() - oldPos;
-				std::cout << "vec\fromServer: " << vecFromServer.x << "," << vecFromServer.y << " vecFromClient: " << vec.x << "," << vec.y << " dist: " << distance.x << "," << distance.y << " length: " << length << "\n";
+				//std::cout << "vec\fromServer: " << vecFromServer.x << "," << vecFromServer.y << " vecFromClient: " << vec.x << "," << vec.y << " dist: " << distance.x << "," << distance.y << " length: " << length << "\n";
 				circle.setPosition(player.getPosition());
 				clock.restart();
 			}
-
+			
 
 			//circle.setPosition(circle.getPosition() + vec);
 
@@ -218,6 +223,7 @@ void Windows::event_loop(){
 			display();
 
 		}
+		first = true;
 	}
 	else {
 		setView(sf::View(sf::FloatRect(0, 0, size_x, size_y)));
@@ -291,6 +297,9 @@ void Windows::setIp(sf::IpAddress _serverIp)
 	network = new Network(_serverIp, &player);
 	network->connectPlayer();
 	network->init(sf::Vector2f(map.getLocalBounds().width, map.getLocalBounds().height), (sf::Vector2f)map.getPosition(), (sf::Vector2f)this->getSize());
+	std::cout << "player pos in init: " << player.getPosition().x << ", " << player.getPosition().y << std::endl;
+	//view.reset((sf::FloatRect(player.getPosition().x - getSize().x / 2, player.getPosition().y - getSize().y / 2, getSize().x, getSize().y)));
+
 }
 /*
 void Windows::add(Widget *w)

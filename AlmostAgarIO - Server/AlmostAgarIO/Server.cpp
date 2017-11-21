@@ -42,7 +42,7 @@ void Server::run()
 					std::cout << client->getRemotePort();
 					// Add the new client to the clients list
 					///TODO: should randomize start position
-					players.insert(std::make_pair(id,(Player(id, sf::Vector2f(3000, 3000), client))));
+					players.insert(std::make_pair(id,(Player(id, sf::Vector2f(3000, 2000), client))));
 					id++;
 					// Add the new client to the selector so that we will
 					// be notified when he sends something
@@ -96,10 +96,10 @@ void Server::run()
 						vec.y = speed * distance.y / length;
 
 						if (abs(distance.x) < 2 || ((player->getPosition().x - vec.x) <= player->getMapPosition().x && vec.x <= 0) || ((player->getPosition().x + vec.x) >= (player->getMapPosition().x + player->getMapSize().x) && vec.x >= 0) /*|| !(window.mapPixelToCoords(sf::Mouse::getPosition(window)).x > background.getPosition().x && window.mapPixelToCoords(sf::Mouse::getPosition(window)).x < (background.getPosition().x + texture.getSize().x))*/) {
-						//	vec.x = 0;
+							vec.x = 0;
 						}
 						if (abs(distance.y) < 2 || ((player->getPosition().y - vec.y) <= player->getMapPosition().y && vec.y <= 0) || ((player->getPosition().y - vec.y) >= (player->getMapPosition().y + player->getMapSize().y) && vec.y >= 0)/*|| !(window.mapPixelToCoords(sf::Mouse::getPosition(window)).y > background.getPosition().y && window.mapPixelToCoords(sf::Mouse::getPosition(window)).y < (background.getPosition().y + texture.getSize().y))*/) {
-						//	vec.y = 0;
+							vec.y = 0;
 						}
 
 						
@@ -155,11 +155,14 @@ void Server::run()
 								sf::Vector2f _mapPosition;
 								sf::Vector2f _windowSize;
 								packet >> id >> _mapSize.x >> _mapSize.y >> _mapPosition.x >> _mapPosition.y >> _windowSize.x >> _windowSize.y;
-								Player player = players.find(id)->second;
-								player.setMapSize(_mapSize);
-								player.setMapPosition(_mapPosition);
-								player.setWindowSize(_windowSize);
-								std::cout << "received init params\n";
+								Player *player = &players.find(id)->second;
+								player->setMapSize(_mapSize);
+								player->setMapPosition(_mapPosition);
+								player->setWindowSize(_windowSize);
+
+								//player->setPosition(sf::Vector2f((_mapPosition.x+_mapSize.x/2),(_mapPosition.y+_mapSize.y/2)));
+								std::cout << "\n\n\nreceived init params: "<<player->getPosition().x<<", "<<player->getPosition().y<<"\n\n\n\n";
+
 							}
 						}
 						else
