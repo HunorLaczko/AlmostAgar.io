@@ -21,5 +21,6 @@ public:
 	void handle(sf::Event event);
 	bool isempty();
 	std::string getValue();
+
 };
 
