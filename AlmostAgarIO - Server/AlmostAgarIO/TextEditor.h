@@ -9,7 +9,7 @@ protected:
 	std::string _empty_value;
 	bool _selected;
 	float _cursor_posxid;
-///Átmeneti?
+///Átmeneti? 
 	sf::Font _font;
 	sf::Text text;
 	float mouse_x;
