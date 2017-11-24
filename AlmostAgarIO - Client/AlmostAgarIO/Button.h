@@ -22,4 +22,4 @@ class lambdaButton : public Button {
 public:
 	lambdaButton(float x, float y, float size_x, float size_y, std::string value, std::function<void()> f);
 	void action();
-};
+}; 
