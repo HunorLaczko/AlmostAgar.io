@@ -135,7 +135,7 @@ void Server::run()
 			{
 				// The listener socket is not ready, test all other sockets (the clients)
 				//for (size_t i = 0; i < players.size(); i++)
-				for (auto it = players.begin(); it != players.end(); it++)
+				for (std::map<int, Player>::iterator it = players.begin(); it != players.end(); it++)
 				{
 					//sf::TcpSocket& client = it->getSocket;
 					if (selector.isReady(*(*it).second.getTcpSocket()))
@@ -171,26 +171,25 @@ void Server::run()
 							//std::cout << status;
 							if (sf::Socket::Disconnected == status)
 							{
-								//(*it).second.getTcpSocket()->disconnect();
-								//selector.remove(*(*it).second.getTcpSocket());
-								//players.erase(it);
+								(*it).second.getTcpSocket()->disconnect();
+								selector.remove(*(*it).second.getTcpSocket());
 								
+								std::cout << "disconnected player: " << it->second.getId() << std::endl;
+								it = players.erase(it);
+								if (players.size() == 0) break;
+								//it = players.begin();
 							}
-							
 						}
-					}
-
-					
-					
+					}	
 				}
 			}
 		}
 
 
-		if (clock.getElapsedTime() > sf::milliseconds(33))
+		if (clock.getElapsedTime() > sf::milliseconds(33) && players.size() != 0)
 		{
 			std::cout << "nr of players: " << players.size() << "\n";
-			for (auto it = players.begin(); it != players.end(); it++)
+			for (std::map<int, Player>::iterator it = players.begin(); it != players.end(); it++)
 			{
 				sf::Packet outPacket;
 				outPacket << 2 << it->first << it->second.getPosition().x << it->second.getPosition().y;

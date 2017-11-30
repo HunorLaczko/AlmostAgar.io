@@ -52,10 +52,13 @@ void Network::connectPlayer()
 		else
 		{
 			std::cout << "Something went wrong\n ";
-
 		}
-
 	}
+}
+
+void Network::disconnectPlayer()
+{
+	tcpSocket.disconnect();
 }
 
 void Network::init(sf::Vector2f _mapSize, sf::Vector2f _mapPosition, sf::Vector2f _windowSize)

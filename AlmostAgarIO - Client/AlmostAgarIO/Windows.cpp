@@ -95,6 +95,7 @@ void Windows::event_loop(){
 				{
 				case sf::Event::Closed: {
 					changeview(Views::game_over_menu_view);
+					network->disconnectPlayer();
 					//close();
 				}
 				case sf::Event::Resized: {
