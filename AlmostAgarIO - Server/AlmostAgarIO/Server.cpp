@@ -135,8 +135,9 @@ void Server::run()
 			{
 				// The listener socket is not ready, test all other sockets (the clients)
 				//for (size_t i = 0; i < players.size(); i++)
-				for (std::map<int, Player>::iterator it = players.begin(); it != players.end(); it++)
+				for (std::map<int, Player>::iterator it = players.begin(), next_it = players.begin(); it != players.end(); it = next_it)
 				{
+					next_it = it; ++next_it;
 					//sf::TcpSocket& client = it->getSocket;
 					if (selector.isReady(*(*it).second.getTcpSocket()))
 					{
@@ -175,8 +176,9 @@ void Server::run()
 								selector.remove(*(*it).second.getTcpSocket());
 								
 								std::cout << "disconnected player: " << it->second.getId() << std::endl;
-								it = players.erase(it);
-								if (players.size() == 0) break;
+								players.erase(it++);
+								//it = players.erase(it);
+								//if (players.size() == 0) break;
 								//it = players.begin();
 							}
 						}
