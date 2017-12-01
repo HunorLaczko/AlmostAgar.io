@@ -59,44 +59,9 @@ Game::~Game()
 
 }
 
-void Game::draw(sf::RenderWindow & window)
-{
-	// sf::Vector2f movement-et máshol kéne beállítani
-
-	view.move(movement);
-
-	circle.setFillColor(sf::Color(0, 250, 0));
-	circle.setOutlineThickness(-5);
-	circle.setOutlineColor(sf::Color(0, 150, 0));
-
-	circle.getPosition().x;
-	window.clear(sf::Color::Black);
-
-
-	window.setView(view);
-	window.draw(background);
-	window.draw(map);
-	for (int i = 0; i < food.size(); i++) {
-		if ((mapPixelToCoords(sf::Vector2i(0, 0)).x + view.getSize().x) > food[i].getPosition().x && mapPixelToCoords(sf::Vector2i(0, 0)).x < food[i].getPosition().x &&
-			(mapPixelToCoords(sf::Vector2i(0, 0)).y + view.getSize().y) > food[i].getPosition().y && mapPixelToCoords(sf::Vector2i(0, 0)).y < food[i].getPosition().y) {
-			window.draw(food[i]);
-
-		}
-	}
-	window.draw(circle);
-	window.display();
-}
-
-
-
 void Game::resize(sf::Event::SizeEvent event_size, sf::Vector2u window_size) {
 	setView(sf::View(sf::FloatRect(0, 0, event_size.width, event_size.height)));
 	view.reset((sf::FloatRect(circle.getPosition().x - window_size.x / 2, circle.getPosition().y - window_size.y / 2, window_size.x, window_size.y)));
-}
-
-void Game::disconnect()
-{
-	network->disconnectPlayer();
 }
 
 sf::Vector2f Game::getCirclePos()
@@ -113,10 +78,15 @@ void Game::setIp(sf::IpAddress _serverIp, sf::Vector2u window_size)
 	//view.reset((sf::FloatRect(player.getPosition().x - getSize().x / 2, player.getPosition().y - getSize().y / 2, getSize().x, getSize().y)));
 }
 
+void Game::disconnect()
+{
+	network->disconnectPlayer();
+}
+
 void Game::counting(sf::RenderWindow & window)
 {
 	//Számolás
-	sf::Vector2f distance(mapPixelToCoords(sf::Mouse::getPosition(window)).x - circle.getPosition().x, mapPixelToCoords(sf::Mouse::getPosition(window)).y - circle.getPosition().y);
+	sf::Vector2f distance(window.mapPixelToCoords(sf::Mouse::getPosition(window)).x - circle.getPosition().x, window.mapPixelToCoords(sf::Mouse::getPosition(window)).y - circle.getPosition().y);
 	float speed = 2.2 - (0.005*circle.getRadius());
 	if (speed <= 0.6) speed = 0.6;
 
@@ -184,6 +154,33 @@ void Game::counting(sf::RenderWindow & window)
 	if (abs(distFromCenter.y) < 20 || (vec.x == 0 && vec.y == 0)) {
 		movement.y = 0;
 	}
+}
+
+
+void Game::draw(sf::RenderWindow & window)
+{
+	view.move(movement);
+
+	circle.setFillColor(sf::Color(0, 250, 0));
+	circle.setOutlineThickness(-5);
+	circle.setOutlineColor(sf::Color(0, 150, 0));
+
+	circle.getPosition().x;
+	window.clear(sf::Color::Black);
+
+
+	window.setView(view);
+	window.draw(background);
+	window.draw(map);
+	for (int i = 0; i < food.size(); i++) {
+		if ((window.mapPixelToCoords(sf::Vector2i(0, 0)).x + view.getSize().x) > food[i].getPosition().x && window.mapPixelToCoords(sf::Vector2i(0, 0)).x < food[i].getPosition().x &&
+			(window.mapPixelToCoords(sf::Vector2i(0, 0)).y + view.getSize().y) > food[i].getPosition().y && window.mapPixelToCoords(sf::Vector2i(0, 0)).y < food[i].getPosition().y) {
+			window.draw(food[i]);
+
+		}
+	}
+	window.draw(circle);
+	window.display();
 }
 
 //Régi
