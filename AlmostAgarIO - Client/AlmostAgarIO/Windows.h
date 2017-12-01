@@ -7,6 +7,7 @@
 #include "FoodGenerator.h"
 #include "Network.h"
 #include "Player.h"
+#include "Game.h"
 #include<SFML/Network.hpp>
 //#include "C:\SFML\include\SFML\Graphics\RenderWindow.hpp"
 enum Views { main_menu_view, game_view, game_over_menu_view };
@@ -31,14 +32,6 @@ private:
 	std::vector<Widget*> menu, game_over;
 	unsigned int size_x, size_y;
 
-
-	sf::View view;
-	std::vector<sf::CircleShape> food;
-	//FoodGenerator gen;
-	sf::CircleShape circle;
-	sf::Sprite map, background;
-	sf::Texture texture, texture2;
-	Network *network;
-	Player player;
+	Game game;
 };
 
