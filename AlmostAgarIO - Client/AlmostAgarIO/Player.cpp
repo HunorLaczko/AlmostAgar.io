@@ -4,6 +4,7 @@
 
 Player::Player()
 {
+	changed = false;
 }
 
 
@@ -43,12 +44,22 @@ sf::Vector2u Player::getWindowSize()
 
 void Player::setRadius(float _radius)
 {
+	if(_radius != radius) 	changed = true;
+
 	radius = _radius;
 }
 
 float Player::getRadius()
 {
 	return radius;
+}
+
+bool Player::isRadiusChanged() {
+	return changed;
+}
+
+void Player::setChange(bool _change) {
+	changed = _change;
 }
 
 /*

@@ -16,9 +16,7 @@ void Game::func() {
 	}
 	view.setViewport(sf::FloatRect(0, 0, 1, 1));
 	view.zoom(ZOOM);
-	setVerticalSyncEnabled(false);
-	setFramerateLimit(60);
-	setMouseCursorGrabbed(false);
+
 	//window.setMouseCursorVisible(false);
 	circle.setRadius(radius);
 	circle.scale(1, 1);
@@ -61,6 +59,9 @@ Game::Game() : thread(&Game::func, this)
 	sf::Clock clock;
 	bool first = true;
 	network = new Network(this);
+	/*setVerticalSyncEnabled(false);
+	setFramerateLimit(60);
+	setMouseCursorGrabbed(true);*/
 	/*************************
 	if (!texture.loadFromFile("palya.jpg") || !texture2.loadFromFile("background.png"))
 	{
@@ -190,6 +191,8 @@ void Game::counting(sf::RenderWindow & window)
 		vec.y = 0;
 	}
 
+
+
 	//Pozició küldés/fogadás
 	//circle.move(vec);
 	//player.setPosition(circle.getPosition());
@@ -208,16 +211,17 @@ void Game::counting(sf::RenderWindow & window)
 		clock.restart();
 
 		//nem tudom ezt most valamibe bele kell-e rakni
-		//meret valtoztatas
-		circle.setRadius(player.getRadius());
-		std::cout << "current radius: " << player.getRadius() << std::endl;
-		circle.setOrigin(player.getRadius(), player.getRadius());
-		if ((int)(circle.getRadius() - 30) % 5 == 0 && (circle.getRadius() - 30) == (int)(circle.getRadius() - 30)) {
-			//view.zoom(ZOOM);
-		}
+
 	}
 
-	
+	//meret valtoztatas
+	circle.setRadius(player.getRadius());
+	circle.setOrigin(player.getRadius(), player.getRadius());
+	if (player.isRadiusChanged() && (int)(player.getRadius() - 30) % 5 == 0 && (player.getRadius() - 30) == (int)(player.getRadius() - 30)) {
+		view.zoom(ZOOM);
+		player.setChange(false);
+		std::cout << "ZOOOOOOOOMMMMMMM\n";
+	}
 
 
 	//circle.setPosition(circle.getPosition() + vec);

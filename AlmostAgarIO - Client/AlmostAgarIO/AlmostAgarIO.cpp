@@ -28,6 +28,9 @@ int main()
 	sf::ContextSettings settings;
 	settings.antialiasingLevel = 4;
 	Windows window(sf::VideoMode(1000, 600), "almostagar.io", sf::Style::Default, settings);
+	window.setVerticalSyncEnabled(false);
+	window.setFramerateLimit(60);
+	window.setMouseCursorGrabbed(false);
 
 	lambdaButton *g1 = new lambdaButton(300 + 100, 300, 200, 50, "Játék",
 		[&]//mindent akarok használni
