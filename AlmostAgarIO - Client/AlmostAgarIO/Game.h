@@ -14,6 +14,7 @@ public:
 	~Game();
 	void draw(sf::RenderWindow & window);
 	void resize(sf::Event::SizeEvent event_size, sf::Vector2u window_size);
+	void connect();
 	void disconnect();
 	sf::Vector2f getCirclePos();
 	void setIp(sf::IpAddress _serverIp, sf::Vector2u window_size);

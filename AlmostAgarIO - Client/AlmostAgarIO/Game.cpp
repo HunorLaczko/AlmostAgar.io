@@ -78,6 +78,11 @@ void Game::setIp(sf::IpAddress _serverIp, sf::Vector2u window_size)
 	//view.reset((sf::FloatRect(player.getPosition().x - getSize().x / 2, player.getPosition().y - getSize().y / 2, getSize().x, getSize().y)));
 }
 
+void Game::connect()
+{
+	network->connectPlayer();
+}
+
 void Game::disconnect()
 {
 	network->disconnectPlayer();
