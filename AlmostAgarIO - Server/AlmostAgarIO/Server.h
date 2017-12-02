@@ -20,7 +20,7 @@ class Server
 
 	bool running;
 
-
+	void updatePlayerPosition(int id, sf::Vector2f pos);
 
 public:
 	Server();

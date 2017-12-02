@@ -83,39 +83,7 @@ void Server::run()
 					case 1:						
 					{
 						packet >> id >> pos.x >> pos.y;
-						Player* player = &players.at(id);
-
-						sf::Vector2f vec;
-						sf::Vector2f distance(pos.x - player->getPosition().x, pos.y - player->getPosition().y);
-						float speed = 2.2 - (0.005 * player->getRadius());
-						if (speed <= 0.06) speed = 0.06;
-
-						//std::cout << "Size: " << circle.getRadius() << " Speed: " << speed << std::endl;
-						float length = sqrt(distance.x*distance.x + distance.y*distance.y);
-						vec.x = speed * distance.x / length;
-						vec.y = speed * distance.y / length;
-
-						if (abs(distance.x) < 2 || ((player->getPosition().x - vec.x) <= player->getMapPosition().x && vec.x <= 0) || ((player->getPosition().x + vec.x) >= (player->getMapPosition().x + player->getMapSize().x) && vec.x >= 0) /*|| !(window.mapPixelToCoords(sf::Mouse::getPosition(window)).x > background.getPosition().x && window.mapPixelToCoords(sf::Mouse::getPosition(window)).x < (background.getPosition().x + texture.getSize().x))*/) {
-							vec.x = 0;
-						}
-						if (abs(distance.y) < 2 || ((player->getPosition().y - vec.y) <= player->getMapPosition().y && vec.y <= 0) || ((player->getPosition().y - vec.y) >= (player->getMapPosition().y + player->getMapSize().y) && vec.y >= 0)/*|| !(window.mapPixelToCoords(sf::Mouse::getPosition(window)).y > background.getPosition().y && window.mapPixelToCoords(sf::Mouse::getPosition(window)).y < (background.getPosition().y + texture.getSize().y))*/) {
-							vec.y = 0;
-						}
-
-						
-
-						std::cout << "playerPos: " << player->getPosition().x << "," << player->getPosition().y << "\n";
-						pos = player->getPosition() + vec;
-						std::cout << "vec: " << vec.x << "," << vec.y << " dist: " << distance.x << "," << distance.y << " length: " << length << "\n";
-						//std::cout << "vec: " << vec.x << "," << vec.y << " pos: " << pos.x << "," << pos.y << "\n";
-						player->setPosition(pos);
-						std::cout << "playerPos: " << player->getPosition().x << "," << player->getPosition().y << "\n";
-
-						//std::cout << "received player location: (" << pos.x << "," << pos.y << ")\n";
-
-						//sf::Packet outPacket;
-						//outPacket << 2 << id << pos.x + 1 << pos.y + 1;
-						//std::cout << "responding: " << udpSocket.send(outPacket, sender, udpPortSend) << std::endl;
+						updatePlayerPosition(id, pos);
 						break; 
 					}
 					case 3:
@@ -169,10 +137,10 @@ void Server::run()
 						else
 						{
 							//not sure when this occours
-							//std::cout << status;
+							std::cout << status;
 							if (sf::Socket::Disconnected == status)
 							{
-								(*it).second.getTcpSocket()->disconnect();
+								//(*it).second.getTcpSocket()->disconnect();
 								selector.remove(*(*it).second.getTcpSocket());
 								
 								std::cout << "disconnected player: " << it->second.getId() << std::endl;
@@ -188,18 +156,18 @@ void Server::run()
 		}
 
 
-		if (clock.getElapsedTime() > sf::milliseconds(33) && players.size() != 0)
+		if (clock.getElapsedTime() > sf::milliseconds(33) )
 		{
-			std::cout << "nr of players: " << players.size() << "\n";
+			//std::cout << "nr of players: " << players.size() << "\n";
 			for (std::map<int, Player>::iterator it = players.begin(); it != players.end(); it++)
 			{
 				sf::Packet outPacket;
 				outPacket << 2 << it->first << it->second.getPosition().x << it->second.getPosition().y;
-				std::cout << "sent position: " << it->second.getPosition().x << "," << it->second.getPosition().y << "\n";
+				//std::cout << "sent position: " << it->second.getPosition().x << "," << it->second.getPosition().y << "\n";
 				udpSocket.send(outPacket, it->second.getPlayerIp(), udpPortSend);
 			}
 			clock.restart();
-			std::cout << "sent new positions\n";
+			//std::cout << "sent new positions\n";
 		}
 
 		/*
@@ -230,7 +198,42 @@ void Server::run()
 		
 		}
 		*/
-
-
 	}
+}
+
+void Server::updatePlayerPosition(int id, sf::Vector2f pos)
+{
+	Player* player = &players.at(id);
+
+	sf::Vector2f vec;
+	sf::Vector2f distance(pos.x - player->getPosition().x, pos.y - player->getPosition().y);
+	float speed = 2.2 - (0.005 * player->getRadius());
+	if (speed <= 0.06) speed = 0.06;
+
+	//std::cout << "Size: " << circle.getRadius() << " Speed: " << speed << std::endl;
+	float length = sqrt(distance.x*distance.x + distance.y*distance.y);
+	vec.x = speed * distance.x / length;
+	vec.y = speed * distance.y / length;
+
+	if (abs(distance.x) < 2 || ((player->getPosition().x - vec.x) <= player->getMapPosition().x && vec.x <= 0) || ((player->getPosition().x + vec.x) >= (player->getMapPosition().x + player->getMapSize().x) && vec.x >= 0) /*|| !(window.mapPixelToCoords(sf::Mouse::getPosition(window)).x > background.getPosition().x && window.mapPixelToCoords(sf::Mouse::getPosition(window)).x < (background.getPosition().x + texture.getSize().x))*/) {
+		vec.x = 0;
+	}
+	if (abs(distance.y) < 2 || ((player->getPosition().y - vec.y) <= player->getMapPosition().y && vec.y <= 0) || ((player->getPosition().y - vec.y) >= (player->getMapPosition().y + player->getMapSize().y) && vec.y >= 0)/*|| !(window.mapPixelToCoords(sf::Mouse::getPosition(window)).y > background.getPosition().y && window.mapPixelToCoords(sf::Mouse::getPosition(window)).y < (background.getPosition().y + texture.getSize().y))*/) {
+		vec.y = 0;
+	}
+
+
+
+	//std::cout << "playerPos: " << player->getPosition().x << "," << player->getPosition().y << "\n";
+	pos = player->getPosition() + vec;
+	//std::cout << "vec: " << vec.x << "," << vec.y << " dist: " << distance.x << "," << distance.y << " length: " << length << "\n";
+	//std::cout << "vec: " << vec.x << "," << vec.y << " pos: " << pos.x << "," << pos.y << "\n";
+	player->setPosition(pos);
+	//std::cout << "playerPos: " << player->getPosition().x << "," << player->getPosition().y << "\n";
+
+	//std::cout << "received player location: (" << pos.x << "," << pos.y << ")\n";
+
+	//sf::Packet outPacket;
+	//outPacket << 2 << id << pos.x + 1 << pos.y + 1;
+	//std::cout << "responding: " << udpSocket.send(outPacket, sender, udpPortSend) << std::endl;
 }
