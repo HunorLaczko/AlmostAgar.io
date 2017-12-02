@@ -240,7 +240,22 @@ void Game::draw(sf::RenderWindow & window)
 	circle.setOutlineThickness(-5);
 	circle.setOutlineColor(sf::Color(0, 150, 0));
 
-	circle.getPosition().x;
+	sf::Font font;
+	if (!font.loadFromFile("arial.ttf")) std::cout << "Couldn't load font file!" << std::endl;
+	
+	sf::Text text;
+	text.setFont(font);
+	text.setString("Ez egy player név");
+	text.setColor(sf::Color::White);
+	text.setStyle(sf::Text::Bold);
+	text.setOutlineColor(sf::Color::Black);
+	text.setOutlineThickness(2);
+	text.setCharacterSize(18);
+	text.setOrigin(text.getLocalBounds().width / 2, text.getLocalBounds().height / 2);
+
+	text.setPosition(circle.getPosition());
+
+
 	window.clear(sf::Color::Black);
 
 	if (finished) {
@@ -255,6 +270,7 @@ void Game::draw(sf::RenderWindow & window)
 			}
 		}
 		window.draw(circle);
+		window.draw(text);
 	}
 	window.display();
 }
