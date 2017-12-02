@@ -30,3 +30,13 @@ void Player::setPosition(sf::Vector2f _position)
 {
 	position = _position;
 }
+
+void Player::setWindowSize(sf::Vector2u _windowSize)
+{
+	windowSize = _windowSize;
+}
+
+sf::Vector2u Player::getWindowSize()
+{
+	return windowSize;
+}

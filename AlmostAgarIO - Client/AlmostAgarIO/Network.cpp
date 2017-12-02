@@ -3,19 +3,15 @@
 #include<iostream>
 #include <thread>
 
-Network::Network(sf::IpAddress _serverIp, Player* _player)
+Network::Network()
 {
-	serverIp = _serverIp;
-	player = _player;
-
-	udpSocket.bind(serverUdpPortReceive, serverIp);
-	udpSocket.setBlocking(false);
+	
 }
 
 
 Network::~Network()
 {
-
+	delete player;
 }
 
 void Network::setPosition(sf::Vector2f _position)
@@ -23,8 +19,17 @@ void Network::setPosition(sf::Vector2f _position)
 	position = _position;
 }
 
-void Network::connectPlayer()
+void Network::setIp(sf::IpAddress _serverIp)
 {
+	serverIp = _serverIp;
+}
+
+void Network::connectPlayer(Player *_player)
+{
+	player = _player;
+	udpSocket.bind(serverUdpPortReceive, serverIp);
+	udpSocket.setBlocking(false);
+
 	sf::Socket::Status status = tcpSocket.connect(serverIp, serverTcpPort);
 	//udpSocket.bind(serverUdpPortReceive);
 	if (status != sf::Socket::Done)
@@ -59,6 +64,7 @@ void Network::connectPlayer()
 void Network::disconnectPlayer()
 {
 	tcpSocket.disconnect();
+	//delete player;
 }
 
 void Network::init(sf::Vector2f _mapSize, sf::Vector2f _mapPosition, sf::Vector2f _windowSize)

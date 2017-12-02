@@ -54,7 +54,7 @@ void Windows::threadWait() {
 void Windows::event_loop(){
 	if (viewid == Views::game_view) {
 	//Játék megnyitása/megjelenítése, kapcsolódás
-		///game.connect();
+		game.connect();
 		//Eseménykezelés
 		while (isOpen() && !viewChanged)
 		{
@@ -184,7 +184,7 @@ void Windows::changeview(Views view)
 }
 void Windows::setIp(sf::IpAddress _serverIp)
 {
-	game.setIp(_serverIp, getSize());
+	game.setIpAndWindowSize(_serverIp, getSize());
 }
 /*
 void Windows::add(Widget *w)

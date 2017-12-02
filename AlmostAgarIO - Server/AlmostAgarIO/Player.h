@@ -22,7 +22,7 @@ class Player
 	sf::Vector2f mapPosition;//player's map's location relative to world coordinates
 	sf::Vector2f windowSize;//player's window size
 	sf::Vector2f mousePosition;
-
+	std::vector<sf::Vector2f> food;	//food that the player sees
 
 public:
 	Player();
@@ -55,6 +55,8 @@ public:
 	sf::Vector2f getMousePosition();
 	void setMousePosition(sf::Vector2f _mousePosition);
 
+	void init(std::vector<sf::Vector2f>& _food);
+	void updateFood(sf::Vector2f toDelete, sf::Vector2f toAdd);
 	//void movePlayer()
 };
 

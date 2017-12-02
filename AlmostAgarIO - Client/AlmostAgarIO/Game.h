@@ -17,7 +17,7 @@ public:
 	void connect();
 	void disconnect();
 	sf::Vector2f getCirclePos();
-	void setIp(sf::IpAddress _serverIp, sf::Vector2u window_size);
+	void setIpAndWindowSize(sf::IpAddress _serverIp, sf::Vector2u window_size);
 	void counting(sf::RenderWindow & window);
 	void func();
 	void threadWait();

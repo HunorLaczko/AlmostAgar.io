@@ -15,12 +15,13 @@ class Network
 	sf::Vector2f position;
 
 public:
-	Network(sf::IpAddress _serverIp, Player* player);
+	Network();
 	~Network();
 
 	void setPosition(sf::Vector2f _position);
+	void setIp(sf::IpAddress _serverIp);
 
-	void connectPlayer();
+	void connectPlayer(Player *_player);
 	void disconnectPlayer();
 	void init(sf::Vector2f _mapSize, sf::Vector2f _mapPosition, sf::Vector2f _windowSize);
 	void sendPosition(sf::Vector2f position);

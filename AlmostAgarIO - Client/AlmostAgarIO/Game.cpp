@@ -52,6 +52,7 @@ Game::Game() : thread(&Game::func, this)
 	sf::Vector2f movement(0, 0);
 	sf::Clock clock;
 	bool first = true;
+	network = new Network();
 	/*************************
 	if (!texture.loadFromFile("palya.jpg") || !texture2.loadFromFile("background.png"))
 	{
@@ -114,23 +115,23 @@ sf::Vector2f Game::getCirclePos()
 	return circle.getPosition();
 }
 
-void Game::setIp(sf::IpAddress _serverIp, sf::Vector2u window_size)
+void Game::setIpAndWindowSize(sf::IpAddress _serverIp, sf::Vector2u window_size)
 {
-	network = new Network(_serverIp, &player);
-	network->connectPlayer();
-	network->init(sf::Vector2f(map.getLocalBounds().width, map.getLocalBounds().height), (sf::Vector2f)map.getPosition(), (sf::Vector2f)window_size);
-	std::cout << "player pos in init: " << player.getPosition().x << ", " << player.getPosition().y << std::endl;
-	//view.reset((sf::FloatRect(player.getPosition().x - getSize().x / 2, player.getPosition().y - getSize().y / 2, getSize().x, getSize().y)));
+	network->setIp(_serverIp);
+	player.setWindowSize(window_size);
 }
 
 void Game::connect()
-{
-	network->connectPlayer();
+{	
+	network->connectPlayer(&player);
+	network->init(sf::Vector2f(map.getLocalBounds().width, map.getLocalBounds().height), (sf::Vector2f)map.getPosition(), (sf::Vector2f)player.getWindowSize());
+	std::cout << "player pos in init: " << player.getPosition().x << ", " << player.getPosition().y << std::endl;
 }
 
 void Game::disconnect()
 {
 	network->disconnectPlayer();
+	//delete network;
 }
 
 void Game::counting(sf::RenderWindow & window)

@@ -103,6 +103,18 @@ void Player::setMousePosition(sf::Vector2f _mousePosition)
 	mousePosition = _mousePosition;
 }
 
+void Player::init(std::vector<sf::Vector2f>& _food)
+{
+	for (sf::Vector2f f : _food)
+	{
+		//if(f.x > )
+	}
+}
+
+void Player::updateFood(sf::Vector2f toDelete, sf::Vector2f toAdd)
+{
+}
+
 bool operator==(const Player &a, const Player &b)
 {
 	if (a.getId() == b.getId())
