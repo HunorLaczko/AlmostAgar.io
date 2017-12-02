@@ -8,13 +8,51 @@ float radius = 30;
 const float radius2 = 7;
 sf::Vector2f oldPos(0, 0);
 
-Game::Game()
-{
+void Game::func() {
+	std::cout << "Betoltes elindult...\n";
+	if (!texture.loadFromFile("palya.jpg") || !texture2.loadFromFile("background.png"))
+	{
+		close();
+	}
+	view.setViewport(sf::FloatRect(0, 0, 1, 1));
+	view.zoom(ZOOM);
+	setVerticalSyncEnabled(false);
+	setFramerateLimit(60);
+	setMouseCursorGrabbed(false);
+	//window.setMouseCursorVisible(false);
+	circle.setRadius(radius);
+	circle.scale(1, 1);
+	circle.setOrigin(radius, radius);
+	circle.setPosition(texture2.getSize().x / 2, texture2.getSize().y / 2);
+	///view.reset((sf::FloatRect(circle.getPosition().x - getSize().x / 2, circle.getPosition().y - getSize().y / 2, getSize().x, getSize().y)));
+	map.setTexture(texture);
+	background.setTexture(texture2);
+	map.scale(1, 1);
+	background.scale(1, 1);
+	map.setPosition(1000, 750);
 
+	for (int i = 0; i < 1000; i++) {
+		sf::CircleShape tmp(radius2);
+		tmp.setPosition(sf::Vector2f((texture2.getSize().x - texture.getSize().x) / 2 + rand() % texture.getSize().x, (texture2.getSize().y - texture.getSize().y) / 2 + rand() % texture.getSize().y));
+		tmp.setFillColor(sf::Color(rand() % 255, rand() % 255, rand() % 255));
+		tmp.setOrigin(radius2 / 2, radius2 / 2);
+		food.push_back(tmp);
+	}
+
+	finished = true;
+	std::cout << "Betolto szal leall!" << std::endl;
+
+}
+
+Game::Game() : thread(&Game::func, this)
+{
+	finished = false;
+	thread.launch();
 	sf::Vector2f vec(0, 0);
 	sf::Vector2f movement(0, 0);
 	sf::Clock clock;
 	bool first = true;
+	/*************************
 	if (!texture.loadFromFile("palya.jpg") || !texture2.loadFromFile("background.png"))
 	{
 		close();
@@ -46,6 +84,7 @@ Game::Game()
 		tmp.setOrigin(radius2 / 2, radius2 / 2);
 		food.push_back(tmp);
 	}
+	**************************/
 }
 /*
 Game::Game(sf::WindowHandle handle, const sf::ContextSettings & settings)
@@ -57,6 +96,12 @@ Game::Game(sf::WindowHandle handle, const sf::ContextSettings & settings)
 Game::~Game()
 {
 
+}
+
+void Game::threadWait() {
+	std::cout << "A szal varakozik\n";
+	thread.wait();
+	std::cout << "A tolto szal befejezte a varakozast\n";
 }
 
 void Game::resize(sf::Event::SizeEvent event_size, sf::Vector2u window_size) {
@@ -173,18 +218,19 @@ void Game::draw(sf::RenderWindow & window)
 	circle.getPosition().x;
 	window.clear(sf::Color::Black);
 
+	if (finished) {
+		window.setView(view);
+		window.draw(background);
+		window.draw(map);
+		for (int i = 0; i < food.size(); i++) {
+			if ((window.mapPixelToCoords(sf::Vector2i(0, 0)).x + view.getSize().x) > food[i].getPosition().x && window.mapPixelToCoords(sf::Vector2i(0, 0)).x < food[i].getPosition().x &&
+				(window.mapPixelToCoords(sf::Vector2i(0, 0)).y + view.getSize().y) > food[i].getPosition().y && window.mapPixelToCoords(sf::Vector2i(0, 0)).y < food[i].getPosition().y) {
+				window.draw(food[i]);
 
-	window.setView(view);
-	window.draw(background);
-	window.draw(map);
-	for (int i = 0; i < food.size(); i++) {
-		if ((window.mapPixelToCoords(sf::Vector2i(0, 0)).x + view.getSize().x) > food[i].getPosition().x && window.mapPixelToCoords(sf::Vector2i(0, 0)).x < food[i].getPosition().x &&
-			(window.mapPixelToCoords(sf::Vector2i(0, 0)).y + view.getSize().y) > food[i].getPosition().y && window.mapPixelToCoords(sf::Vector2i(0, 0)).y < food[i].getPosition().y) {
-			window.draw(food[i]);
-
+			}
 		}
+		window.draw(circle);
 	}
-	window.draw(circle);
 	window.display();
 }
 

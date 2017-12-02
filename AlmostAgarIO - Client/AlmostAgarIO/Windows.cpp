@@ -47,12 +47,14 @@ Windows::~Windows()
 
 }
 
-
+void Windows::threadWait() {
+	game.threadWait();
+}
 
 void Windows::event_loop(){
 	if (viewid == Views::game_view) {
 	//Játék megnyitása/megjelenítése, kapcsolódás
-		game.connect();
+		///game.connect();
 		//Eseménykezelés
 		while (isOpen() && !viewChanged)
 		{

@@ -19,6 +19,9 @@ public:
 	sf::Vector2f getCirclePos();
 	void setIp(sf::IpAddress _serverIp, sf::Vector2u window_size);
 	void counting(sf::RenderWindow & window);
+	void func();
+	void threadWait();
+
 private:
 	sf::Vector2f vec;
 	sf::Vector2f movement;
@@ -32,6 +35,8 @@ private:
 	sf::Texture texture, texture2;
 	Network *network;
 	Player player;
+	bool finished;
+	sf::Thread thread;
 };
 //Régi:
 /*#include <SFML/Graphics.hpp>

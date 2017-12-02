@@ -38,7 +38,7 @@ int main()
 		std::cout << "Nev: " << playerName->getValue() << std::endl;
 		}*/
 		//window.close();
-
+		window.threadWait();
 		window.setIp(sf::IpAddress(serverIp->getValue()));
 
 		window.changeview(Views::game_view);
