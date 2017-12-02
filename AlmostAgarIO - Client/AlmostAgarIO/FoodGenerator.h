@@ -7,12 +7,12 @@ class FoodGenerator
 private:
 	std::vector<sf::Vector2f> food;
 	float radius;
-	sf::Vector2f background;
-	sf::Vector2f map;
+	sf::Vector2f map_pos;
+	sf::Vector2f map_size;
 
 public:
 	FoodGenerator();
-	FoodGenerator(const sf::Vector2f _background, const sf::Vector2f _map);
+	FoodGenerator(const sf::Vector2f _map_pos, const sf::Vector2f _map_size);
 	~FoodGenerator();
 
 	void generateFood(const int number);

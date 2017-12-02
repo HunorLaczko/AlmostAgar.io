@@ -7,10 +7,10 @@ FoodGenerator::FoodGenerator() {
 	radius = 7.0f;
 }
 
-FoodGenerator::FoodGenerator(const sf::Vector2f _background, const sf::Vector2f _map)
+FoodGenerator::FoodGenerator(const sf::Vector2f _map_pos, const sf::Vector2f _map_size)
 {
-	background = _background;
-	map = _map;
+	map_pos = _map_pos;
+	map_size = _map_size;
 	radius = 7.0f;
 }
 
@@ -24,10 +24,9 @@ void FoodGenerator::generateFood(const int number)
 {
 	srand(time(0));
 	for (int i = 0; i <number; i++) {
-		//sf::CircleShape tmp(radius);
-		sf::Vector2f tmp((background.x- map.x) / 2 + rand() % (int)map.x, (background.y - map.y) / 2 + rand() % (int)map.y);
-		//tmp.setFillColor(sf::Color(rand() % 255, rand() % 255, rand() % 255));
-		//tmp.setOrigin(radius / 2, radius / 2);
+		sf::Vector2f tmp(map_pos.x + rand() % (int) map_size.x, map_pos.y + rand() % (int) map_size.y);
+		//sf::Vector2f tmp((background.x- map.x) / 2 + rand() % (int)map.x, (background.y - map.y) / 2 + rand() % (int)map.y);
+
 		food.push_back(tmp);
 	}
 }
@@ -44,8 +43,7 @@ std::vector<sf::Vector2f> FoodGenerator::getFood()
 
 sf::Vector2f FoodGenerator::updateElement(int index){
 	srand(time(0));
-	std::cout << "MapSize: " << map.x << " " << map.y << "\n";
-	sf::Vector2f tmp((background.x - map.x) / 2 + rand() % (int)map.x, (background.y - map.y) / 2 + rand() % (int)map.y);
+	sf::Vector2f tmp(map_pos.x + rand() % (int)map_size.x, map_pos.y + rand() % (int)map_size.y);
 	food[index] = tmp;
 	return tmp;
 }

@@ -32,7 +32,8 @@ void Game::func() {
 	map.setPosition(1000, 750);
 
 	//kajagenerálás
-	gen = FoodGenerator(sf::Vector2f(background.getLocalBounds().width, background.getLocalBounds().height), sf::Vector2f(map.getLocalBounds().width, map.getLocalBounds().height));
+	//gen = FoodGenerator(sf::Vector2f(background.getLocalBounds().width, background.getLocalBounds().height), sf::Vector2f(map.getLocalBounds().width, map.getLocalBounds().height));
+	gen = FoodGenerator(map.getPosition(), sf::Vector2f(map.getLocalBounds().width, map.getLocalBounds().height));
 	gen.generateFood(1000);
 
 	std::vector<sf::Vector2f> tmpPos = gen.getFood();
