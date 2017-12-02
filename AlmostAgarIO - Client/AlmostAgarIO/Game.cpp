@@ -111,6 +111,9 @@ void Game::threadWait() {
 	std::cout << "A tolto szal befejezte a varakozast\n";
 }
 
+void Game::setFirst() {
+	first = true;
+
 void Game::resize(sf::Event::SizeEvent event_size, sf::Vector2u window_size) {
 	setView(sf::View(sf::FloatRect(0.f, 0.f, (float) event_size.width, (float) event_size.height)));
 	view.reset((sf::FloatRect(circle.getPosition().x - (float) window_size.x / 2, circle.getPosition().y - (float) window_size.y / 2, (float) window_size.x, (float) window_size.y)));
@@ -142,10 +145,19 @@ void Game::disconnect()
 
 void Game::counting(sf::RenderWindow & window)
 {
+	//itt rögtön tudnia kell egy kezdőpontotha először van meghívva, mivel most fix 3000,2000 a szerveer ezért megy jól, randomnál sztem kell egy plusz lekérés ide h tudja rögötn a player postitiont
+	//ha biztosan tudjuk majd át kell írni a kikommentezett verzióra
+	if (first) {
+		//view.setCenter(player.getPosition().x, player.getPosition().y);
+		//view.reset((sf::FloatRect(player.getPosition().x - (float)window.getSize().x / 2, player.getPosition().y - (float)window.getSize().y / 2, (float)window.getSize().x, (float)window.getSize().y)));
+		view.setCenter(3000, 2000);
+		view.reset((sf::FloatRect(3000- (float)window.getSize().x / 2, 2000 - (float)window.getSize().y / 2, (float)window.getSize().x, (float)window.getSize().y)));
+		first = false;
+	}
 	//Számolás
 	sf::Vector2f distance(window.mapPixelToCoords(sf::Mouse::getPosition(window)).x - circle.getPosition().x, window.mapPixelToCoords(sf::Mouse::getPosition(window)).y - circle.getPosition().y);
 	float speed = 2.2f - (0.005f*circle.getRadius());
-	if (speed <= 0.6) speed = 0.6f;
+	if (speed <= 0.6f) speed = 0.6f;
 
 	//std::cout << "Size: " << circle.getRadius() << " Speed: " << speed << std::endl;
 	float length = sqrt(distance.x*distance.x + distance.y*distance.y);
@@ -166,10 +178,11 @@ void Game::counting(sf::RenderWindow & window)
 		network->sendPosition(sf::Vector2f(window.mapPixelToCoords(sf::Mouse::getPosition(window)).x, window.mapPixelToCoords(sf::Mouse::getPosition(window)).y));
 		oldPos = player.getPosition();
 		network->getResponse();
-		if (first) {
+		/*if (first) {
+			//view.setCenter(player.getPosition().x - (float)window.getSize().x / 2, player.getPosition().y - (float)window.getSize().y / 2);
 			view.reset((sf::FloatRect(player.getPosition().x - (float) window.getSize().x / 2, player.getPosition().y - (float) window.getSize().y / 2, (float) window.getSize().x, (float) window.getSize().y)));
 			first = false;
-		}
+		}*/
 		sf::Vector2f vecFromServer = player.getPosition() - oldPos;
 		//std::cout << "vec\fromServer: " << vecFromServer.x << "," << vecFromServer.y << " vecFromClient: " << vec.x << "," << vec.y << " dist: " << distance.x << "," << distance.y << " length: " << length << "\n";
 		circle.setPosition(player.getPosition());

@@ -113,6 +113,7 @@ void Windows::event_loop(){
 		}
 		//Kilépés a játékból, kapcsolat bontás
 		//first = true;
+		game.setFirst();
 		game.disconnect();//Átraktam ide
 	}
 	else {

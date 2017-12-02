@@ -21,12 +21,13 @@ public:
 	void counting(sf::RenderWindow & window);
 	void func();
 	void threadWait();
+	void setFirst();
 
 private:
 	sf::Vector2f vec;
 	sf::Vector2f movement;
 	sf::Clock clock;
-	bool first;
+	bool first; //kamera nézetet reseteli, ha first=true, mindig meg kell hivni a setfirst-t hogy ha új játékot kezdünk
 	sf::View view;
 
 	std::vector<sf::CircleShape> food;
