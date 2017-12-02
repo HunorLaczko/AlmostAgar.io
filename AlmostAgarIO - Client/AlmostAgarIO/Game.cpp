@@ -113,6 +113,7 @@ void Game::threadWait() {
 
 void Game::setFirst() {
 	first = true;
+}
 
 void Game::resize(sf::Event::SizeEvent event_size, sf::Vector2u window_size) {
 	setView(sf::View(sf::FloatRect(0.f, 0.f, (float) event_size.width, (float) event_size.height)));
