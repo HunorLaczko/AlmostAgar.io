@@ -28,8 +28,10 @@ private:
 	sf::Clock clock;
 	bool first;
 	sf::View view;
+
 	std::vector<sf::CircleShape> food;
-	//FoodGenerator gen;
+	FoodGenerator gen;
+
 	sf::CircleShape circle;
 	sf::Sprite map, background;
 	sf::Texture texture, texture2;

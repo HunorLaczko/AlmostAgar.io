@@ -98,5 +98,6 @@ int main()
 		start = false;*/
 		//window.changeview(0);
 	}
+	window.threadWait();
 	return 0;
 }

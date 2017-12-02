@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "FoodGenerator.h"
 #include <random>
+#include <iostream>
 
 FoodGenerator::FoodGenerator() {
 	radius = 7.0f;
@@ -43,6 +44,7 @@ std::vector<sf::Vector2f> FoodGenerator::getFood()
 
 sf::Vector2f FoodGenerator::updateElement(int index){
 	srand(time(0));
+	std::cout << "MapSize: " << map.x << " " << map.y << "\n";
 	sf::Vector2f tmp((background.x - map.x) / 2 + rand() % (int)map.x, (background.y - map.y) / 2 + rand() % (int)map.y);
 	food[index] = tmp;
 	return tmp;
