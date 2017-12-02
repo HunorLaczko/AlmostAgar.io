@@ -1,5 +1,7 @@
 #include "stdafx.h"
 #include "Windows.h"
+#include <SFML/System/Time.hpp>
+#include <SFML/System/Sleep.hpp>
 
 
 /*(Game osztályban van)
@@ -126,6 +128,7 @@ void Windows::event_loop(){
 		else if(viewid == Views::game_over_menu_view) {
 			widgets = game_over;
 		}
+		sf::Time t = sf::milliseconds(30);
 		while (isOpen() && !viewChanged)
 		{
 			sf::Event event;
@@ -172,6 +175,7 @@ void Windows::event_loop(){
 				widgets[i]->draw(*this);
 			}
 			display();
+			sf::sleep(t);
 		}
 	}
 	viewChanged = false;
