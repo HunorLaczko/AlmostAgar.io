@@ -40,3 +40,27 @@ sf::Vector2u Player::getWindowSize()
 {
 	return windowSize;
 }
+
+void Player::setRadius(float _radius)
+{
+	radius = _radius;
+}
+
+float Player::getRadius()
+{
+	return radius;
+}
+
+/*
+std::vector<sf::Vector2f> Player::getFood()
+{
+	std::vector<sf::Vector2f> tmp = food;
+	food.clear();
+	return tmp;
+}
+
+void Player::setFood(const std::vector<sf::Vector2f> _food)
+{
+	food = _food;
+}
+*/

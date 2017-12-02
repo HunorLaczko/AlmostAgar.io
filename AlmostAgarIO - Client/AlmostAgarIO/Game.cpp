@@ -33,7 +33,7 @@ void Game::func() {
 
 	//kajagenerálás
 	//gen = FoodGenerator(sf::Vector2f(background.getLocalBounds().width, background.getLocalBounds().height), sf::Vector2f(map.getLocalBounds().width, map.getLocalBounds().height));
-	gen = FoodGenerator(map.getPosition(), sf::Vector2f(map.getLocalBounds().width, map.getLocalBounds().height));
+	/*gen = FoodGenerator(map.getPosition(), sf::Vector2f(map.getLocalBounds().width, map.getLocalBounds().height));
 	gen.generateFood(1000);
 
 	std::vector<sf::Vector2f> tmpPos = gen.getFood();
@@ -44,6 +44,7 @@ void Game::func() {
 		circ.setOrigin(gen.getFoodRadius() / 2, gen.getFoodRadius() / 2);
 		food.push_back(circ);
 	}
+	*/
 
 	finished = true;
 	std::cout << "Betolto szal leall!" << std::endl;
@@ -59,7 +60,7 @@ Game::Game() : thread(&Game::func, this)
 	sf::Vector2f movement(0, 0);
 	sf::Clock clock;
 	bool first = true;
-	network = new Network();
+	network = new Network(this);
 	/*************************
 	if (!texture.loadFromFile("palya.jpg") || !texture2.loadFromFile("background.png"))
 	{
@@ -114,6 +115,22 @@ void Game::threadWait() {
 
 void Game::setFirst() {
 	first = true;
+}
+
+void Game::setFood(const std::vector<sf::Vector2f>& _food, float foodRadius)
+{
+	for (int i = 0; i < 1000; i++) {
+		sf::CircleShape circ(foodRadius);
+		circ.setPosition(_food[i]);
+		circ.setFillColor(sf::Color(rand() % 255, rand() % 255, rand() % 255));
+		circ.setOrigin(foodRadius / 2, foodRadius / 2);
+		food.push_back(circ);
+	}
+}
+
+void Game::updateFood(int index, sf::Vector2f newFood)
+{
+	food[index].setPosition(newFood);
 }
 
 void Game::resize(sf::Event::SizeEvent event_size, sf::Vector2u window_size) {
@@ -189,13 +206,25 @@ void Game::counting(sf::RenderWindow & window)
 		//std::cout << "vec\fromServer: " << vecFromServer.x << "," << vecFromServer.y << " vecFromClient: " << vec.x << "," << vec.y << " dist: " << distance.x << "," << distance.y << " length: " << length << "\n";
 		circle.setPosition(player.getPosition());
 		clock.restart();
+
+		//nem tudom ezt most valamibe bele kell-e rakni
+		//meret valtoztatas
+		circle.setRadius(player.getRadius());
+		std::cout << "current radius: " << player.getRadius() << std::endl;
+		circle.setOrigin(player.getRadius(), player.getRadius());
+		if ((int)(circle.getRadius() - 30) % 5 == 0 && (circle.getRadius() - 30) == (int)(circle.getRadius() - 30)) {
+			//view.zoom(ZOOM);
+		}
 	}
+
+	
 
 
 	//circle.setPosition(circle.getPosition() + vec);
 
 	//Egyéb számolás, ütközés a kajával, majd méret növelés
 	//bool changed = false;
+	/*
 	for (int i = 0; i < food.size(); i++) {
 		sf::Vector2f distance2(circle.getPosition().x - food[i].getPosition().x, circle.getPosition().y - food[i].getPosition().y);
 		float lenght2 = sqrt(distance2.x*distance2.x + distance2.y*distance2.y);
@@ -213,7 +242,7 @@ void Game::counting(sf::RenderWindow & window)
 			}
 
 		}
-	}
+	}*/
 	//food = gen.getFood();
 	//if(changed) gen.setFood(food);
 	

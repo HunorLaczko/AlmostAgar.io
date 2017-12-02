@@ -5,6 +5,10 @@
 
 Network::Network()
 {
+}
+
+Network::Network(Game* _game) : game(_game)
+{
 	
 }
 
@@ -49,8 +53,10 @@ void Network::connectPlayer(Player *_player)
 			if (type == 0) //connected to server
 			{
 				int id;
-				packet >> id;
+				float radius;
+				packet >> id >> radius;
 				player->setId(id);
+				player->setRadius(radius);
 				std::cout << "received id: " << id << "\n";
 			}
 		}
@@ -73,6 +79,20 @@ void Network::init(sf::Vector2f _mapSize, sf::Vector2f _mapPosition, sf::Vector2
 	outPacket << 3 << player->getId() << _mapSize.x << _mapSize.y << _mapPosition.x << _mapPosition.y << _windowSize.x << _windowSize.y;;
 	//std::cout << udpSocket.send(outPacket, serverIp, serverUdpPortSend) << std::endl;
 	tcpSocket.send(outPacket);
+	sf::Packet foodPacket;
+	tcpSocket.receive(foodPacket);
+	std::vector<sf::Vector2f> food;
+	size_t foodSize;
+	float foodRadius;
+	sf::Vector2f tmp;
+	foodPacket >> foodRadius;
+	foodPacket >> foodSize;
+	for (size_t i = 0; i < foodSize; ++i)
+	{
+		foodPacket >> tmp.x >> tmp.y;
+		food.push_back(tmp);
+	}
+	game->setFood(food, foodRadius);
 }
 
 void Network::sendPosition(sf::Vector2f position)
@@ -99,9 +119,25 @@ void Network::getResponse()
 		{
 			sf::Vector2f pos;
 			packet >> id >> pos.x >> pos.y;
-			std::cout << "oldPos: " << player->getPosition().x << "," << player->getPosition().y << " newPos: " << pos.x << "," << pos.y << "\n";
+			//std::cout << "oldPos: " << player->getPosition().x << "," << player->getPosition().y << " newPos: " << pos.x << "," << pos.y << "\n";
 			player->setPosition(pos);
-			std::cout << "received new location\n";
+			//std::cout << "received new location\n";
+			break;
+		}
+		case 4:
+		{
+			int index;
+			sf::Vector2f newFood;
+			packet >> index >> newFood.x >> newFood.y;
+			game->updateFood(index, newFood);
+			break;
+		}
+		case 5:
+		{
+			float radius;
+			packet >> radius;
+			player->setRadius(radius);
+			std::cout << "updated radius\n";
 			break;
 		}
 			

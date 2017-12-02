@@ -5,7 +5,7 @@
 #include <algorithm>
 
 
-Server::Server()
+Server::Server() : foodGenerator(sf::Vector2f(1000,750), sf::Vector2f(4000,3000))
 {
 	id = 0;
 	listener.listen(port);
@@ -15,6 +15,8 @@ Server::Server()
 	udpSocket.setBlocking(false);
 	selector.add(udpSocket);
 	clock.restart();
+	foodGenerator.generateFood(1000);
+	food = foodGenerator.getFood();
 }
 
 
@@ -54,10 +56,13 @@ void Server::run()
 					packet << 0;
 					//packet << players.back().getId();
 					packet << id - 1;
+					packet << players.at(id - 1).getRadius();
 					if (client->send(packet) != sf::Socket::Done) //Send client id
 						std::cout << "Error sending id" << std::endl;
 					else
 						std::cout << "\nId sent to " << client->getRemoteAddress() << " on port " << client->getRemotePort() << "\n";
+					//players.at(id - 1).init(foodGenerator.getFood());
+					//setFood(id - 1);
 				}
 
 			}			
@@ -84,6 +89,7 @@ void Server::run()
 					{
 						packet >> id >> pos.x >> pos.y;
 						updatePlayerPosition(id, pos);
+						updateFood(id);
 						break; 
 					}
 					case 3:
@@ -119,6 +125,7 @@ void Server::run()
 							packet >> type;
 							if (type == 3)
 							{
+								//initializing parameters from client
 								int id;
 								sf::Vector2f _mapSize;
 								sf::Vector2f _mapPosition;
@@ -128,6 +135,17 @@ void Server::run()
 								player->setMapSize(_mapSize);
 								player->setMapPosition(_mapPosition);
 								player->setWindowSize(_windowSize);
+								
+								//sending whole food vector to client
+								sf::Packet foodPacket;
+								foodPacket << foodGenerator.getFoodRadius();
+								foodPacket << food.size();
+								for (sf::Vector2f f : food)
+								{
+									foodPacket << f.x << f.y;
+								}
+								(*it).second.getTcpSocket()->send(foodPacket);
+
 
 								//player->setPosition(sf::Vector2f((_mapPosition.x+_mapSize.x/2),(_mapPosition.y+_mapSize.y/2)));
 								std::cout << "\n\n\nreceived init params: "<<player->getPosition().x<<", "<<player->getPosition().y<<"\n\n\n\n";
@@ -207,8 +225,8 @@ void Server::updatePlayerPosition(int id, sf::Vector2f pos)
 
 	sf::Vector2f vec;
 	sf::Vector2f distance(pos.x - player->getPosition().x, pos.y - player->getPosition().y);
-	float speed = 2.2 - (0.005 * player->getRadius());
-	if (speed <= 0.06) speed = 0.06;
+	float speed = (float)(2.2 - (0.005 * player->getRadius()));
+	if (speed <= 0.06f) speed = 0.06f;
 
 	//std::cout << "Size: " << circle.getRadius() << " Speed: " << speed << std::endl;
 	float length = sqrt(distance.x*distance.x + distance.y*distance.y);
@@ -221,9 +239,6 @@ void Server::updatePlayerPosition(int id, sf::Vector2f pos)
 	if (abs(distance.y) < 2 || ((player->getPosition().y - vec.y) <= player->getMapPosition().y && vec.y <= 0) || ((player->getPosition().y - vec.y) >= (player->getMapPosition().y + player->getMapSize().y) && vec.y >= 0)/*|| !(window.mapPixelToCoords(sf::Mouse::getPosition(window)).y > background.getPosition().y && window.mapPixelToCoords(sf::Mouse::getPosition(window)).y < (background.getPosition().y + texture.getSize().y))*/) {
 		vec.y = 0;
 	}
-
-
-
 	//std::cout << "playerPos: " << player->getPosition().x << "," << player->getPosition().y << "\n";
 	pos = player->getPosition() + vec;
 	//std::cout << "vec: " << vec.x << "," << vec.y << " dist: " << distance.x << "," << distance.y << " length: " << length << "\n";
@@ -231,9 +246,35 @@ void Server::updatePlayerPosition(int id, sf::Vector2f pos)
 	player->setPosition(pos);
 	//std::cout << "playerPos: " << player->getPosition().x << "," << player->getPosition().y << "\n";
 
-	//std::cout << "received player location: (" << pos.x << "," << pos.y << ")\n";
+	
+}
 
-	//sf::Packet outPacket;
-	//outPacket << 2 << id << pos.x + 1 << pos.y + 1;
-	//std::cout << "responding: " << udpSocket.send(outPacket, sender, udpPortSend) << std::endl;
+void Server::setFood(unsigned int id)
+{
+}
+
+void Server::updateFood(unsigned int id)
+{
+	Player* player = &players.at(id);
+	for (int i = 0; i < food.size(); i++) {
+		sf::Vector2f distance(player->getPosition().x - food[i].x, player->getPosition().y - food[i].y);
+		float lenght = sqrt(distance.x*distance.x + distance.y*distance.y);
+
+		//check if player ate a food
+		if (lenght < (player->getRadius() + foodGenerator.getFoodRadius())) {
+			food[i] = foodGenerator.updateElement(i);
+			player->setRadius(player->getRadius() + 0.5f);
+			sf::Packet radiusPacket;
+			radiusPacket << 5 << player->getRadius();
+			udpSocket.send(radiusPacket, player->getPlayerIp(), udpPortSend);
+
+			//sending food change to every player
+			for (std::map<int, Player>::iterator it = players.begin(); it != players.end(); it++)
+			{
+				sf::Packet outPacket;
+				outPacket << 4 << i << food[i].x << food[i].y;
+				udpSocket.send(outPacket, it->second.getPlayerIp(), udpPortSend);
+			}			
+		}
+	}
 }

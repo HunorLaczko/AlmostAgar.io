@@ -1,10 +1,13 @@
 #pragma once
 #include "SFML\System.hpp"
+#include <vector>
 class Player
 {
 	unsigned int id;
 	sf::Vector2f position;
 	sf::Vector2u windowSize;
+	float radius;
+	//std::vector<sf::Vector2f> food;
 public:
 	Player();
 	~Player();
@@ -17,5 +20,10 @@ public:
 
 	void setWindowSize(sf::Vector2u _windowSize);
 	sf::Vector2u getWindowSize();
+
+	void setRadius(float _radius);
+	float getRadius();
+	/*std::vector<sf::Vector2f> getFood();
+	void setFood(const std::vector<sf::Vector2f> _food);*/
 };
 

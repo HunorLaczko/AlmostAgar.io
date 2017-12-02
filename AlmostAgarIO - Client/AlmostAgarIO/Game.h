@@ -4,6 +4,9 @@
 #include "Network.h"
 #include "Player.h"
 #include<SFML/Network.hpp>
+
+class Network;
+
 //#include "C:\SFML\include\SFML\Graphics\RenderWindow.hpp"
 class Game :
 	public sf::RenderWindow
@@ -22,6 +25,8 @@ public:
 	void func();
 	void threadWait();
 	void setFirst();
+	void setFood(const std::vector<sf::Vector2f>& _food, float foodRadius);
+	void updateFood(int index, sf::Vector2f newFood);
 
 private:
 	sf::Vector2f vec;
@@ -31,12 +36,12 @@ private:
 	sf::View view;
 
 	std::vector<sf::CircleShape> food;
-	FoodGenerator gen;
+	//FoodGenerator gen;
 
 	sf::CircleShape circle;
 	sf::Sprite map, background;
 	sf::Texture texture, texture2;
-	Network *network;
+	Network* network;
 	Player player;
 	bool finished;
 	sf::Thread thread;

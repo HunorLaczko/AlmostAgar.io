@@ -4,6 +4,7 @@
 #include <list>
 #include <map>
 #include "Player.h"
+#include "FoodGenerator.h"
 
 class Server
 {
@@ -17,11 +18,14 @@ class Server
 	unsigned int id;
 	sf::Vector2f position;
 	sf::Clock clock;
+	FoodGenerator foodGenerator;
+	std::vector<sf::Vector2f> food;
 
 	bool running;
 
 	void updatePlayerPosition(int id, sf::Vector2f pos);
-
+	void setFood(unsigned int id);
+	void updateFood(unsigned int id);
 public:
 	Server();
 	~Server();

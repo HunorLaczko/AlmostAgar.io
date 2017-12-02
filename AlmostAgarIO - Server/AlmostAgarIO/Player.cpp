@@ -2,16 +2,15 @@
 #include "Player.h"
 #include <SFML/Network.hpp>
 
-Player::Player()
-{
-}
 
-Player::Player(int _id, sf::Vector2f _position, sf::TcpSocket *_tcpSocket) 
+Player::Player(int _id, sf::Vector2f _position, sf::TcpSocket *_tcpSocket)
+	: id(_id), position(_position), tcpSocket(_tcpSocket), radius(30),
+	name("unknown"), udpSocket(nullptr), playerIp(sf::IpAddress()),port(0),
+	speed(sf::Vector2f(0, 0)), velocity(sf::Vector2f(0, 0)), points(0), 
+	mapSize(sf::Vector2f(0, 0)), mapPosition(sf::Vector2f(0, 0)),
+	windowSize(sf::Vector2f(0, 0)), mousePosition(sf::Vector2f(0, 0))
 {
-	id = _id;
-	position = _position;
-	tcpSocket = _tcpSocket;
-	radius = 30;
+	
 }
 
 Player::~Player()
@@ -73,12 +72,12 @@ void Player::setWindowSize(sf::Vector2f _windowSize)
 	windowSize = _windowSize;
 }
 
-unsigned int Player::getRadius()
+float Player::getRadius()
 {
 	return radius;
 }
 
-void Player::setRadius(unsigned int _radius)
+void Player::setRadius(float _radius)
 {
 	radius = _radius;
 }
@@ -105,14 +104,29 @@ void Player::setMousePosition(sf::Vector2f _mousePosition)
 
 void Player::init(std::vector<sf::Vector2f>& _food)
 {
+	/*
 	for (sf::Vector2f f : _food)
 	{
-		//if(f.x > )
+		if (f.x > position.x - (windowSize.x / 2 - 50) && f.x < position.x + (windowSize.x / 2 + 50) &&
+			f.y > position.y - (windowSize.y / 2 - 50) && f.y < position.y + (windowSize.y / 2 + 50))
+		{
+			food.insert(f);
+		}
 	}
+	*/
+	food = _food;
 }
 
-void Player::updateFood(sf::Vector2f toDelete, sf::Vector2f toAdd)
+void Player::updateFood(int index, sf::Vector2f newPosition)
 {
+	/*
+	food.erase(food.find(toDelete));
+	if (toAdd.x > position.x - (windowSize.x / 2 - 50) && toAdd.x < position.x + (windowSize.x / 2 + 50) &&
+		toAdd.y > position.y - (windowSize.y / 2 - 50) && toAdd.y < position.y + (windowSize.y / 2 + 50))
+	{
+		food.insert(toAdd);
+	}*/
+
 }
 
 bool operator==(const Player &a, const Player &b)
@@ -121,3 +135,5 @@ bool operator==(const Player &a, const Player &b)
 		return true;
 	return false;
 }
+
+
