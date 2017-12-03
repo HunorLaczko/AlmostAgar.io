@@ -183,6 +183,20 @@ void Server::run()
 				outPacket << 2 << it->first << it->second.getPosition().x << it->second.getPosition().y;
 				//std::cout << "sent position: " << it->second.getPosition().x << "," << it->second.getPosition().y << "\n";
 				udpSocket.send(outPacket, it->second.getPlayerIp(), udpPortSend);
+
+				//sending changed food
+				if (foodToUpdate.size() != 0)
+				{
+					sf::Packet foodPacket;
+					foodPacket << 4 << foodToUpdate.size();
+					for (std::unordered_map<int, sf::Vector2f>::iterator it = foodToUpdate.begin(); it != foodToUpdate.end(); it++)
+					{
+						foodPacket << it->first << it->second.x << it->second.y;
+					}
+					udpSocket.send(foodPacket, it->second.getPlayerIp(), udpPortSend);
+					foodToUpdate.clear();
+				}
+				
 			}
 			clock.restart();
 			//std::cout << "sent new positions\n";
@@ -256,25 +270,27 @@ void Server::setFood(unsigned int id)
 void Server::updateFood(unsigned int id)
 {
 	Player* player = &players.at(id);
+	float foodRadius = foodGenerator.getFoodRadius();
 	for (int i = 0; i < food.size(); i++) {
 		sf::Vector2f distance(player->getPosition().x - food[i].x, player->getPosition().y - food[i].y);
 		float lenght = sqrt(distance.x*distance.x + distance.y*distance.y);
 
 		//check if player ate a food
-		if (lenght < (player->getRadius() + foodGenerator.getFoodRadius())) {
+		if (lenght < (player->getRadius() + foodRadius)) {
 			food[i] = foodGenerator.updateElement(i);
 			player->setRadius(player->getRadius() + 0.5f);
 			sf::Packet radiusPacket;
 			radiusPacket << 5 << player->getRadius();
 			udpSocket.send(radiusPacket, player->getPlayerIp(), udpPortSend);
+			foodToUpdate.emplace(i, food[i]);
 
 			//sending food change to every player
-			for (std::map<int, Player>::iterator it = players.begin(); it != players.end(); it++)
+			/*for (std::map<int, Player>::iterator it = players.begin(); it != players.end(); it++)
 			{
 				sf::Packet outPacket;
 				outPacket << 4 << i << food[i].x << food[i].y;
 				udpSocket.send(outPacket, it->second.getPlayerIp(), udpPortSend);
-			}			
+			}	*/		
 		}
 	}
 }

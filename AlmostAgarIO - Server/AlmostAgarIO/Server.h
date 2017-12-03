@@ -3,6 +3,7 @@
 #include <SFML\System.hpp>
 #include <list>
 #include <map>
+#include <unordered_map>
 #include "Player.h"
 #include "FoodGenerator.h"
 
@@ -20,6 +21,7 @@ class Server
 	sf::Clock clock;
 	FoodGenerator foodGenerator;
 	std::vector<sf::Vector2f> food;
+	std::unordered_map<int, sf::Vector2f> foodToUpdate;
 
 	bool running;
 

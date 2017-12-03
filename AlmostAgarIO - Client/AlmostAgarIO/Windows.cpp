@@ -55,6 +55,7 @@ void Windows::threadWait() {
 
 void Windows::event_loop(){
 	if (viewid == Views::game_view) {
+	//	sf::sleep(sf::Time(sf::milliseconds(10)));
 	//Játék megnyitása/megjelenítése, kapcsolódás
 		game.connect();
 		//Eseménykezelés

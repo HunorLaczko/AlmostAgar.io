@@ -2,6 +2,7 @@
 #include "Network.h"
 #include<iostream>
 #include <thread>
+#include <unordered_map>
 
 Network::Network()
 {
@@ -126,10 +127,20 @@ void Network::getResponse()
 		}
 		case 4:
 		{
-			int index;
+			/*int index;
 			sf::Vector2f newFood;
 			packet >> index >> newFood.x >> newFood.y;
-			game->updateFood(index, newFood);
+			game->updateFood(index, newFood);*/
+			int index;
+			sf::Vector2f newFood;
+			size_t tmpSize;
+			packet >> tmpSize;
+			for (size_t i = 0; i < tmpSize; ++i)
+			{
+				packet >> index >> newFood.x >> newFood.y;
+				game->updateFood(index, newFood);
+			}
+			std::cout << "received food update\n";
 			break;
 		}
 		case 5:

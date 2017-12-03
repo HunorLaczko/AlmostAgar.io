@@ -199,7 +199,7 @@ void Game::counting(sf::RenderWindow & window)
 	if (clock.getElapsedTime() > sf::milliseconds(33)) {
 		network->sendPosition(sf::Vector2f(window.mapPixelToCoords(sf::Mouse::getPosition(window)).x, window.mapPixelToCoords(sf::Mouse::getPosition(window)).y));
 		oldPos = player.getPosition();
-		network->getResponse();
+		
 		/*if (first) {
 			//view.setCenter(player.getPosition().x - (float)window.getSize().x / 2, player.getPosition().y - (float)window.getSize().y / 2);
 			view.reset((sf::FloatRect(player.getPosition().x - (float) window.getSize().x / 2, player.getPosition().y - (float) window.getSize().y / 2, (float) window.getSize().x, (float) window.getSize().y)));
@@ -210,10 +210,8 @@ void Game::counting(sf::RenderWindow & window)
 		circle.setPosition(player.getPosition());
 		clock.restart();
 
-		//nem tudom ezt most valamibe bele kell-e rakni
-
 	}
-
+	network->getResponse();
 	//meret valtoztatas
 	circle.setRadius(player.getRadius());
 	circle.setOrigin(player.getRadius(), player.getRadius());
