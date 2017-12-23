@@ -31,7 +31,7 @@ public:
 	void init(sf::Vector2f _mapSize, sf::Vector2f _mapPosition, sf::Vector2f _windowSize);
 	void sendPosition(sf::Vector2f position);
 	void getResponse();
-	void sendKey(char key);
+	void sendKey(char key, bool active);
 
 	void run();
 };
