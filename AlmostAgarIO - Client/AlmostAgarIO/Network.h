@@ -9,8 +9,8 @@ class Network
 {
 	sf::IpAddress serverIp;
 	unsigned short serverTcpPort = 50000;
-	unsigned short serverUdpPortSend = 50005;
-	unsigned short serverUdpPortReceive = 50006;
+	unsigned short serverUdpPortSend = 50015;
+	unsigned short serverUdpPortReceive = 50016;
 	sf::TcpSocket tcpSocket;
 	sf::UdpSocket udpSocket;
 

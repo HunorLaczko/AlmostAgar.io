@@ -14,8 +14,8 @@ class Server
 	std::map<int, Player> players;
 	sf::SocketSelector selector;
 	unsigned short port = 50000;
-	unsigned short udpPortReceive = 50005;
-	unsigned short udpPortSend = 50006;
+	unsigned short udpPortReceive = 50015;
+	unsigned short udpPortSend = 50016;
 	unsigned int id;
 	sf::Vector2f position;
 	sf::Clock clock;
