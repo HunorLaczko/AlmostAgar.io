@@ -160,6 +160,7 @@ void Game::connect()
 void Game::disconnect()
 {
 	network->disconnectPlayer();
+	food.clear();
 	//delete network;
 }
 
