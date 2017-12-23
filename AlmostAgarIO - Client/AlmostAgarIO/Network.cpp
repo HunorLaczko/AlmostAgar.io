@@ -158,6 +158,10 @@ void Network::getResponse()
 	//std::cout << udpSocket.send(outPacket, serverIp, serverUdpPortSend) << std::endl;
 }
 
+void Network::sendKey(char key, bool active)
+{
+}
+
 void Network::run()
 {
 
