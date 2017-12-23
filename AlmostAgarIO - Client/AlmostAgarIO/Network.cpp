@@ -32,7 +32,7 @@ void Network::setIp(sf::IpAddress _serverIp)
 void Network::connectPlayer(Player *_player)
 {
 	player = _player;
-	udpSocket.bind(serverUdpPortReceive, serverIp);
+	udpSocket.bind(serverUdpPortReceive); // .bind(serverUdpPortReceive, serverIP)
 	udpSocket.setBlocking(false);
 
 	sf::Socket::Status status = tcpSocket.connect(serverIp, serverTcpPort);
