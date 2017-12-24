@@ -146,6 +146,8 @@ void Server::run()
 								}
 								(*it).second.getTcpSocket()->send(foodPacket);
 
+								
+
 
 								//player->setPosition(sf::Vector2f((_mapPosition.x+_mapSize.x/2),(_mapPosition.y+_mapSize.y/2)));
 								std::cout << "\n\n\nreceived init params: "<<player->getPosition().x<<", "<<player->getPosition().y<<"\n\n\n\n";
@@ -177,12 +179,18 @@ void Server::run()
 		if (clock.getElapsedTime() > sf::milliseconds(33) )
 		{
 			//std::cout << "nr of players: " << players.size() << "\n";
+			//generating packet with all players' location
+			sf::Packet positionPacket;
+			positionPacket << 2 << players.size();
 			for (std::map<int, Player>::iterator it = players.begin(); it != players.end(); it++)
 			{
-				sf::Packet outPacket;
-				outPacket << 2 << it->first << it->second.getPosition().x << it->second.getPosition().y;
-				//std::cout << "sent position: " << it->second.getPosition().x << "," << it->second.getPosition().y << "\n";
-				udpSocket.send(outPacket, it->second.getPlayerIp(), udpPortSend);
+				positionPacket << it->first << it->second.getPosition().x << it->second.getPosition().y;
+			}
+
+			for (std::map<int, Player>::iterator it = players.begin(); it != players.end(); it++)
+			{
+				//sending players' positions
+				udpSocket.send(positionPacket, it->second.getPlayerIp(), udpPortSend);
 
 				//sending changed food
 				if (foodToUpdate.size() != 0)
@@ -202,34 +210,7 @@ void Server::run()
 			//std::cout << "sent new positions\n";
 		}
 
-		/*
-		
-		sf::Packet packet;
-		sf::IpAddress sender;
-		if (udpSocket.receive(packet, sender, udpPortReceive) == sf::Socket::Done)
-		{
-			std::cout << "udp socket received something\n";
-			int type;
-			packet >> type;
-
-			switch (type)
-			{
-				//received location
-			case 1:
-				int id;
-				sf::Vector2f pos;
-				packet >> id >> pos.x >> pos.y;
-
-				sf::Packet outPacket;
-				outPacket << 2 << id << pos.x + 1 << pos.y << +1;
-				udpSocket.send(packet, sender, udpPortSend);
-				break;
-			}
-
-			std::cout << type << std::endl;
-		
-		}
-		*/
+	
 	}
 }
 

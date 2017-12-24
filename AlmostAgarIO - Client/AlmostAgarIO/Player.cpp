@@ -62,6 +62,21 @@ void Player::setChange(bool _change) {
 	changed = _change;
 }
 
+std::unordered_map<int, Player> Player::getEnemies()
+{
+	return enemies;
+}
+
+void Player::setEnemies(std::unordered_map<int, Player> _enemies)
+{
+	enemies = _enemies;
+}
+
+void Player::updateEnemy(int id, sf::Vector2f position)
+{
+	enemies.at(id).setPosition(position);
+}
+
 /*
 std::vector<sf::Vector2f> Player::getFood()
 {

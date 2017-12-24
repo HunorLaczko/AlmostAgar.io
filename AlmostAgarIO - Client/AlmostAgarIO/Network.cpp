@@ -76,10 +76,13 @@ void Network::disconnectPlayer()
 
 void Network::init(sf::Vector2f _mapSize, sf::Vector2f _mapPosition, sf::Vector2f _windowSize)
 {
+	//sending initializing parameters
 	sf::Packet outPacket;
 	outPacket << 3 << player->getId() << _mapSize.x << _mapSize.y << _mapPosition.x << _mapPosition.y << _windowSize.x << _windowSize.y;;
 	//std::cout << udpSocket.send(outPacket, serverIp, serverUdpPortSend) << std::endl;
 	tcpSocket.send(outPacket);
+
+	//receiving initially the whole food vector
 	sf::Packet foodPacket;
 	tcpSocket.receive(foodPacket);
 	std::vector<sf::Vector2f> food;
@@ -119,9 +122,24 @@ void Network::getResponse()
 		case 2:
 		{
 			sf::Vector2f pos;
-			packet >> id >> pos.x >> pos.y;
+			size_t playersSize;
+			int myId = player->getId();
+			packet >> playersSize;
+			for (size_t i = 0; i < playersSize; i++)
+			{
+				packet >> id >> pos.x >> pos.y;
+				if (id == myId)
+				{
+					player->setPosition(pos);
+				}
+				else
+				{
+					player->updateEnemy(id, pos);
+				}
+			}
+			
 			//std::cout << "oldPos: " << player->getPosition().x << "," << player->getPosition().y << " newPos: " << pos.x << "," << pos.y << "\n";
-			player->setPosition(pos);
+			
 			//std::cout << "received new location\n";
 			break;
 		}
