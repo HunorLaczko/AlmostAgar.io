@@ -187,26 +187,37 @@ void Server::run()
 				positionPacket << it->first << it->second.getPosition().x << it->second.getPosition().y;
 			}
 
+			sf::Packet foodPacket;
+			foodPacket << 4 << foodToUpdate.size();
+			for (std::unordered_map<int, sf::Vector2f>::iterator it = foodToUpdate.begin(); it != foodToUpdate.end(); it++)
+			{
+				foodPacket << it->first << it->second.x << it->second.y;
+			}
+
 			for (std::map<int, Player>::iterator it = players.begin(); it != players.end(); it++)
 			{
 				//sending players' positions
 				udpSocket.send(positionPacket, it->second.getPlayerIp(), udpPortSend);
-
+		
+			
+				///itt nem csak a elso jatekos kapja meg a foodto updatet?? mert a clear utan ez tuti ures lesz de az nem 
 				//sending changed food
 				if (foodToUpdate.size() != 0)
 				{
-					sf::Packet foodPacket;
+					/*sf::Packet foodPacket;
 					foodPacket << 4 << foodToUpdate.size();
 					for (std::unordered_map<int, sf::Vector2f>::iterator it = foodToUpdate.begin(); it != foodToUpdate.end(); it++)
 					{
 						foodPacket << it->first << it->second.x << it->second.y;
-					}
+					}*/
 					udpSocket.send(foodPacket, it->second.getPlayerIp(), udpPortSend);
-					foodToUpdate.clear();
+					//foodToUpdate.clear();
 				}
-				
+			  	
 			}
 			clock.restart();
+			foodToUpdate.clear();
+
 			//std::cout << "sent new positions\n";
 		}
 
@@ -240,8 +251,6 @@ void Server::updatePlayerPosition(int id, sf::Vector2f pos)
 	//std::cout << "vec: " << vec.x << "," << vec.y << " pos: " << pos.x << "," << pos.y << "\n";
 	player->setPosition(pos);
 	//std::cout << "playerPos: " << player->getPosition().x << "," << player->getPosition().y << "\n";
-
-	
 }
 
 void Server::setFood(unsigned int id)

@@ -166,6 +166,8 @@ void Game::disconnect()
 
 void Game::counting(sf::RenderWindow & window)
 {
+	// TODO Huni
+
 	//itt rögtön tudnia kell egy kezdőpontotha először van meghívva, mivel most fix 3000,2000 a szerveer ezért megy jól, randomnál sztem kell egy plusz lekérés ide h tudja rögötn a player postitiont
 	//ha biztosan tudjuk majd át kell írni a kikommentezett verzióra
 	if (first) {
@@ -286,7 +288,21 @@ void Game::draw(sf::RenderWindow & window)
 	text.setOrigin(text.getLocalBounds().width / 2, text.getLocalBounds().height / 2);
 
 	text.setPosition(circle.getPosition());
+	
+	//enemy drawing
+	srand(time(0));
+	std::vector<sf::CircleShape> enemy;
 
+	//nem tudom miért nem tudok iterálni ...
+	/*for (std::map<int, Player>::iterator it = player.getEnemies().begin(); it != player.getEnemies().end(); it++)
+	{
+		sf::CircleShape tmp(it->second.getRadius());
+		tmp.setOrigin(it->second.getRadius(),it->second.getRadius());
+		tmp.setFillColor(sf::Color(170+rand() % 80, 0, 0));
+		tmp.setOutlineThickness(-5);
+		tmp.setOutlineColor(sf::Color(150, 0, 0));
+		enemy.push_back(tmp);
+	}*/
 
 	window.clear(sf::Color::Black);
 
@@ -298,8 +314,11 @@ void Game::draw(sf::RenderWindow & window)
 			if ((window.mapPixelToCoords(sf::Vector2i(0, 0)).x + view.getSize().x) > food[i].getPosition().x && window.mapPixelToCoords(sf::Vector2i(0, 0)).x < food[i].getPosition().x &&
 				(window.mapPixelToCoords(sf::Vector2i(0, 0)).y + view.getSize().y) > food[i].getPosition().y && window.mapPixelToCoords(sf::Vector2i(0, 0)).y < food[i].getPosition().y) {
 				window.draw(food[i]);
-
 			}
+		}
+		//TODO a ha nagyobb nalam akkor elfedhet engem , nem latszodhatok felette
+		for (int i = 0; i < enemy.size(); i++) {
+			window.draw(enemy[i]);
 		}
 		window.draw(circle);
 		window.draw(text);

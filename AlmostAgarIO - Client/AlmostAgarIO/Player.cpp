@@ -12,7 +12,7 @@ Player::~Player()
 {
 }
 
-unsigned int Player::getId()
+unsigned int Player::getId() const
 {
 	return id;
 }
@@ -62,12 +62,12 @@ void Player::setChange(bool _change) {
 	changed = _change;
 }
 
-std::unordered_map<int, Player> Player::getEnemies()
+std::map<int, Player> Player::getEnemies()
 {
 	return enemies;
 }
 
-void Player::setEnemies(std::unordered_map<int, Player> _enemies)
+void Player::setEnemies(std::map<int, Player> _enemies)
 {
 	enemies = _enemies;
 }
@@ -90,3 +90,10 @@ void Player::setFood(const std::vector<sf::Vector2f> _food)
 	food = _food;
 }
 */
+
+bool operator==(const Player &a, const Player &b)
+{
+	if (a.getId() == b.getId())
+		return true;
+	return false;
+}

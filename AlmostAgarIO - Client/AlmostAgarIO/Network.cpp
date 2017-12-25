@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "Network.h"
-#include<iostream>
+#include <iostream>
 #include <thread>
 #include <unordered_map>
 
