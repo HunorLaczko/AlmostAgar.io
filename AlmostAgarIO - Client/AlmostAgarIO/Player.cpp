@@ -74,7 +74,7 @@ void Player::setEnemies(std::unordered_map<int, Player> _enemies)
 
 void Player::updateEnemy(int id, sf::Vector2f position)
 {
-	enemies.at(id).setPosition(position);
+	enemies[id].setPosition(position);
 }
 
 /*
