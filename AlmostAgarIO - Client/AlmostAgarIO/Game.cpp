@@ -290,20 +290,21 @@ void Game::draw(sf::RenderWindow & window)
 	text.setPosition(circle.getPosition());
 	
 	//enemy drawing
-	srand(time(0));
 	std::vector<sf::CircleShape> enemy;
 
 	//nem tudom miért nem tudok iterálni ...
-	/*for (std::map<int, Player>::iterator it = player.getEnemies().begin(); it != player.getEnemies().end(); it++)
+	for (std::map<int, Player>::iterator it = player.getEnemies().begin(); it != player.getEnemies().end(); it++)
 	{
 		sf::CircleShape tmp(it->second.getRadius());
 		tmp.setOrigin(it->second.getRadius(),it->second.getRadius());
-		tmp.setFillColor(sf::Color(170+rand() % 80, 0, 0));
+		tmp.setPosition(it->second.getPosition());
+
+		tmp.setFillColor(sf::Color(170, 0, 0, 150));
 		tmp.setOutlineThickness(-5);
 		tmp.setOutlineColor(sf::Color(150, 0, 0));
 		enemy.push_back(tmp);
-	}*/
-
+	}
+	
 	window.clear(sf::Color::Black);
 
 	if (finished) {

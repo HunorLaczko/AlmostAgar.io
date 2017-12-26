@@ -16,7 +16,7 @@ public:
 	Player();
 	~Player();
 
-	unsigned int getId() const;
+	unsigned int getId();
 	void setId(unsigned int _id);
 
 	sf::Vector2f getPosition();
@@ -31,9 +31,9 @@ public:
 	bool isRadiusChanged();
 	void setChange(bool _change);
 
-	std::map<int, Player> getEnemies();
+	std::map<int, Player> &getEnemies();
 	void setEnemies(std::map<int, Player> _enemies);
-	void updateEnemy(int id, sf::Vector2f position);
+	void updateEnemy(int id, sf::Vector2f position, float radius);
 
 	/*std::vector<sf::Vector2f> getFood();
 	void setFood(const std::vector<sf::Vector2f> _food);*/

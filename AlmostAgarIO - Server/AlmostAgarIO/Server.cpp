@@ -184,7 +184,7 @@ void Server::run()
 			positionPacket << 2 << players.size();
 			for (std::map<int, Player>::iterator it = players.begin(); it != players.end(); it++)
 			{
-				positionPacket << it->first << it->second.getPosition().x << it->second.getPosition().y;
+				positionPacket << it->first << it->second.getPosition().x << it->second.getPosition().y << it->second.getRadius();
 			}
 
 			sf::Packet foodPacket;

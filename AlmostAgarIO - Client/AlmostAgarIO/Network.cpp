@@ -123,18 +123,19 @@ void Network::getResponse()
 		{
 			sf::Vector2f pos;
 			size_t playersSize;
+			float radius;
 			int myId = player->getId();
 			packet >> playersSize;
 			for (size_t i = 0; i < playersSize; i++)
 			{
-				packet >> id >> pos.x >> pos.y;
+				packet >> id >> pos.x >> pos.y >> radius;
 				if (id == myId)
 				{
 					player->setPosition(pos);
 				}
 				else
 				{
-					player->updateEnemy(id, pos);
+					player->updateEnemy(id, pos, radius);
 				}
 			}
 			
