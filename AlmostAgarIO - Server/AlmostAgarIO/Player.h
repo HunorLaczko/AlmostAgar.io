@@ -37,7 +37,7 @@ class Player
 	sf::Vector2f windowSize;//player's window size
 	sf::Vector2f mousePosition;
 	//std::unordered_set<sf::Vector2f, std::hash<sf::Vector2f>> food;	//food that the player sees
-	std::vector<sf::Vector2f> food;
+	//std::vector<sf::Vector2f> food;
 public:
 	Player(int id, sf::Vector2f _position, sf::TcpSocket *tcpSocket);
 	~Player();
@@ -68,8 +68,10 @@ public:
 	sf::Vector2f getMousePosition();
 	void setMousePosition(sf::Vector2f _mousePosition);
 
-	void init(std::vector<sf::Vector2f>& _food);
-	void updateFood(int index, sf::Vector2f newPosition);
+	void initPosition();
+
+	//void init(std::vector<sf::Vector2f>& _food);
+	//void updateFood(int index, sf::Vector2f newPosition);
 	//void movePlayer()
 };
 

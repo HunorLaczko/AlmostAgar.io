@@ -62,12 +62,12 @@ void Player::setChange(bool _change) {
 	changed = _change;
 }
 
-std::map<int, Player> &Player::getEnemies()
+std::unordered_map<int, Player> &Player::getEnemies()
 {
 	return enemies;
 }
 
-void Player::setEnemies(std::map<int, Player> _enemies)
+void Player::setEnemies(std::unordered_map<int, Player> _enemies)
 {
 	enemies = _enemies;
 }
@@ -76,6 +76,18 @@ void Player::updateEnemy(int id, sf::Vector2f position, float radius)
 {
 	enemies[id].setPosition(position);
 	enemies[id].setRadius(radius);
+}
+
+void Player::reset()
+{
+	id = -1;
+	position = sf::Vector2f(0, 0);
+	enemies.clear();
+}
+
+void Player::resetEnemies()
+{
+	enemies.clear();
 }
 
 /*

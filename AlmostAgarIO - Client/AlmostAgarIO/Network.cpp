@@ -82,6 +82,18 @@ void Network::init(sf::Vector2f _mapSize, sf::Vector2f _mapPosition, sf::Vector2
 	//std::cout << udpSocket.send(outPacket, serverIp, serverUdpPortSend) << std::endl;
 	tcpSocket.send(outPacket);
 
+	//receiving initial position
+	sf::Packet initPositionPacket;
+	tcpSocket.receive(initPositionPacket);
+	int id;
+	initPositionPacket >> id;
+	if (id == player->getId())//just making sure we received the right packet
+	{
+		sf::Vector2f pos;
+		initPositionPacket >> pos.x >> pos.y;
+		player->setPosition(pos);
+	}
+
 	//receiving initially the whole food vector
 	sf::Packet foodPacket;
 	tcpSocket.receive(foodPacket);
@@ -126,6 +138,7 @@ void Network::getResponse()
 			float radius;
 			int myId = player->getId();
 			packet >> playersSize;
+			if (playersSize != player->getEnemies().size() + 1) player->resetEnemies();
 			for (size_t i = 0; i < playersSize; i++)
 			{
 				packet >> id >> pos.x >> pos.y >> radius;

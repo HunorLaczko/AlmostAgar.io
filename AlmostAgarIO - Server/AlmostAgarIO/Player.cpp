@@ -4,7 +4,7 @@
 
 
 Player::Player(int _id, sf::Vector2f _position, sf::TcpSocket *_tcpSocket)
-	: id(_id), position(_position), tcpSocket(_tcpSocket), radius(30),
+	: id(_id), position(_position), tcpSocket(_tcpSocket), radius(80),
 	name("unknown"), udpSocket(nullptr), playerIp(sf::IpAddress()),port(0),
 	speed(sf::Vector2f(0, 0)), velocity(sf::Vector2f(0, 0)), points(0), 
 	mapSize(sf::Vector2f(0, 0)), mapPosition(sf::Vector2f(0, 0)),
@@ -101,10 +101,16 @@ void Player::setMousePosition(sf::Vector2f _mousePosition)
 {
 	mousePosition = _mousePosition;
 }
-
+void Player::initPosition()
+{
+	position.x = rand() % (int)mapSize.x + mapPosition.x;
+	position.y = rand() % (int)mapSize.y + mapPosition.y;
+	//position = sf::Vector2f(2000, 2000);
+}
+/*
 void Player::init(std::vector<sf::Vector2f>& _food)
 {
-	/*
+	
 	for (sf::Vector2f f : _food)
 	{
 		if (f.x > position.x - (windowSize.x / 2 - 50) && f.x < position.x + (windowSize.x / 2 + 50) &&
@@ -113,22 +119,22 @@ void Player::init(std::vector<sf::Vector2f>& _food)
 			food.insert(f);
 		}
 	}
-	*/
+	
 	food = _food;
 }
 
 void Player::updateFood(int index, sf::Vector2f newPosition)
 {
-	/*
+	
 	food.erase(food.find(toDelete));
 	if (toAdd.x > position.x - (windowSize.x / 2 - 50) && toAdd.x < position.x + (windowSize.x / 2 + 50) &&
 		toAdd.y > position.y - (windowSize.y / 2 - 50) && toAdd.y < position.y + (windowSize.y / 2 + 50))
 	{
 		food.insert(toAdd);
-	}*/
+	}
 
 }
-
+*/
 bool operator==(const Player &a, const Player &b)
 {
 	if (a.getId() == b.getId())

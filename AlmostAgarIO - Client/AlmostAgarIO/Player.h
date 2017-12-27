@@ -1,7 +1,7 @@
 #pragma once
 #include "SFML\System.hpp"
 #include <vector>
-#include <map>
+#include <unordered_map>
 
 class Player
 {
@@ -10,7 +10,7 @@ class Player
 	sf::Vector2u windowSize;
 	float radius;
 	bool changed;
-	std::map<int, Player> enemies;
+	std::unordered_map<int, Player> enemies;
 	//std::vector<sf::Vector2f> food;
 public:
 	Player();
@@ -31,10 +31,12 @@ public:
 	bool isRadiusChanged();
 	void setChange(bool _change);
 
-	std::map<int, Player> &getEnemies();
-	void setEnemies(std::map<int, Player> _enemies);
+	std::unordered_map<int, Player> &getEnemies();
+	void setEnemies(std::unordered_map<int, Player> _enemies);
 	void updateEnemy(int id, sf::Vector2f position, float radius);
 
+	void reset();
+	void resetEnemies();
 	/*std::vector<sf::Vector2f> getFood();
 	void setFood(const std::vector<sf::Vector2f> _food);*/
 };

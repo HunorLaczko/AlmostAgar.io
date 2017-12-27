@@ -92,10 +92,7 @@ void Server::run()
 						updateFood(id);
 						break; 
 					}
-					case 3:
-						
-						
-						break;
+					
 					}
 				}
 				else
@@ -135,7 +132,13 @@ void Server::run()
 								player->setMapSize(_mapSize);
 								player->setMapPosition(_mapPosition);
 								player->setWindowSize(_windowSize);
-								
+
+								//generating random start position and sending it to player
+								player->initPosition();
+								sf::Packet initPositionPacket;
+								initPositionPacket << player->getId() << player->getPosition().x << player->getPosition().y;
+								(*it).second.getTcpSocket()->send(initPositionPacket);
+
 								//sending whole food vector to client
 								sf::Packet foodPacket;
 								foodPacket << foodGenerator.getFoodRadius();
@@ -146,12 +149,13 @@ void Server::run()
 								}
 								(*it).second.getTcpSocket()->send(foodPacket);
 
-								
-
-
 								//player->setPosition(sf::Vector2f((_mapPosition.x+_mapSize.x/2),(_mapPosition.y+_mapSize.y/2)));
 								std::cout << "\n\n\nreceived init params: "<<player->getPosition().x<<", "<<player->getPosition().y<<"\n\n\n\n";
 
+							}
+							else if (type == 4)
+							{
+								//
 							}
 						}
 						else
@@ -187,6 +191,7 @@ void Server::run()
 				positionPacket << it->first << it->second.getPosition().x << it->second.getPosition().y << it->second.getRadius();
 			}
 
+			//generating food packet
 			sf::Packet foodPacket;
 			foodPacket << 4 << foodToUpdate.size();
 			for (std::unordered_map<int, sf::Vector2f>::iterator it = foodToUpdate.begin(); it != foodToUpdate.end(); it++)
@@ -198,20 +203,12 @@ void Server::run()
 			{
 				//sending players' positions
 				udpSocket.send(positionPacket, it->second.getPlayerIp(), udpPortSend);
-		
-			
+
 				///itt nem csak a elso jatekos kapja meg a foodto updatet?? mert a clear utan ez tuti ures lesz de az nem 
 				//sending changed food
 				if (foodToUpdate.size() != 0)
 				{
-					/*sf::Packet foodPacket;
-					foodPacket << 4 << foodToUpdate.size();
-					for (std::unordered_map<int, sf::Vector2f>::iterator it = foodToUpdate.begin(); it != foodToUpdate.end(); it++)
-					{
-						foodPacket << it->first << it->second.x << it->second.y;
-					}*/
 					udpSocket.send(foodPacket, it->second.getPlayerIp(), udpPortSend);
-					//foodToUpdate.clear();
 				}
 			  	
 			}

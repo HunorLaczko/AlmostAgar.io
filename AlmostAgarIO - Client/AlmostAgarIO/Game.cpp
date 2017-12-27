@@ -2,6 +2,7 @@
 
 #include "Game.h"
 #include "iostream"
+#include <unordered_map>
 
 float ZOOM = 1.01f; //1%-os zoom
 float radius = 30;
@@ -153,6 +154,7 @@ void Game::setIpAndWindowSize(sf::IpAddress _serverIp, sf::Vector2u window_size)
 void Game::connect()
 {	
 	network->connectPlayer(&player);
+	player.resetEnemies();
 	network->init(sf::Vector2f(map.getLocalBounds().width, map.getLocalBounds().height), (sf::Vector2f)map.getPosition(), (sf::Vector2f)player.getWindowSize());
 	std::cout << "player pos in init: " << player.getPosition().x << ", " << player.getPosition().y << std::endl;
 }
@@ -161,22 +163,24 @@ void Game::disconnect()
 {
 	network->disconnectPlayer();
 	food.clear();
+	player.reset();
 	//delete network;
 }
 
 void Game::counting(sf::RenderWindow & window)
 {
-	// TODO Huni
+	///TODO Huni
 
 	//itt rögtön tudnia kell egy kezdőpontotha először van meghívva, mivel most fix 3000,2000 a szerveer ezért megy jól, randomnál sztem kell egy plusz lekérés ide h tudja rögötn a player postitiont
 	//ha biztosan tudjuk majd át kell írni a kikommentezett verzióra
 	if (first) {
-		//view.setCenter(player.getPosition().x, player.getPosition().y);
-		//view.reset((sf::FloatRect(player.getPosition().x - (float)window.getSize().x / 2, player.getPosition().y - (float)window.getSize().y / 2, (float)window.getSize().x, (float)window.getSize().y)));
-		view.setCenter(3000, 2000);
-		view.reset((sf::FloatRect(3000- (float)window.getSize().x / 2, 2000 - (float)window.getSize().y / 2, (float)window.getSize().x, (float)window.getSize().y)));
+		view.setCenter(player.getPosition().x, player.getPosition().y);
+		view.reset((sf::FloatRect(player.getPosition().x - (float)window.getSize().x / 2, player.getPosition().y - (float)window.getSize().y / 2, (float)window.getSize().x, (float)window.getSize().y)));
+		//view.setCenter(3000, 2000);
+		//view.reset((sf::FloatRect(3000- (float)window.getSize().x / 2, 2000 - (float)window.getSize().y / 2, (float)window.getSize().x, (float)window.getSize().y)));
 		first = false;
 	}
+	
 	//Számolás
 	sf::Vector2f distance(window.mapPixelToCoords(sf::Mouse::getPosition(window)).x - circle.getPosition().x, window.mapPixelToCoords(sf::Mouse::getPosition(window)).y - circle.getPosition().y);
 	float speed = 2.2f - (0.005f*circle.getRadius());
@@ -186,7 +190,7 @@ void Game::counting(sf::RenderWindow & window)
 	float length = sqrt(distance.x*distance.x + distance.y*distance.y);
 	vec.x = speed * distance.x / length;
 	vec.y = speed * distance.y / length;
-
+	
 	if (abs(distance.x) < 2 || ((circle.getPosition().x - vec.x) <= map.getPosition().x && vec.x <= 0) || ((circle.getPosition().x + vec.x) >= (map.getPosition().x + map.getLocalBounds().width) && vec.x >= 0) /*|| !(window.mapPixelToCoords(sf::Mouse::getPosition(window)).x > background.getPosition().x && window.mapPixelToCoords(sf::Mouse::getPosition(window)).x < (background.getPosition().x + texture.getSize().x))*/) {
 		vec.x = 0;
 	}
@@ -293,7 +297,9 @@ void Game::draw(sf::RenderWindow & window)
 	std::vector<sf::CircleShape> enemy;
 
 	//nem tudom miért nem tudok iterálni ...
-	for (std::map<int, Player>::iterator it = player.getEnemies().begin(); it != player.getEnemies().end(); it++)
+	//talan igy?
+	std::unordered_map<int, Player> enemies = player.getEnemies();
+	for (std::unordered_map<int, Player>::iterator it = enemies.begin(); it != enemies.end(); it++)
 	{
 		sf::CircleShape tmp(it->second.getRadius());
 		tmp.setOrigin(it->second.getRadius(),it->second.getRadius());
