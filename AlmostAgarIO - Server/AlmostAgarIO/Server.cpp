@@ -263,12 +263,9 @@ void Server::updateFood(unsigned int id)
 		float lenght = sqrt(distance.x*distance.x + distance.y*distance.y);
 
 		//check if player ate a food
-		if (lenght < (player->getRadius() + foodRadius)) {
+		if (lenght < (player->getRadius() )) {
 			food[i] = foodGenerator.updateElement(i);
 			player->setRadius(player->getRadius() + 0.5f);
-			sf::Packet radiusPacket;
-			radiusPacket << 5 << player->getRadius();
-			udpSocket.send(radiusPacket, player->getPlayerIp(), udpPortSend);
 			foodToUpdate.emplace(i, food[i]);
 
 			//sending food change to every player

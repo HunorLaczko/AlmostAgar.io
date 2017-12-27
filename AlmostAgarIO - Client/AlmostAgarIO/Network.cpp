@@ -145,6 +145,7 @@ void Network::getResponse()
 				if (id == myId)
 				{
 					player->setPosition(pos);
+					player->setRadius(radius);
 				}
 				else
 				{
@@ -175,14 +176,7 @@ void Network::getResponse()
 			std::cout << "received food update\n";
 			break;
 		}
-		case 5:
-		{
-			float radius;
-			packet >> radius;
-			player->setRadius(radius);
-			std::cout << "updated radius\n";
-			break;
-		}
+		
 			
 		}
 	}
