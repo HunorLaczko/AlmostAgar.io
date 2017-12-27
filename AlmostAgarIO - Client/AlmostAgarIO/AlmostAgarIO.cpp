@@ -43,7 +43,7 @@ int main()
 		//window.close();
 		window.threadWait();
 		window.setIp(sf::IpAddress(serverIp->getValue()));
-
+		window.setName(playerName->getValue());
 		window.changeview(Views::game_view);
 		start = true;
 	}

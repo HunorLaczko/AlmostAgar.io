@@ -192,11 +192,11 @@ void Windows::setIp(sf::IpAddress _serverIp)
 {
 	game.setIpAndWindowSize(_serverIp, getSize());
 }
-/*
-void Windows::add(Widget *w)
+
+void Windows::setName(sf::String _name)
 {
-	widgets.push_back(w);
-}*/
+	game.setName(_name);
+}
 
 void Windows::set(std::vector<Widget*>  _menu, std::vector<Widget*> _game_over)
 {
