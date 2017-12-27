@@ -34,6 +34,7 @@ private:
 	sf::Clock clock;
 	bool first; //kamera nézetet reseteli, ha first=true, mindig meg kell hivni a setfirst-t hogy ha új játékot kezdünk
 	sf::View view;
+	int zoom_count;
 
 	std::vector<sf::CircleShape> food;
 	//FoodGenerator gen;
