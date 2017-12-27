@@ -152,10 +152,7 @@ void Network::getResponse()
 					player->updateEnemy(id, pos, radius);
 				}
 			}
-			
-			//std::cout << "oldPos: " << player->getPosition().x << "," << player->getPosition().y << " newPos: " << pos.x << "," << pos.y << "\n";
-			
-			//std::cout << "received new location\n";
+
 			break;
 		}
 		case 4:
@@ -180,8 +177,6 @@ void Network::getResponse()
 			
 		}
 	}
-	//outPacket << 1 << player->getId() << position.x << position.y;
-	//std::cout << udpSocket.send(outPacket, serverIp, serverUdpPortSend) << std::endl;
 }
 
 void Network::sendKey(char key, bool active)
@@ -224,7 +219,6 @@ void Network::run()
 				packet >> pos.x >> pos.y;
 				player->setPosition(pos);
 				position = pos; //will be set by window
-								//std::cout << pos.x << " " << pos.y << std::endl;
 			}
 		}
 

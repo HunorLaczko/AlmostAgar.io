@@ -13,7 +13,6 @@ class Player
 	sf::String name;
 	bool changed;
 	std::unordered_map<int, Player> enemies;
-	//std::vector<sf::Vector2f> food;
 public:
 	Player();
 	~Player();

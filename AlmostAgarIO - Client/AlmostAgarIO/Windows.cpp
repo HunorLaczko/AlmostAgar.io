@@ -115,26 +115,6 @@ void Windows::event_loop(){
 						changeview(Views::game_over_menu_view);
 						//close();
 					}
-					/*if (event.key.code == sf::Keyboard::Up) {
-						radius += 2;
-						circle.setRadius(radius);
-						circle.setOrigin(circle.getRadius(), circle.getRadius());
-					}
-					if (event.key.code == sf::Keyboard::Down) {
-						radius -= 2;
-						circle.setRadius(radius);
-						circle.setOrigin(circle.getRadius(), circle.getRadius());
-
-					}
-					if (event.key.code == sf::Keyboard::Right) {
-						view.zoom(1 / ZOOM);
-					}
-
-					if (event.key.code == sf::Keyboard::Left) {
-						view.zoom(ZOOM);
-
-					}*/
-
 					break;
 				}
 				}

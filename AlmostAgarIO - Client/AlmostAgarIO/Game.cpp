@@ -28,21 +28,6 @@ void Game::func() {
 	background.scale(1, 1);
 	map.setPosition(1000, 750);
 
-	//kajagenerálás
-	//gen = FoodGenerator(sf::Vector2f(background.getLocalBounds().width, background.getLocalBounds().height), sf::Vector2f(map.getLocalBounds().width, map.getLocalBounds().height));
-	/*gen = FoodGenerator(map.getPosition(), sf::Vector2f(map.getLocalBounds().width, map.getLocalBounds().height));
-	gen.generateFood(1000);
-
-	std::vector<sf::Vector2f> tmpPos = gen.getFood();
-	for (int i = 0; i < 1000; i++) {
-		sf::CircleShape circ(gen.getFoodRadius());
-		circ.setPosition(tmpPos[i]);
-		circ.setFillColor(sf::Color(rand() % 255, rand() % 255, rand() % 255));
-		circ.setOrigin(gen.getFoodRadius() / 2, gen.getFoodRadius() / 2);
-		food.push_back(circ);
-	}
-	*/
-
 	finished = true;
 	std::cout << "Betolto szal leall!" << std::endl;
 
@@ -58,49 +43,7 @@ Game::Game() : thread(&Game::func, this)
 	sf::Clock clock;
 	bool first = true;
 	network = new Network(this);
-	/*setVerticalSyncEnabled(false);
-	setFramerateLimit(60);
-	setMouseCursorGrabbed(true);*/
-	/*************************
-	if (!texture.loadFromFile("palya.jpg") || !texture2.loadFromFile("background.png"))
-	{
-		close();
-	}
-	view.setViewport(sf::FloatRect(0, 0, 1, 1));
-	view.zoom(ZOOM);
-	setVerticalSyncEnabled(false);
-	setFramerateLimit(60);
-	setMouseCursorGrabbed(false);
-	//window.setMouseCursorVisible(false);
-	circle.setRadius(radius);
-	circle.scale(1, 1);
-	circle.setOrigin(radius, radius);
-	circle.setPosition(texture2.getSize().x / 2, texture2.getSize().y / 2);
-	///view.reset((sf::FloatRect(circle.getPosition().x - getSize().x / 2, circle.getPosition().y - getSize().y / 2, getSize().x, getSize().y)));
-	map.setTexture(texture);
-	background.setTexture(texture2);
-	map.scale(1, 1);
-	background.scale(1, 1);
-	map.setPosition(1000, 750);
-
-	//lassu a generator
-	//gen.generateFood(1000, sf::Vector2f(background.getLocalBounds().width, background.getLocalBounds().height), sf::Vector2f(map.getLocalBounds().width, map.getLocalBounds().height));
-
-	for (int i = 0; i < 1000; i++) {
-		sf::CircleShape tmp(radius2);
-		tmp.setPosition(sf::Vector2f((texture2.getSize().x - texture.getSize().x) / 2 + rand() % texture.getSize().x, (texture2.getSize().y - texture.getSize().y) / 2 + rand() % texture.getSize().y));
-		tmp.setFillColor(sf::Color(rand() % 255, rand() % 255, rand() % 255));
-		tmp.setOrigin(radius2 / 2, radius2 / 2);
-		food.push_back(tmp);
-	}
-	**************************/
 }
-/*
-Game::Game(sf::WindowHandle handle, const sf::ContextSettings & settings)
-{
-
-}*/
-
 
 Game::~Game()
 {
@@ -170,10 +113,6 @@ void Game::disconnect()
 
 void Game::counting(sf::RenderWindow & window)
 {
-	///TODO Huni
-
-	//itt rögtön tudnia kell egy kezdőpontotha először van meghívva, mivel most fix 3000,2000 a szerveer ezért megy jól, randomnál sztem kell egy plusz lekérés ide h tudja rögötn a player postitiont
-	//ha biztosan tudjuk majd át kell írni a kikommentezett verzióra
 	if (first) {
 		view.setCenter(player.getPosition().x, player.getPosition().y);
 		view.reset((sf::FloatRect(player.getPosition().x - (float)window.getSize().x / 2, player.getPosition().y - (float)window.getSize().y / 2, (float)window.getSize().x, (float)window.getSize().y)));
@@ -182,25 +121,25 @@ void Game::counting(sf::RenderWindow & window)
 		first = false;
 	}
 	
+	/*
 	//Számolás
 	sf::Vector2f distance(window.mapPixelToCoords(sf::Mouse::getPosition(window)).x - player.getPosition().x, window.mapPixelToCoords(sf::Mouse::getPosition(window)).y - player.getPosition().y);
 	float speed = 2.2f - (0.005f*player.getRadius());
 	if (speed <= 0.6f) speed = 0.6f;
 
-	//std::cout << "Size: " << circle.getRadius() << " Speed: " << speed << std::endl;
 	float length = sqrt(distance.x*distance.x + distance.y*distance.y);
 	vec.x = speed * distance.x / length;
 	vec.y = speed * distance.y / length;
 	
-	if (abs(distance.x) < 2 || ((player.getPosition().x - vec.x) <= map.getPosition().x && vec.x <= 0) || ((player.getPosition().x + vec.x) >= (map.getPosition().x + map.getLocalBounds().width) && vec.x >= 0) /*|| !(window.mapPixelToCoords(sf::Mouse::getPosition(window)).x > background.getPosition().x && window.mapPixelToCoords(sf::Mouse::getPosition(window)).x < (background.getPosition().x + texture.getSize().x))*/) {
+	if (abs(distance.x) < 2 || ((player.getPosition().x - vec.x) <= map.getPosition().x && vec.x <= 0) || ((player.getPosition().x + vec.x) >= (map.getPosition().x + map.getLocalBounds().width) && vec.x >= 0)) {
 		vec.x = 0;
 	}
-	if (abs(distance.y) < 2 || ((player.getPosition().y - vec.y) <= map.getPosition().y && vec.y <= 0) || ((player.getPosition().y - vec.y) >= (map.getPosition().y + map.getLocalBounds().height) && vec.y >= 0)/*|| !(window.mapPixelToCoords(sf::Mouse::getPosition(window)).y > background.getPosition().y && window.mapPixelToCoords(sf::Mouse::getPosition(window)).y < (background.getPosition().y + texture.getSize().y))*/) {
+	if (abs(distance.y) < 2 || ((player.getPosition().y - vec.y) <= map.getPosition().y && vec.y <= 0) || ((player.getPosition().y - vec.y) >= (map.getPosition().y + map.getLocalBounds().height) && vec.y >= 0)) {
 		vec.y = 0;
 	}
 
 
-
+	*/
 	//Pozició küldés/fogadás
 	//circle.move(vec);
 	//player.setPosition(circle.getPosition());
@@ -208,13 +147,7 @@ void Game::counting(sf::RenderWindow & window)
 		network->sendPosition(sf::Vector2f(window.mapPixelToCoords(sf::Mouse::getPosition(window)).x, window.mapPixelToCoords(sf::Mouse::getPosition(window)).y));
 		oldPos = player.getPosition();
 		
-		/*if (first) {
-			//view.setCenter(player.getPosition().x - (float)window.getSize().x / 2, player.getPosition().y - (float)window.getSize().y / 2);
-			view.reset((sf::FloatRect(player.getPosition().x - (float) window.getSize().x / 2, player.getPosition().y - (float) window.getSize().y / 2, (float) window.getSize().x, (float) window.getSize().y)));
-			first = false;
-		}*/
 		sf::Vector2f vecFromServer = player.getPosition() - oldPos;
-		//std::cout << "vec\fromServer: " << vecFromServer.x << "," << vecFromServer.y << " vecFromClient: " << vec.x << "," << vec.y << " dist: " << distance.x << "," << distance.y << " length: " << length << "\n";
 		clock.restart();
 
 	}
@@ -225,34 +158,8 @@ void Game::counting(sf::RenderWindow & window)
 		player.setChange(false);
 		std::cout << "ZOOOOOOOOMMMMMMM\n";
 	}
-
-
-	//circle.setPosition(circle.getPosition() + vec);
-
-	//Egyéb számolás, ütközés a kajával, majd méret növelés
-	//bool changed = false;
-	/*
-	for (int i = 0; i < food.size(); i++) {
-		sf::Vector2f distance2(circle.getPosition().x - food[i].getPosition().x, circle.getPosition().y - food[i].getPosition().y);
-		float lenght2 = sqrt(distance2.x*distance2.x + distance2.y*distance2.y);
-
-		if (lenght2 < (circle.getRadius() + gen.getFoodRadius())) {
-			//food.erase(food.begin() + i);
-			food[i].setPosition(gen.updateElement(i));
-			//food[i].setPosition();
-			//changed = true;
-			circle.setRadius(circle.getRadius() + 0.5f);
-			circle.setOrigin(circle.getRadius(), circle.getRadius());
-			//gen.delElement(i);
-			if ((int)(circle.getRadius() - 30) % 5 == 0 && (circle.getRadius() - 30) == (int)(circle.getRadius() - 30)) {
-				view.zoom(ZOOM);
-			}
-
-		}
-	}*/
-	//food = gen.getFood();
-	//if(changed) gen.setFood(food);
 	
+	/*
 	//kamera mozgas szamolasa
 	sf::Vector2f distFromCenter(player.getPosition().x - view.getCenter().x, player.getPosition().y - view.getCenter().y);
 	float lenght2 = sqrt(distFromCenter.x * distFromCenter.x + distFromCenter.y*distFromCenter.y);
@@ -265,13 +172,14 @@ void Game::counting(sf::RenderWindow & window)
 	if (abs(distFromCenter.y) < 20 || (vec.x == 0 && vec.y == 0)) {
 		movement.y = 0;
 	}
+	*/
 }
 
 
 void Game::draw(sf::RenderWindow & window)
 {
-	view.move(movement);
-
+	//view.move(movement);
+	view.setCenter(player.getPosition());
 	
 	//smaller enemy drawing
 	std::vector<Player> smallerEnemy;

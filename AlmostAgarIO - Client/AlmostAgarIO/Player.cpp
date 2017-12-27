@@ -135,17 +135,3 @@ void Player::draw(sf::RenderWindow & window)
 	window.draw(text);
 
 }
-
-/*
-std::vector<sf::Vector2f> Player::getFood()
-{
-	std::vector<sf::Vector2f> tmp = food;
-	food.clear();
-	return tmp;
-}
-
-void Player::setFood(const std::vector<sf::Vector2f> _food)
-{
-	food = _food;
-}
-*/
