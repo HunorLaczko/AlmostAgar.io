@@ -107,6 +107,16 @@ void Player::initPosition()
 	position.y = rand() % (int)mapSize.y + mapPosition.y;
 	//position = sf::Vector2f(2000, 2000);
 }
+
+sf::Color Player::getColor() {
+	return color;
+}
+
+void Player::setColor(sf::Color _color) {
+	color = _color;
+}
+
+
 /*
 void Player::init(std::vector<sf::Vector2f>& _food)
 {

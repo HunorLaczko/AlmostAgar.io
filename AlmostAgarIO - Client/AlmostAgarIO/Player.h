@@ -13,9 +13,15 @@ class Player
 	sf::String name;
 	bool changed;
 	std::unordered_map<int, Player> enemies;
+	sf::Color color;
+	static float default_radius;
+
 public:
 	Player();
 	~Player();
+
+	static float getDefRad();
+	static void setDefRad(float radius);
 
 	unsigned int getId();
 	void setId(unsigned int _id);
@@ -43,6 +49,9 @@ public:
 	void resetEnemies();
 
 	void draw(sf::RenderWindow & window);
+
+	sf::Color getColor();
+	void setColor(sf::Color _color);
 	/*std::vector<sf::Vector2f> getFood();
 	void setFood(const std::vector<sf::Vector2f> _food);*/
 };

@@ -5,6 +5,7 @@
 #include <memory>
 #include <utility>
 #include <unordered_set>
+#include <SFML/Graphics.hpp>
 
 namespace std {
 	template<>
@@ -36,8 +37,8 @@ class Player
 	sf::Vector2f mapPosition;//player's map's location relative to world coordinates
 	sf::Vector2f windowSize;//player's window size
 	sf::Vector2f mousePosition;
-	//std::unordered_set<sf::Vector2f, std::hash<sf::Vector2f>> food;	//food that the player sees
-	//std::vector<sf::Vector2f> food;
+	sf::Color color; //player's color
+
 public:
 	Player(int id, sf::Vector2f _position, sf::TcpSocket *tcpSocket);
 	~Player();
@@ -69,6 +70,9 @@ public:
 	void setMousePosition(sf::Vector2f _mousePosition);
 
 	void initPosition();
+
+	sf::Color getColor();
+	void setColor(sf::Color _color);
 
 	//void init(std::vector<sf::Vector2f>& _food);
 	//void updateFood(int index, sf::Vector2f newPosition);

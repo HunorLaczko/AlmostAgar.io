@@ -153,7 +153,7 @@ void Game::counting(sf::RenderWindow & window)
 	}
 	network->getResponse();
 	//meret valtoztatas
-	if (player.isRadiusChanged() && (int)(player.getRadius() - 30) % 5 == 0 && (player.getRadius() - 30) == (int)(player.getRadius() - 30)) {
+	if (player.isRadiusChanged() && (int)(player.getRadius() - Player::getDefRad()) % 5 == 0 && (player.getRadius() - Player::getDefRad()) == (int)(player.getRadius() - Player::getDefRad())) {
 		view.zoom(ZOOM);
 		player.setChange(false);
 		std::cout << "ZOOOOOOOOMMMMMMM\n";

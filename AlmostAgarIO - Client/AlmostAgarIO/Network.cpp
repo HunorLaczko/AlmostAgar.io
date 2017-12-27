@@ -58,6 +58,7 @@ void Network::connectPlayer(Player *_player)
 				packet >> id >> radius;
 				player->setId(id);
 				player->setRadius(radius);
+				Player::setDefRad(radius);
 				std::cout << "received id: " << id << "\n";
 			}
 		}

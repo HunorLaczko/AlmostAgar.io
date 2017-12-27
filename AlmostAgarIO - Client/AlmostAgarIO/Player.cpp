@@ -14,6 +14,16 @@ Player::~Player()
 {
 }
 
+float Player::default_radius; //ez a qva sor hogy rohandjon meg kellett neki mert idiota :D
+
+float Player::getDefRad() {
+	return default_radius;
+}
+
+void Player::setDefRad(float radius) {
+	default_radius = radius;
+}
+
 unsigned int Player::getId()
 {
 	return id;
@@ -64,6 +74,14 @@ sf::String Player::getName()
 void Player::setName(sf::String _name)
 {
 	name = _name;
+}
+
+sf::Color Player::getColor() {
+	return color;
+}
+
+void Player::setColor(sf::Color _color) {
+	color = _color;
 }
 
 bool Player::isRadiusChanged() {
