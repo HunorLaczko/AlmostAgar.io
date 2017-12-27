@@ -1,10 +1,12 @@
 #include "stdafx.h"
 #include "Player.h"
+#include "iostream"
 
 
 Player::Player()
 {
 	changed = false;
+	name = "Anonymous";
 }
 
 
@@ -54,6 +56,16 @@ float Player::getRadius()
 	return radius;
 }
 
+sf::String Player::getName()
+{
+	return name;
+}
+
+void Player::setName(sf::String _name)
+{
+	name = _name;
+}
+
 bool Player::isRadiusChanged() {
 	return changed;
 }
@@ -88,6 +100,40 @@ void Player::reset()
 void Player::resetEnemies()
 {
 	enemies.clear();
+}
+
+void Player::draw(sf::RenderWindow & window)
+{
+	sf::CircleShape circle;
+	circle.setFillColor(sf::Color(0, 250, 0));
+	circle.setOutlineThickness(-5);
+	circle.setOutlineColor(sf::Color(0, 150, 0));
+	circle.setRadius(radius);
+	circle.scale(1, 1);
+	circle.setOrigin(radius, radius);
+	circle.setPosition(position);
+
+	sf::Font font;
+	if (!font.loadFromFile("arial.ttf")) std::cout << "Couldn't load font file!" << std::endl;
+
+	sf::Text text;
+	text.setFont(font);
+	text.setString(name);
+	text.setColor(sf::Color::White);
+	text.setStyle(sf::Text::Bold);
+	text.setOutlineColor(sf::Color::Black);
+	text.setOutlineThickness(2);
+	if(name.getSize()>2)
+		text.setCharacterSize(2*radius/name.getSize());
+	else
+		text.setCharacterSize(2 * radius / 3);
+
+	text.setOrigin(text.getLocalBounds().width / 2, text.getLocalBounds().height / 2);
+	text.setPosition(circle.getPosition());
+
+	window.draw(circle);
+	window.draw(text);
+
 }
 
 /*
