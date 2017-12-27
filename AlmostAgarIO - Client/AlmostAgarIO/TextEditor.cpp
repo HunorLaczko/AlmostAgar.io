@@ -238,8 +238,3 @@ void TextEditor::handle(sf::Event event)
 	}
 }
 
-std::string TextEditor::getValue()
-{
-	return _value;
-}
-

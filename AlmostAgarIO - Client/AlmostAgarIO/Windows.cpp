@@ -2,6 +2,9 @@
 #include "Windows.h"
 #include <SFML/System/Time.hpp>
 #include <SFML/System/Sleep.hpp>
+#include <iostream>
+#include <fstream>
+#include <string>
 
 
 /*(Game osztályban van)
@@ -51,6 +54,36 @@ Windows::~Windows()
 
 void Windows::threadWait() {
 	game.threadWait();
+}
+
+void Windows::load()
+{
+	//Load data
+	std::string ip, name;
+	std::ifstream inputData("data.txt");
+	if (inputData.good()) {
+		inputData >> std::ws;
+		std::getline(inputData, ip);
+		menu[0]->setValue(ip);
+
+	}
+	if (inputData.good()) {
+		inputData >> std::ws;
+		std::getline(inputData, name);
+		menu[1]->setValue(name);
+	}
+	else {
+		name = "";
+	}
+	inputData.close();
+}
+
+void Windows::save()
+{
+	//Save data
+	std::ofstream outputData("data.txt");
+	outputData << menu[0]->getValue() << std::endl << menu[1]->getValue();
+	outputData.close();
 }
 
 void Windows::event_loop(){
@@ -188,14 +221,9 @@ void Windows::changeview(Views view)
 		viewChanged = true;
 	//}
 }
-void Windows::setIp(sf::IpAddress _serverIp)
+void Windows::initGame(sf::IpAddress _serverIp,sf::String _playerName)
 {
-	game.setIpAndWindowSize(_serverIp, getSize());
-}
-
-void Windows::setName(sf::String _name)
-{
-	game.setName(_name);
+	game.init(_serverIp, getSize(), _playerName);
 }
 
 void Windows::set(std::vector<Widget*>  _menu, std::vector<Widget*> _game_over)

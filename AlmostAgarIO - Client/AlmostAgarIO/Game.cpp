@@ -143,17 +143,14 @@ sf::Vector2f Game::getCirclePos()
 	return player.getPosition();
 }
 
-void Game::setIpAndWindowSize(sf::IpAddress _serverIp, sf::Vector2u window_size)
+void Game::init(sf::IpAddress _serverIp, sf::Vector2u window_size, sf::String _playerName)
 {
 	network->setIp(_serverIp);
 	player.setWindowSize(window_size);
+	if(_playerName !="")
+		player.setName(_playerName);
 }
 
-void Game::setName(sf::String _name)
-{
-	if(_name!="")
-		player.setName(_name);
-}
 
 void Game::connect()
 {	

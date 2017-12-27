@@ -20,6 +20,5 @@ public:
 	void draw(sf::RenderWindow & window);
 	void handle(sf::Event event);
 	bool isempty();
-	std::string getValue();
 };
 

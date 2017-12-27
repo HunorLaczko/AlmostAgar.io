@@ -24,9 +24,10 @@ public:
 	//void add(Widget *w);
 	void set(std::vector<Widget*> menu, std::vector<Widget*> game_over);
 	void Windows::changeview(Views view);
-	void setIp(sf::IpAddress _serverIp);
-	void setName(sf::String _name);
+	void initGame(sf::IpAddress _serverIp,sf::String _playerName);
 	void threadWait();
+	void load();
+	void save();
 
 private:
 	Views viewid;

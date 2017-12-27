@@ -42,8 +42,7 @@ int main()
 		}*/
 		//window.close();
 		window.threadWait();
-		window.setIp(sf::IpAddress(serverIp->getValue()));
-		window.setName(playerName->getValue());
+		window.initGame(sf::IpAddress(serverIp->getValue()),playerName->getValue());
 		window.changeview(Views::game_view);
 		start = true;
 	}
@@ -83,24 +82,19 @@ int main()
 	);
 	game_over_menu.push_back(exit);
 
+
+	//Menü elemek átadása az ablaknak, majd IP és név betöltés
+	window.set(main_menu, game_over_menu);
+	window.load();
+
+	//Fut a program
 	while (fut && window.isOpen()) {
-
-		window.set(main_menu, game_over_menu);
-
-		//window.changeview(1);
+		//Fut valamelyik menü, vagy a játék
 		window.event_loop();
-		/*
-		fut = false;
-		if (start) {
-			fut = true;
-			window.changeview(1);
-			//Windows window(sf::VideoMode(WIDTH, HEIGHT), "Teszteles alatt...", sf::IpAddress(serverIp->getValue()), sf::Style::Default, settings);
-			window.setIp(sf::IpAddress(serverIp->getValue()));
-			window.event_loop();
-		}
-		start = false;*/
-		//window.changeview(0);
 	}
+
+	//IP és név mentés
+	window.save();
 	window.threadWait();
 	return 0;
 }

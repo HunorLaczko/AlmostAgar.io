@@ -20,8 +20,7 @@ public:
 	void connect();
 	void disconnect();
 	sf::Vector2f getCirclePos();
-	void setIpAndWindowSize(sf::IpAddress _serverIp, sf::Vector2u window_size);
-	void setName(sf::String _name);
+	void init(sf::IpAddress _serverIp, sf::Vector2u window_size,sf::String _playerName);
 	void counting(sf::RenderWindow & window);
 	void func();
 	void threadWait();
