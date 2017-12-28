@@ -302,11 +302,31 @@ void Server::updatePlayerPosition(int id, sf::Vector2f pos)
 
 	//TODO: Levi: player utkozesek (azaz megevette valakit :) )
 
-	//if somebody ate someone
-	if (false)
+	bool eatSomeOne = false;
+	int eatenID = -1;
+	float sizeDif = 20; //meret kulonbseg ahhoz h megeegyem a kisebbet
+
+	for (std::unordered_map<int, Player>::iterator it = players.begin(), next_it = players.begin(); it != players.end() && !eatSomeOne; it = next_it)
 	{
+		if (it->first != player->getId()) {
+			sf::Vector2f distancePlayer(player->getPosition().x - it->second.getPosition().x, player->getPosition().y - it->second.getPosition().y);
+			float lenghtPlayer = sqrt(distancePlayer.x*distancePlayer.x + distancePlayer.y*distancePlayer.y);
+			if (lenghtPlayer < player->getRadius() && player->getRadius() > (it->second.getRadius() + sizeDif)) {
+				eatenID = it->first;
+				eatSomeOne = true;
+				std::cout << "A " << player->getId() << " jatekos megette a kovektkezo jatekost: " << eatenID << std::endl;
+				//TODO barkinek megnovelni a player meretet valamennyivel , akar szintetlepve is majd
+				//itt ne az osszes radiust adjuk at annak aki megevett valakit
+			}
+		}
+	}
+	//if somebody ate someone
+	if (eatSomeOne)
+	{
+		//eatenID  ez a megett jatekos :)
+
 		//I need the id of the eaten player
-		int id = 0; //replace with actual id
+		//int id = 0; //replace with actual id
 		//TODO: Huni: send gameover packet
 		//TODO: Huni: checkranking
 		//TODO: Huni: delete eaten player
@@ -326,7 +346,7 @@ void Server::updateFood(unsigned int id)
 		float lenght = sqrt(distance.x*distance.x + distance.y*distance.y);
 
 		//check if player ate a food
-		if (lenght < (player->getRadius() )) {
+		if (lenght < player->getRadius()) {
 			food[i] = foodGenerator.updateElement(i);
 			player->setRadius(player->getRadius() + 0.5f);
 			foodToUpdate.emplace(i, food[i]);	
