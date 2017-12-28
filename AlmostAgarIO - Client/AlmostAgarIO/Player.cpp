@@ -120,6 +120,21 @@ void Player::resetEnemies()
 	enemies.clear();
 }
 
+sf::String Player::getEnemyName(unsigned int id)
+{
+	return enemies.find(id)->second.getName();
+}
+
+int Player::getEnemyRadius(unsigned int id)
+{
+	return enemies.find(id)->second.getRadius();
+}
+
+sf::Color Player::getEnemyColor(unsigned int id)
+{
+	return enemies.find(id)->second.getColor();
+}
+
 void Player::draw(sf::RenderWindow & window)
 {
 	sf::CircleShape circle;

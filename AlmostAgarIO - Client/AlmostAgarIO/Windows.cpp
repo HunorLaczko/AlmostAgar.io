@@ -92,7 +92,7 @@ void Windows::event_loop(){
 	//Játék megnyitása/megjelenítése, kapcsolódás
 		game.connect();
 		//Eseménykezelés
-		while (isOpen() && !viewChanged)
+		while (isOpen() && !viewChanged && !game.isOver())
 		{
 			sf::Event event;
 			//std::vector<sf::CircleShape> food = gen.getFood();
@@ -126,6 +126,9 @@ void Windows::event_loop(){
 			//Window beállítás, rajzolás
 			game.draw(*this);
 
+		}
+		if (game.isOver()) {
+			changeview(Views::game_over_menu_view);
 		}
 		//Kilépés a játékból, kapcsolat bontás
 		//first = true;

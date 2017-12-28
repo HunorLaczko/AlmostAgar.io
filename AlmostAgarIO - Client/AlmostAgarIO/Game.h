@@ -20,6 +20,9 @@ public:
 	void connect();
 	void disconnect();
 	sf::Vector2f getCirclePos();
+	void setLeaderboard(std::vector<unsigned int> _leaderboard);
+	bool isOver();
+	void gameOver();
 	void init(sf::IpAddress _serverIp, sf::Vector2u window_size,sf::String _playerName);
 	void counting(sf::RenderWindow & window);
 	void func();
@@ -27,7 +30,6 @@ public:
 	void setFirst();
 	void setFood(const std::vector<sf::Vector2f>& _food, float foodRadius);
 	void updateFood(int index, sf::Vector2f newFood);
-
 private:
 	sf::Vector2f vec;
 	sf::Vector2f movement;
@@ -35,6 +37,8 @@ private:
 	bool first; //kamera nézetet reseteli, ha first=true, mindig meg kell hivni a setfirst-t hogy ha új játékot kezdünk
 	sf::View view;
 	int zoom_count;
+	std::vector<unsigned int> leaderboard;
+	bool gameover;
 
 	std::vector<sf::CircleShape> food;
 	//FoodGenerator gen;

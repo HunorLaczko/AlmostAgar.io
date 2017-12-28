@@ -44,6 +44,7 @@ Game::Game() : thread(&Game::func, this)
 	bool first = true;
 	network = new Network(this);
 	zoom_count = 0;
+	gameover = false;
 }
 
 Game::~Game()
@@ -93,6 +94,21 @@ sf::Vector2f Game::getCirclePos()
 	return player.getPosition();
 }
 
+void Game::setLeaderboard(std::vector<unsigned int> _leaderboard)
+{
+	leaderboard = _leaderboard;
+}
+
+bool Game::isOver()
+{
+	return gameover;
+}
+
+void Game::gameOver()
+{
+	gameover = true;
+}
+
 void Game::init(sf::IpAddress _serverIp, sf::Vector2u window_size, sf::String _playerName)
 {
 	network->setIp(_serverIp);
@@ -108,6 +124,7 @@ void Game::connect()
 	player.resetEnemies();
 	network->init(sf::Vector2f(map.getLocalBounds().width, map.getLocalBounds().height), (sf::Vector2f)map.getPosition(), (sf::Vector2f)player.getWindowSize());
 	std::cout << "player pos in init: " << player.getPosition().x << ", " << player.getPosition().y << std::endl;
+	gameover = false;
 }
 
 void Game::disconnect()
@@ -189,6 +206,8 @@ void Game::draw(sf::RenderWindow & window)
 	//view.move(movement);
 	view.setCenter(player.getPosition());
 	
+	//TODO Bálint: ha szervertől megvan a leaderboard, akkor szerint átírni:
+
 	//smaller enemy drawing
 	std::vector<Player> smallerEnemy;
 	

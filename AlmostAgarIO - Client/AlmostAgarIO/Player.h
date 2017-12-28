@@ -48,6 +48,10 @@ public:
 	void reset();
 	void resetEnemies();
 
+	sf::String getEnemyName(unsigned int id);
+	int getEnemyRadius(unsigned int id);
+	sf::Color getEnemyColor(unsigned int id);
+
 	void draw(sf::RenderWindow & window);
 
 	sf::Color getColor();
