@@ -209,6 +209,13 @@ void Windows::initGame(sf::IpAddress _serverIp,sf::String _playerName)
 	game.init(_serverIp, getSize(), _playerName);
 }
 
+std::string Windows::validate(std::string _serverIp, std::string _playerName)
+{
+	sf::IpAddress serverIP = sf::IpAddress(_serverIp);
+	//TODO IP ellenõrzés, (+elõtte regex?)
+	return "OK";
+}
+
 void Windows::set(std::vector<Widget*>  _menu, std::vector<Widget*> _game_over)
 {
 	menu = _menu;

@@ -41,10 +41,18 @@ int main()
 		std::cout << "Nev: " << playerName->getValue() << std::endl;
 		}*/
 		//window.close();
-		window.threadWait();
-		window.initGame(sf::IpAddress(serverIp->getValue()),playerName->getValue());
-		window.changeview(Views::game_view);
-		start = true;
+		std::string answer = window.validate(serverIp->getValue(), playerName->getValue());
+		//Ha minden renben, akkor kezdõdjön a játék, ha nem, akkor hibaüzenet
+		if (answer == "OK") {
+			window.threadWait();
+			window.initGame(sf::IpAddress(serverIp->getValue()), playerName->getValue());
+			window.changeview(Views::game_view);
+			start = true;
+		}
+		else {
+			//TODO Bálint: Hibaüzenet kiírása
+			std::cout << answer << std::endl;
+		}
 	}
 	);
 	main_menu.push_back(g1);
