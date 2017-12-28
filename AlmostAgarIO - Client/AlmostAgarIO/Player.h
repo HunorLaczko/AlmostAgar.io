@@ -10,7 +10,7 @@ class Player
 	sf::Vector2f position;
 	sf::Vector2u windowSize;
 	float radius;
-	sf::String name;
+	std::string name;
 	bool changed;
 	std::unordered_map<int, Player> enemies;
 	sf::Color color;
@@ -35,8 +35,8 @@ public:
 	void setRadius(float _radius);
 	float getRadius();
 
-	sf::String getName();
-	void setName(sf::String _name);
+	std::string getName();
+	void setName(std::string _name);
 
 	bool isRadiusChanged();
 	void setChange(bool _change);
@@ -48,9 +48,13 @@ public:
 	void reset();
 	void resetEnemies();
 
-	sf::String getEnemyName(unsigned int id);
+	std::string getEnemyName(unsigned int id);
+	void setEnemyName(unsigned int id, std::string _name);
+
 	int getEnemyRadius(unsigned int id);
+
 	sf::Color getEnemyColor(unsigned int id);
+	void setEnemyColor(unsigned int id, sf::Color _color);
 
 	void draw(sf::RenderWindow & window);
 

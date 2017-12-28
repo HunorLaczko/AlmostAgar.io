@@ -66,12 +66,12 @@ float Player::getRadius()
 	return radius;
 }
 
-sf::String Player::getName()
+std::string Player::getName()
 {
 	return name;
 }
 
-void Player::setName(sf::String _name)
+void Player::setName(std::string _name)
 {
 	name = _name;
 }
@@ -120,9 +120,14 @@ void Player::resetEnemies()
 	enemies.clear();
 }
 
-sf::String Player::getEnemyName(unsigned int id)
+std::string Player::getEnemyName(unsigned int id)
 {
 	return enemies.find(id)->second.getName();
+}
+
+void Player::setEnemyName(unsigned int id, std::string _name)
+{
+	enemies[id].setName(_name);
 }
 
 int Player::getEnemyRadius(unsigned int id)
@@ -133,6 +138,11 @@ int Player::getEnemyRadius(unsigned int id)
 sf::Color Player::getEnemyColor(unsigned int id)
 {
 	return enemies.find(id)->second.getColor();
+}
+
+void Player::setEnemyColor(unsigned int id, sf::Color _color)
+{
+	enemies[id].setColor(_color);
 }
 
 void Player::draw(sf::RenderWindow & window)
@@ -156,8 +166,8 @@ void Player::draw(sf::RenderWindow & window)
 	text.setStyle(sf::Text::Bold);
 	text.setOutlineColor(sf::Color::Black);
 	text.setOutlineThickness(2);
-	if(name.getSize()>2)
-		text.setCharacterSize(2*radius/name.getSize());
+	if(name.size()>2)
+		text.setCharacterSize(2*radius/name.size());
 	else
 		text.setCharacterSize(2 * radius / 3);
 

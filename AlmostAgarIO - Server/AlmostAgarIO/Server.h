@@ -11,7 +11,7 @@ class Server
 {
 	sf::TcpListener listener;
 	sf::UdpSocket udpSocket;
-	std::map<int, Player> players;
+	std::unordered_map<int, Player> players;
 	sf::SocketSelector selector;
 	unsigned short port = 50000;
 	unsigned short udpPortReceive = 50015;
@@ -22,12 +22,16 @@ class Server
 	FoodGenerator foodGenerator;
 	std::vector<sf::Vector2f> food;
 	std::unordered_map<int, sf::Vector2f> foodToUpdate;
+	std::vector<Player> ranking;
 
 	bool running;
+	bool rankingChanged;
 
 	void updatePlayerPosition(int id, sf::Vector2f pos);
 	void setFood(unsigned int id);
 	void updateFood(unsigned int id);
+	void checkRanking();
+	void deletePlayerFromRanking(int id);
 public:
 	Server();
 	~Server();

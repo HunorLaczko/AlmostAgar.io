@@ -114,14 +114,14 @@ void Game::init(sf::IpAddress _serverIp, sf::Vector2u window_size, sf::String _p
 	network->setIp(_serverIp);
 	player.setWindowSize(window_size);
 	if(_playerName !="")
-		player.setName(_playerName);
+		player.setName(_playerName.toAnsiString());
 }
 
 
 void Game::connect()
 {	
 	network->connectPlayer(&player);
-	player.resetEnemies();
+	//player.resetEnemies();
 	network->init(sf::Vector2f(map.getLocalBounds().width, map.getLocalBounds().height), (sf::Vector2f)map.getPosition(), (sf::Vector2f)player.getWindowSize());
 	std::cout << "player pos in init: " << player.getPosition().x << ", " << player.getPosition().y << std::endl;
 	gameover = false;

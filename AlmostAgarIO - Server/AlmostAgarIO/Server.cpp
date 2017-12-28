@@ -17,6 +17,7 @@ Server::Server() : foodGenerator(sf::Vector2f(1000,750), sf::Vector2f(4000,3000)
 	clock.restart();
 	foodGenerator.generateFood(1000);
 	food = foodGenerator.getFood();
+	rankingChanged = false;
 }
 
 
@@ -57,12 +58,14 @@ void Server::run()
 					//packet << players.back().getId();
 					packet << id - 1;
 					packet << players.at(id - 1).getRadius();
+					//add player to ranking and refresh order
+					ranking.push_back(players.at(id - 1));
+					checkRanking();
 					if (client->send(packet) != sf::Socket::Done) //Send client id
 						std::cout << "Error sending id" << std::endl;
 					else
 						std::cout << "\nId sent to " << client->getRemoteAddress() << " on port " << client->getRemotePort() << "\n";
-					//players.at(id - 1).init(foodGenerator.getFood());
-					//setFood(id - 1);
+					
 				}
 
 			}			
@@ -106,7 +109,7 @@ void Server::run()
 			{
 				// The listener socket is not ready, test all other sockets (the clients)
 				//for (size_t i = 0; i < players.size(); i++)
-				for (std::map<int, Player>::iterator it = players.begin(), next_it = players.begin(); it != players.end(); it = next_it)
+				for (std::unordered_map<int, Player>::iterator it = players.begin(), next_it = players.begin(); it != players.end(); it = next_it)
 				{
 					next_it = it; ++next_it;
 					//sf::TcpSocket& client = it->getSocket;
@@ -123,34 +126,68 @@ void Server::run()
 							if (type == 3)
 							{
 								//initializing parameters from client
-								int id;
+								unsigned int id;
 								sf::Vector2f _mapSize;
 								sf::Vector2f _mapPosition;
 								sf::Vector2f _windowSize;
-								packet >> id >> _mapSize.x >> _mapSize.y >> _mapPosition.x >> _mapPosition.y >> _windowSize.x >> _windowSize.y;
-								Player *player = &players.find(id)->second;
+								std::string name;
+								packet >> id >> _mapSize.x >> _mapSize.y >> _mapPosition.x >> _mapPosition.y >> _windowSize.x >> _windowSize.y >> name;
+								//Player *player = &players.find(id)->second;
+								Player* player = &players.at(id);
 								player->setMapSize(_mapSize);
 								player->setMapPosition(_mapPosition);
 								player->setWindowSize(_windowSize);
+								player->setName(name);
+
+								sf::Packet initPacket;
+
 
 								//generating random start position and sending it to player
 								player->initPosition();
 								sf::Packet initPositionPacket;
 								initPositionPacket << player->getId() << player->getPosition().x << player->getPosition().y;
-								(*it).second.getTcpSocket()->send(initPositionPacket);
+								initPacket << player->getId() << player->getPosition().x << player->getPosition().y;
+								//(*it).second.getTcpSocket()->send(initPositionPacket);
 
 								//sending whole food vector to client
 								sf::Packet foodPacket;
-								foodPacket << foodGenerator.getFoodRadius();
-								foodPacket << food.size();
+								initPacket << foodGenerator.getFoodRadius();
+								initPacket << food.size();
 								for (sf::Vector2f f : food)
 								{
-									foodPacket << f.x << f.y;
+									initPacket << f.x << f.y;
 								}
-								(*it).second.getTcpSocket()->send(foodPacket);
+								//(*it).second.getTcpSocket()->send(foodPacket);
+
+								//generating random color
+								player->setColor(sf::Color(rand() % 256, rand() % 256, rand() % 256));
+
+								//sending every player's name and color for new player
+								std::cout << "sending every player's name and color for new player\n";
+								sf::Packet nameAndColorPacket;
+								initPacket << players.size();
+								for (std::unordered_map<int, Player>::iterator it2 = players.begin(); it2 != players.end(); it2++)
+								{
+									initPacket << it2->second.getId() << it2->second.getName() << (int)it2->second.getColor().r << (int)it2->second.getColor().g << (int)it2->second.getColor().b;
+									std::cout << "id: " << it2->second.getId() << " name: " << it2->second.getName() << " color: (" <<(int)it2->second.getColor().r << "," << (int)it2->second.getColor().g << "," << (int)it2->second.getColor().b << ")\n";
+								}
+								//(*it).second.getTcpSocket()->send(nameAndColorPacket);
+								(*it).second.getTcpSocket()->send(initPacket);
+
+								//sending new player's name and color for others
+								
+								std::cout << "sending new player's name and color for others\n";
+								sf::Packet newPlayer;
+								newPlayer << 7 << it->second.getId() << it->second.getName() << it->second.getColor().r << it->second.getColor().g << it->second.getColor().b;
+								for (std::unordered_map<int, Player>::iterator it2 = players.begin(); it2 != players.end(); it2++)
+								{
+									if(it2->second.getId() != it->second.getId())
+										(*it2).second.getTcpSocket()->send(newPlayer);
+								}
+								
 
 								//player->setPosition(sf::Vector2f((_mapPosition.x+_mapSize.x/2),(_mapPosition.y+_mapSize.y/2)));
-								std::cout << "\n\n\nreceived init params: "<<player->getPosition().x<<", "<<player->getPosition().y<<"\n\n\n\n";
+								std::cout << "\nreceived init params: "<<player->getPosition().x<<", "<<player->getPosition().y<<"\n";
 
 							}
 							else if (type == 4)
@@ -168,6 +205,7 @@ void Server::run()
 								selector.remove(*(*it).second.getTcpSocket());
 								
 								std::cout << "disconnected player: " << it->second.getId() << std::endl;
+								deletePlayerFromRanking(it->second.getId());
 								players.erase(it++);
 								//it = players.erase(it);
 								//if (players.size() == 0) break;
@@ -186,7 +224,7 @@ void Server::run()
 			//generating packet with all players' location
 			sf::Packet positionPacket;
 			positionPacket << 2 << players.size();
-			for (std::map<int, Player>::iterator it = players.begin(); it != players.end(); it++)
+			for (std::unordered_map<int, Player>::iterator it = players.begin(); it != players.end(); it++)
 			{
 				positionPacket << it->first << it->second.getPosition().x << it->second.getPosition().y << it->second.getRadius();
 			}
@@ -199,16 +237,29 @@ void Server::run()
 				foodPacket << it->first << it->second.x << it->second.y;
 			}
 
-			for (std::map<int, Player>::iterator it = players.begin(); it != players.end(); it++)
+			//generating ranking packet
+			sf::Packet rankingPacket;
+			rankingPacket << 6 << ranking.size();
+			for (Player player : ranking)
+			{
+				rankingPacket << player.getId();
+			}
+
+			for (std::unordered_map<int, Player>::iterator it = players.begin(); it != players.end(); it++)
 			{
 				//sending players' positions
 				udpSocket.send(positionPacket, it->second.getPlayerIp(), udpPortSend);
 
-				///itt nem csak a elso jatekos kapja meg a foodto updatet?? mert a clear utan ez tuti ures lesz de az nem 
 				//sending changed food
 				if (foodToUpdate.size() != 0)
 				{
 					udpSocket.send(foodPacket, it->second.getPlayerIp(), udpPortSend);
+				}
+				
+				//sending ranking if changed
+				if (rankingChanged)
+				{	
+					it->second.getTcpSocket()->send(rankingPacket);
 				}
 			  	
 			}
@@ -248,6 +299,18 @@ void Server::updatePlayerPosition(int id, sf::Vector2f pos)
 	//std::cout << "vec: " << vec.x << "," << vec.y << " pos: " << pos.x << "," << pos.y << "\n";
 	player->setPosition(pos);
 	//std::cout << "playerPos: " << player->getPosition().x << "," << player->getPosition().y << "\n";
+
+	//TODO: Levi: player utkozesek (azaz megevette valakit :) )
+
+	//if somebody ate someone
+	if (false)
+	{
+		//I need the id of the eaten player
+		int id = 0; //replace with actual id
+		//TODO: Huni: send gameover packet
+		//TODO: Huni: checkranking
+		//TODO: Huni: delete eaten player
+	}
 }
 
 void Server::setFood(unsigned int id)
@@ -266,15 +329,36 @@ void Server::updateFood(unsigned int id)
 		if (lenght < (player->getRadius() )) {
 			food[i] = foodGenerator.updateElement(i);
 			player->setRadius(player->getRadius() + 0.5f);
-			foodToUpdate.emplace(i, food[i]);
+			foodToUpdate.emplace(i, food[i]);	
+			checkRanking();
+		}
+	}
+}
 
-			//sending food change to every player
-			/*for (std::map<int, Player>::iterator it = players.begin(); it != players.end(); it++)
-			{
-				sf::Packet outPacket;
-				outPacket << 4 << i << food[i].x << food[i].y;
-				udpSocket.send(outPacket, it->second.getPlayerIp(), udpPortSend);
-			}	*/		
+struct less
+{
+	bool operator()(const Player& lhs, const Player& rhs) const {
+		return lhs.getRadius() < rhs.getRadius();
+	}
+};
+
+void Server::checkRanking()
+{
+	if (std::is_sorted(std::begin(ranking), std::end(ranking), less()))
+		return;
+
+	std::sort(std::begin(ranking), std::end(ranking), less());
+	rankingChanged = true;
+}
+
+void Server::deletePlayerFromRanking(int id)
+{
+	for (size_t i = 0; i < ranking.size(); i++)
+	{
+		if (ranking[i].getId() == id)
+		{
+			ranking.erase(ranking.begin() + i);
+			return;
 		}
 	}
 }

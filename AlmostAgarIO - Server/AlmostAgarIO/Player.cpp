@@ -32,6 +32,16 @@ unsigned int Player::getId() const
 	return id;
 }
 
+std::string Player::getName() const
+{
+	return name;
+}
+
+void Player::setName(std::string _name)
+{
+	name = _name;
+}
+
 sf::Vector2f Player::getPosition() const
 {
 	return position;
@@ -42,7 +52,7 @@ void Player::setPosition(sf::Vector2f _position)
 	position = _position;
 }
 
-sf::Vector2f Player::getMapSize()
+sf::Vector2f Player::getMapSize() const
 {
 	return mapSize;
 }
@@ -52,7 +62,7 @@ void Player::setMapSize(sf::Vector2f _mapSize)
 	mapSize = _mapSize;
 }
 
-sf::Vector2f Player::getMapPosition()
+sf::Vector2f Player::getMapPosition() const
 {
 	return mapPosition;
 }
@@ -62,7 +72,7 @@ void Player::setMapPosition(sf::Vector2f _mapPosition)
 	mapPosition = _mapPosition;
 }
 
-sf::Vector2f Player::getWindowSize()
+sf::Vector2f Player::getWindowSize() const
 {
 	return windowSize;
 }
@@ -72,7 +82,7 @@ void Player::setWindowSize(sf::Vector2f _windowSize)
 	windowSize = _windowSize;
 }
 
-float Player::getRadius()
+float Player::getRadius() const
 {
 	return radius;
 }
@@ -82,7 +92,7 @@ void Player::setRadius(float _radius)
 	radius = _radius;
 }
 
-sf::IpAddress Player::getPlayerIp()
+sf::IpAddress Player::getPlayerIp() const
 {
 	return playerIp;
 }
@@ -92,7 +102,7 @@ void Player::setPlayerIp(sf::IpAddress _playerIp)
 	playerIp = _playerIp;
 }
 
-sf::Vector2f Player::getMousePosition()
+sf::Vector2f Player::getMousePosition() const
 {
 	return mousePosition;
 }
@@ -108,7 +118,7 @@ void Player::initPosition()
 	//position = sf::Vector2f(2000, 2000);
 }
 
-sf::Color Player::getColor() {
+sf::Color Player::getColor() const {
 	return color;
 }
 
@@ -117,37 +127,16 @@ void Player::setColor(sf::Color _color) {
 }
 
 
-/*
-void Player::init(std::vector<sf::Vector2f>& _food)
-{
-	
-	for (sf::Vector2f f : _food)
-	{
-		if (f.x > position.x - (windowSize.x / 2 - 50) && f.x < position.x + (windowSize.x / 2 + 50) &&
-			f.y > position.y - (windowSize.y / 2 - 50) && f.y < position.y + (windowSize.y / 2 + 50))
-		{
-			food.insert(f);
-		}
-	}
-	
-	food = _food;
-}
-
-void Player::updateFood(int index, sf::Vector2f newPosition)
-{
-	
-	food.erase(food.find(toDelete));
-	if (toAdd.x > position.x - (windowSize.x / 2 - 50) && toAdd.x < position.x + (windowSize.x / 2 + 50) &&
-		toAdd.y > position.y - (windowSize.y / 2 - 50) && toAdd.y < position.y + (windowSize.y / 2 + 50))
-	{
-		food.insert(toAdd);
-	}
-
-}
-*/
 bool operator==(const Player &a, const Player &b)
 {
 	if (a.getId() == b.getId())
+		return true;
+	return false;
+}
+
+bool operator<(const Player &a, const Player &b)
+{
+	if (a.getRadius() < b.getRadius())
 		return true;
 	return false;
 }
