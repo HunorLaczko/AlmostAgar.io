@@ -47,6 +47,7 @@ public:
 
 	void reset();
 	void resetEnemies();
+	void deleteEnemy(unsigned int id);
 
 	std::string getEnemyName(unsigned int id);
 	void setEnemyName(unsigned int id, std::string _name);

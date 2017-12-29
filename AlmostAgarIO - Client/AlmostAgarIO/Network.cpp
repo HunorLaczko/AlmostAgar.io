@@ -3,14 +3,21 @@
 #include <iostream>
 #include <thread>
 #include <unordered_map>
+#include <random>
+#include <time.h>
 
 Network::Network()
 {
+	srand(time(NULL));
+	serverUdpPortReceive = rand() % 5000 + 50000;
+	serverUdpPortSend = serverUdpPortReceive + 1;
 }
 
 Network::Network(Game* _game) : game(_game)
 {
-	
+	srand(time(NULL));
+	serverUdpPortReceive = rand() % 5000 + 50000;
+	serverUdpPortSend = serverUdpPortReceive + 1;
 }
 
 
@@ -62,6 +69,11 @@ void Network::connectPlayer(Player *_player)
 				player->setRadius(radius);
 				Player::setDefRad(radius);
 				std::cout << "received id: " << id << "\n";
+
+				sf::Packet udpInfo;
+				udpInfo << serverUdpPortSend << serverUdpPortReceive;
+				tcpSocket.send(udpInfo);
+				std::cout << "sent udp ports to server\n";
 			}
 		}
 		else
@@ -74,7 +86,7 @@ void Network::connectPlayer(Player *_player)
 void Network::disconnectPlayer()
 {
 	tcpSocket.disconnect();
-	//udpSocket.unbind();
+	udpSocket.unbind();
 	//delete player;
 }
 
@@ -83,8 +95,8 @@ void Network::init(sf::Vector2f _mapSize, sf::Vector2f _mapPosition, sf::Vector2
 	
 	//sending initializing parameters
 	sf::Packet outPacket;
-	std::cout << "checking name before sending: " << player->getName() << "\n";
-	outPacket << 3 << player->getId() << _mapSize.x << _mapSize.y << _mapPosition.x << _mapPosition.y << _windowSize.x << _windowSize.y << player->getName();
+	//std::cout << "checking name before sending: " << player->getName() << "\n";
+	outPacket << 3 << player->getId() << _mapSize.x << _mapSize.y << _mapPosition.x << _mapPosition.y << _windowSize.x << _windowSize.y << player->getName();// << serverUdpPortSend << serverUdpPortReceive;
 	//std::cout << udpSocket.send(outPacket, serverIp, serverUdpPortSend) << std::endl;
 	tcpSocket.send(outPacket);
 
@@ -162,7 +174,8 @@ void Network::getResponse()
 {
 	sf::Packet packet;
 	sf::IpAddress sender;
-	if (udpSocket.receive(packet, sender, serverUdpPortReceive) == sf::Socket::Done)
+	unsigned short udpPortReceivedFrom;
+	if (udpSocket.receive(packet, sender, udpPortReceivedFrom) == sf::Socket::Done)
 	{
 		//std::cout << "getResponse: received something\n";
 		int type;
@@ -178,7 +191,7 @@ void Network::getResponse()
 			float radius;
 			int myId = player->getId();
 			packet >> playersSize;
-			if (playersSize != player->getEnemies().size() + 1) player->resetEnemies();
+			//if (playersSize != player->getEnemies().size() + 1) player->resetEnemies();
 			for (size_t i = 0; i < playersSize; i++)
 			{
 				packet >> id >> pos.x >> pos.y >> radius;
@@ -237,6 +250,7 @@ void Network::getResponse()
 				ranking.push_back(id);
 				game->setLeaderboard(ranking);
 			}
+			break;
 		}
 		//received new player info
 		case 7:
@@ -247,6 +261,20 @@ void Network::getResponse()
 			packet >> id >> name >> color.r >> color.g >> color.b;
 			player->setEnemyName(id, name);
 			player->setEnemyColor(id, color);
+			break;
+		}
+		//receive game over message
+		case 8:
+		{
+			packet >> id;
+			if (id == player->getId())
+			{
+				game->gameOver();
+			}
+			else
+			{
+				player->deleteEnemy(id);
+			}
 		}
 		}
 	}

@@ -1,11 +1,12 @@
 #include "stdafx.h"
 #include "Player.h"
+#include <iostream>
 #include <SFML/Network.hpp>
 
 
 Player::Player(int _id, sf::Vector2f _position, sf::TcpSocket *_tcpSocket)
 	: id(_id), position(_position), tcpSocket(_tcpSocket), radius(80),
-	name("unknown"), udpSocket(nullptr), playerIp(sf::IpAddress()),port(0),
+	name("unknown"), udpSocket(nullptr), playerIp(sf::IpAddress()),
 	speed(sf::Vector2f(0, 0)), velocity(sf::Vector2f(0, 0)), points(0), 
 	mapSize(sf::Vector2f(0, 0)), mapPosition(sf::Vector2f(0, 0)),
 	windowSize(sf::Vector2f(0, 0)), mousePosition(sf::Vector2f(0, 0))
@@ -24,6 +25,7 @@ sf::TcpSocket * Player::getTcpSocket() const
 
 sf::UdpSocket * Player::getUdpSocket() const
 {
+	if (udpSocket == nullptr) std::cout << "udpSocket hasn't been initialized\n";
 	return udpSocket;
 }
 
@@ -100,6 +102,25 @@ sf::IpAddress Player::getPlayerIp() const
 void Player::setPlayerIp(sf::IpAddress _playerIp)
 {
 	playerIp = _playerIp;
+}
+
+sf::UdpSocket * Player::bindUdpSocket(unsigned short _udpPortReceive, unsigned short _udpPortSend)
+{
+	udpSocket = new sf::UdpSocket();
+	udpSocket->bind(_udpPortReceive);
+	udpPortReceive = _udpPortReceive;
+	udpPortSend = _udpPortSend;
+	return udpSocket;
+}
+
+unsigned short Player::getUdpPortSend() const
+{
+	return udpPortSend;
+}
+
+unsigned short Player::getUdpPortReceive() const
+{
+	return udpPortReceive;
 }
 
 sf::Vector2f Player::getMousePosition() const

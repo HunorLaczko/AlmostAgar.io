@@ -14,7 +14,8 @@ class Player
 	sf::TcpSocket* tcpSocket;
 	sf::UdpSocket* udpSocket;
 	sf::IpAddress playerIp;
-	unsigned int port;
+	unsigned short udpPortReceive;
+	unsigned short udpPortSend;
 	sf::Vector2f position;  //player position, in world coordinates (absolute coordinates)
 	sf::Vector2f speed;     //player speed
 	sf::Vector2f velocity;  //player velocity
@@ -55,6 +56,10 @@ public:
 
 	sf::IpAddress getPlayerIp() const;
 	void setPlayerIp(sf::IpAddress _playerIp);
+
+	sf::UdpSocket* bindUdpSocket(unsigned short _udpPortReceive, unsigned short _udpPortSend);
+	unsigned short getUdpPortSend() const;
+	unsigned short getUdpPortReceive() const;
 
 	sf::Vector2f getMousePosition() const;
 	void setMousePosition(sf::Vector2f _mousePosition);

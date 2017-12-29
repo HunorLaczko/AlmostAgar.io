@@ -14,8 +14,8 @@ class Server
 	std::unordered_map<int, Player> players;
 	sf::SocketSelector selector;
 	unsigned short port = 50000;
-	unsigned short udpPortReceive = 50015;
-	unsigned short udpPortSend = 50016;
+	//unsigned short udpPortReceive = 50015;
+	//unsigned short udpPortSend = 50016;
 	unsigned int id;
 	sf::Vector2f position;
 	sf::Clock clock;
@@ -32,6 +32,7 @@ class Server
 	void updateFood(unsigned int id);
 	void checkRanking();
 	void deletePlayerFromRanking(int id);
+	void playerDied(unsigned int id);
 public:
 	Server();
 	~Server();

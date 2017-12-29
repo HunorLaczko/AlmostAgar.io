@@ -11,9 +11,9 @@ Server::Server() : foodGenerator(sf::Vector2f(1000,750), sf::Vector2f(4000,3000)
 	listener.listen(port);
 	selector.add(listener);
 	running = true;
-	udpSocket.bind(udpPortReceive);
-	udpSocket.setBlocking(false);
-	selector.add(udpSocket);
+	//udpSocket.bind(udpPortReceive);
+	//udpSocket.setBlocking(false);
+	//selector.add(udpSocket);
 	clock.restart();
 	foodGenerator.generateFood(1000);
 	food = foodGenerator.getFood();
@@ -66,12 +66,19 @@ void Server::run()
 					else
 						std::cout << "\nId sent to " << client->getRemoteAddress() << " on port " << client->getRemotePort() << "\n";
 					
+					sf::Packet udpInfo;
+					unsigned short udpPortReceive;
+					unsigned short udpPortSend;
+					client->receive(udpInfo);
+					udpInfo >> udpPortReceive >> udpPortSend;
+					selector.add(*players.at(id - 1).bindUdpSocket(udpPortReceive, udpPortSend));
+					std::cout << "received udp ports from client: " << udpPortReceive << " , " << udpPortSend << "\n";
 				}
 
 			}			
 			//check udp socket
 			//player locations should arrive here
-			else if (selector.isReady(udpSocket))
+			/*else if (selector.isReady(udpSocket))
 			{
 				//std::cout << "udp socket received something\n";
 				sf::Packet packet;
@@ -104,11 +111,10 @@ void Server::run()
 				}
 
 			
-			}
+			}*/
 			else
 			{
 				// The listener socket is not ready, test all other sockets (the clients)
-				//for (size_t i = 0; i < players.size(); i++)
 				for (std::unordered_map<int, Player>::iterator it = players.begin(), next_it = players.begin(); it != players.end(); it = next_it)
 				{
 					next_it = it; ++next_it;
@@ -131,13 +137,15 @@ void Server::run()
 								sf::Vector2f _mapPosition;
 								sf::Vector2f _windowSize;
 								std::string name;
-								packet >> id >> _mapSize.x >> _mapSize.y >> _mapPosition.x >> _mapPosition.y >> _windowSize.x >> _windowSize.y >> name;
+								
+								packet >> id >> _mapSize.x >> _mapSize.y >> _mapPosition.x >> _mapPosition.y >> _windowSize.x >> _windowSize.y >> name;// >> udpPortReceive >> udpPortSend;
 								//Player *player = &players.find(id)->second;
 								Player* player = &players.at(id);
 								player->setMapSize(_mapSize);
 								player->setMapPosition(_mapPosition);
 								player->setWindowSize(_windowSize);
 								player->setName(name);
+								//selector.add(*player->bindUdpSocket(udpPortReceive, udpPortSend));
 
 								sf::Packet initPacket;
 
@@ -205,14 +213,48 @@ void Server::run()
 								selector.remove(*(*it).second.getTcpSocket());
 								
 								std::cout << "disconnected player: " << it->second.getId() << std::endl;
-								deletePlayerFromRanking(it->second.getId());
-								players.erase(it++);
+								unsigned int id = it->second.getId();
+								it++;
+								deletePlayerFromRanking(id);
+								//needs testing
+								playerDied(id);
+								continue;
+									//players.erase(it++);
+									
 								//it = players.erase(it);
 								//if (players.size() == 0) break;
 								//it = players.begin();
 							}
 						}
-					}	
+					}
+					if (selector.isReady(*(*it).second.getUdpSocket()))
+					{
+						sf::Packet packet;
+						sf::IpAddress sender;
+						unsigned short udpPortReceive;
+						if (it->second.getUdpSocket()->receive(packet, sender, udpPortReceive) == sf::Socket::Done)
+						{
+							int type;
+							packet >> type;
+							int id;
+							sf::Vector2f pos;
+
+							//Player player;
+
+							switch (type)
+							{
+								//received location
+							case 1:
+							{
+								packet >> id >> pos.x >> pos.y;
+								updatePlayerPosition(id, pos);
+								updateFood(id);
+								break;
+							}
+
+							}
+						}
+					}
 				}
 			}
 		}
@@ -248,12 +290,12 @@ void Server::run()
 			for (std::unordered_map<int, Player>::iterator it = players.begin(); it != players.end(); it++)
 			{
 				//sending players' positions
-				udpSocket.send(positionPacket, it->second.getPlayerIp(), udpPortSend);
+				it->second.getUdpSocket()->send(positionPacket, it->second.getPlayerIp(), it->second.getUdpPortSend());
 
 				//sending changed food
 				if (foodToUpdate.size() != 0)
 				{
-					udpSocket.send(foodPacket, it->second.getPlayerIp(), udpPortSend);
+					it->second.getUdpSocket()->send(foodPacket, it->second.getPlayerIp(), it->second.getUdpPortSend());
 				}
 				
 				//sending ranking if changed
@@ -279,7 +321,7 @@ void Server::updatePlayerPosition(int id, sf::Vector2f pos)
 
 	sf::Vector2f vec;
 	sf::Vector2f distance(pos.x - player->getPosition().x, pos.y - player->getPosition().y);
-	float speed = (float)(2.2 - (0.005 * player->getRadius()));
+	float speed = (float)(3.2 - (0.005 * player->getRadius()));
 	if (speed <= 0.06f) speed = 0.06f;
 
 	//std::cout << "Size: " << circle.getRadius() << " Speed: " << speed << std::endl;
@@ -300,13 +342,13 @@ void Server::updatePlayerPosition(int id, sf::Vector2f pos)
 	player->setPosition(pos);
 	//std::cout << "playerPos: " << player->getPosition().x << "," << player->getPosition().y << "\n";
 
-	//TODO: Levi: player utkozesek (azaz megevette valakit :) )
+
 
 	bool eatSomeOne = false;
 	int eatenID = -1;
-	float sizeDif = 20; //meret kulonbseg ahhoz h megeegyem a kisebbet
+	float sizeDif = 5; //meret kulonbseg ahhoz h megeegyem a kisebbet
 
-	for (std::unordered_map<int, Player>::iterator it = players.begin(), next_it = players.begin(); it != players.end() && !eatSomeOne; it = next_it)
+	for (std::unordered_map<int, Player>::iterator it = players.begin(); it != players.end() && !eatSomeOne; it++)
 	{
 		if (it->first != player->getId()) {
 			sf::Vector2f distancePlayer(player->getPosition().x - it->second.getPosition().x, player->getPosition().y - it->second.getPosition().y);
@@ -321,12 +363,13 @@ void Server::updatePlayerPosition(int id, sf::Vector2f pos)
 		}
 	}
 	//if somebody ate someone
-	if (eatSomeOne)
+	if (eatSomeOne == true)
 	{
 		//eatenID  ez a megett jatekos :)
+		deletePlayerFromRanking(eatenID);
+		//players.erase(eatenID);
+		playerDied(eatenID);
 
-		//I need the id of the eaten player
-		//int id = 0; //replace with actual id
 		//TODO: Huni: send gameover packet
 		//TODO: Huni: checkranking
 		//TODO: Huni: delete eaten player
@@ -381,4 +424,19 @@ void Server::deletePlayerFromRanking(int id)
 			return;
 		}
 	}
+}
+
+void Server::playerDied(unsigned int id)
+{
+	for (std::unordered_map<int, Player>::iterator it = players.begin(); it != players.end(); it++)
+	{
+			sf::Packet gameOverPacket;
+			gameOverPacket << 8 << id;
+			it->second.getTcpSocket()->send(gameOverPacket);
+	}
+	selector.remove(*players.at(id).getTcpSocket());
+	players.at(id).getTcpSocket()->disconnect();
+	selector.remove(*players.at(id).getUdpSocket());
+	players.at(id).getUdpSocket()->unbind();
+	players.erase(id);
 }

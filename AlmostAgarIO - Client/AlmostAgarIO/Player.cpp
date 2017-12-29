@@ -120,6 +120,11 @@ void Player::resetEnemies()
 	enemies.clear();
 }
 
+void Player::deleteEnemy(unsigned int id)
+{
+	enemies.erase(id);
+}
+
 std::string Player::getEnemyName(unsigned int id)
 {
 	return enemies.find(id)->second.getName();
