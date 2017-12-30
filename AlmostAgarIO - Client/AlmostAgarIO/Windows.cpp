@@ -115,6 +115,11 @@ void Windows::event_loop(){
 						changeview(Views::game_over_menu_view);
 						//close();
 					}
+					game.keyPressed(event.text.unicode);
+					break;
+				}
+				case sf::Event::KeyReleased:{
+					game.keyReleased(event.text.unicode);
 					break;
 				}
 				}

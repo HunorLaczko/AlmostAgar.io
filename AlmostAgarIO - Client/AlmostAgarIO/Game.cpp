@@ -45,6 +45,8 @@ Game::Game() : thread(&Game::func, this)
 	network = new Network(this);
 	zoom_count = 0;
 	gameover = false;
+	//Speciális képességekhez a bilentyűk(számozás abc szerint): a-0, s-18, d-3
+	specalkeys = {{ 0,false },{ 18,false } ,{ 3,false } };
 }
 
 Game::~Game()
@@ -77,6 +79,28 @@ void Game::setFood(const std::vector<sf::Vector2f>& _food, float foodRadius)
 void Game::updateFood(int index, sf::Vector2f newFood)
 {
 	food[index].setPosition(newFood);
+}
+
+void Game::keyPressed(int key)
+{
+	std::map<int, bool>::iterator it;
+	it = specalkeys.find(key);
+	if (it != specalkeys.end()) {
+		if (!it->second) {
+			it->second = true;
+			network->sendKey(key, true);
+		}
+	}
+}
+
+void Game::keyReleased(int key)
+{
+	std::map<int, bool>::iterator it;
+	it = specalkeys.find(key);
+	if (it != specalkeys.end()) {
+		it->second = false;
+		network->sendKey(key,false);
+	}
 }
 
 void Game::resize(sf::Event::SizeEvent event_size, sf::Vector2u window_size) {
