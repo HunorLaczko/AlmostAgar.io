@@ -183,6 +183,18 @@ void Windows::event_loop(){
 					if (event.key.code == sf::Keyboard::Escape) {
 						close();
 					}
+					if (sf::Keyboard::isKeyPressed(sf::Keyboard::Tab)) {
+						bool isselected = false;
+						for (unsigned i = 0; i < widgets.size(); i++) {
+							if (widgets[i]->isSelected()) {
+								isselected = true;
+								break;
+							}
+						}
+						if (!isselected) {
+							widgets[0]->setSelected(true);
+						}
+					}
 				}
 			}
 
@@ -199,10 +211,12 @@ void Windows::event_loop(){
 }
 void Windows::changeview(Views view)
 {
-	//if (viewid >= 0 && viewid <=2) {
-		viewid = view;
-		viewChanged = true;
-	//}
+	//IP és név mentés
+	if (viewid == Views::main_menu_view) {
+		save();
+	}
+	viewid = view;
+	viewChanged = true;
 }
 void Windows::initGame(sf::IpAddress _serverIp,sf::String _playerName)
 {
