@@ -52,6 +52,8 @@ public:
 	std::string getEnemyName(unsigned int id);
 	void setEnemyName(unsigned int id, std::string _name);
 
+	Player getEnemyById(unsigned int id);
+
 	int getEnemyRadius(unsigned int id);
 
 	sf::Color getEnemyColor(unsigned int id);

@@ -127,7 +127,7 @@ void Player::deleteEnemy(unsigned int id)
 
 std::string Player::getEnemyName(unsigned int id)
 {
-	return enemies.find(id)->second.getName();
+	return enemies[id].getName();
 }
 
 void Player::setEnemyName(unsigned int id, std::string _name)
@@ -135,14 +135,19 @@ void Player::setEnemyName(unsigned int id, std::string _name)
 	enemies[id].setName(_name);
 }
 
+Player Player::getEnemyById(unsigned int id)
+{
+	return enemies[id];
+}
+
 int Player::getEnemyRadius(unsigned int id)
 {
-	return enemies.find(id)->second.getRadius();
+	return enemies[id].getRadius();
 }
 
 sf::Color Player::getEnemyColor(unsigned int id)
 {
-	return enemies.find(id)->second.getColor();
+	return enemies[id].getColor();
 }
 
 void Player::setEnemyColor(unsigned int id, sf::Color _color)

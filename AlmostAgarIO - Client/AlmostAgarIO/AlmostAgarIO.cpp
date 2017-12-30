@@ -3,6 +3,8 @@
 
 #include "stdafx.h"
 #include "Button.h"
+#include "TextEditor.h"
+#include "SimpleText.h"
 #include "Windows.h"
 //#include "Game.h"
 
@@ -102,7 +104,7 @@ int main()
 	main_menu.push_back(game);
 	main_menu.push_back(close);
 
-	lambdaButton *newgame = new lambdaButton(300 + 100, 100, 200, 50, "Új játék",
+	lambdaButton *newgame = new lambdaButton(300 + 100, 175, 200, 50, "Új játék",
 		[&]//mindent akarok használni
 	()
 	{
@@ -112,7 +114,7 @@ int main()
 	}
 	, [&]() {});
 
-	lambdaButton *exit = new lambdaButton(300 + 100, 200, 200, 50, "Kilépés",
+	lambdaButton *exit = new lambdaButton(300 + 100, 250, 200, 50, "Kilépés",
 		[&]//mindent akarok használni
 	()
 	{
@@ -121,6 +123,9 @@ int main()
 		fut = false;
 	}
 	, [&]() {});
+
+	SimpleText *gameover = new SimpleText(300 + 100, 100, 200, 50, "Game Over");
+
 	newgame->setTabFunc([&]()
 	{
 		newgame->setSelected(false);
@@ -135,6 +140,7 @@ int main()
 	);
 	game_over_menu.push_back(newgame);
 	game_over_menu.push_back(exit);
+	game_over_menu.push_back(gameover);
 
 
 	//Menü elemek átadása az ablaknak, majd IP és név betöltés
