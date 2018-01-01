@@ -27,7 +27,7 @@ class Server
 	bool running;
 	bool rankingChanged;
 
-	void updatePlayerPosition(int id, sf::Vector2f pos);
+	bool updatePlayerPosition(int id, sf::Vector2f pos);	//returns true if somebody died
 	void setFood(unsigned int id);
 	void updateFood(unsigned int id);
 	void checkRanking();

@@ -18,7 +18,7 @@ Server::Server() : foodGenerator(sf::Vector2f(1000,750), sf::Vector2f(4000,3000)
 	clock.restart();
 	foodGenerator.generateFood(1000);
 	food = foodGenerator.getFood();
-	rankingChanged = false;
+	rankingChanged = true;
 }
 
 
@@ -61,6 +61,7 @@ void Server::run()
 					packet << players.at(id - 1).getRadius();
 					//add player to ranking and refresh order
 					ranking.push_back(players.at(id - 1));
+					rankingChanged = true;
 					checkRanking();
 					if (client->send(packet) != sf::Socket::Done) //Send client id
 						std::cout << "Error sending id" << std::endl;
@@ -77,42 +78,7 @@ void Server::run()
 				}
 
 			}			
-			//check udp socket
-			//player locations should arrive here
-			/*else if (selector.isReady(udpSocket))
-			{
-				//std::cout << "udp socket received something\n";
-				sf::Packet packet;
-				sf::IpAddress sender;
-				if (udpSocket.receive(packet, sender, udpPortReceive) == sf::Socket::Done)
-				{
-					int type;
-					packet >> type;
-					int id;
-					sf::Vector2f pos;
-					
-					//Player player;
-
-					switch (type)
-					{
-						//received location
-					case 1:						
-					{
-						packet >> id >> pos.x >> pos.y;
-						updatePlayerPosition(id, pos);
-						updateFood(id);
-						break; 
-					}
-					
-					}
-				}
-				else
-				{
-
-				}
-
 			
-			}*/
 			else
 			{
 				// The listener socket is not ready, test all other sockets (the clients)
@@ -182,6 +148,7 @@ void Server::run()
 								}
 								//(*it).second.getTcpSocket()->send(nameAndColorPacket);
 								(*it).second.getTcpSocket()->send(initPacket);
+								it->second.setInitReady(true);
 
 								//sending new player's name and color for others
 								
@@ -198,6 +165,7 @@ void Server::run()
 								//player->setPosition(sf::Vector2f((_mapPosition.x+_mapSize.x/2),(_mapPosition.y+_mapSize.y/2)));
 								std::cout << "\nreceived init params: "<<player->getPosition().x<<", "<<player->getPosition().y<<"\n";
 
+								
 							}
 							else if (type == 4)
 							{
@@ -206,7 +174,6 @@ void Server::run()
 						}
 						else
 						{
-							//not sure when this occours
 							std::cout << status;
 							if (sf::Socket::Disconnected == status)
 							{
@@ -248,7 +215,11 @@ void Server::run()
 							case 1:
 							{
 								packet >> id >> pos.x >> pos.y;
-								updatePlayerPosition(id, pos);
+								//might cause problem with iterator if somebody dies in this update that's why I check this
+								if (updatePlayerPosition(id, pos))
+								{
+									continue;
+								}
 								updateFood(id);
 								break;
 							}
@@ -261,7 +232,7 @@ void Server::run()
 		}
 
 
-		if (clock.getElapsedTime() > sf::milliseconds(33) )
+		if (clock.getElapsedTime() > sf::milliseconds(33))
 		{
 			//std::cout << "nr of players: " << players.size() << "\n";
 			//generating packet with all players' location
@@ -290,6 +261,7 @@ void Server::run()
 
 			for (std::unordered_map<int, Player>::iterator it = players.begin(); it != players.end(); it++)
 			{
+				if (!it->second.getInitReady()) continue;
 				//sending players' positions
 				it->second.getUdpSocket()->send(positionPacket, it->second.getPlayerIp(), it->second.getUdpPortSend());
 
@@ -302,7 +274,9 @@ void Server::run()
 				//sending ranking if changed
 				if (rankingChanged)
 				{	
+					std::cout << "sent ranking update\n";
 					it->second.getTcpSocket()->send(rankingPacket);
+					rankingChanged = false;
 				}
 			  	
 			}
@@ -316,7 +290,7 @@ void Server::run()
 	}
 }
 
-void Server::updatePlayerPosition(int id, sf::Vector2f pos)
+bool Server::updatePlayerPosition(int id, sf::Vector2f pos)
 {
 	Player* player = &players.at(id);
 
@@ -369,7 +343,9 @@ void Server::updatePlayerPosition(int id, sf::Vector2f pos)
 	{
 		deletePlayerFromRanking(eatenID);
 		playerDied(eatenID);
+		return true;
 	}
+	return false;
 }
 
 void Server::setFood(unsigned int id)

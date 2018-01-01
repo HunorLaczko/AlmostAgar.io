@@ -26,6 +26,7 @@ class Player
 	sf::Vector2f windowSize;//player's window size
 	sf::Vector2f mousePosition;
 	sf::Color color; //player's color
+	bool initReady;
 
 public:
 	Player(int id, sf::Vector2f _position, sf::TcpSocket *tcpSocket);
@@ -68,6 +69,9 @@ public:
 
 	sf::Color getColor() const;
 	void setColor(sf::Color _color);
+
+	bool getInitReady() const;
+	void setInitReady(bool _initReady);
 
 };
 

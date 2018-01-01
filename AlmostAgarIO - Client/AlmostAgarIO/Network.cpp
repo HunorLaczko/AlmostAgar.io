@@ -248,8 +248,10 @@ void Network::getResponse()
 			{
 				packet >> id;
 				ranking.push_back(id);
-				game->setLeaderboard(ranking);
+				std::cout << id << " ";
 			}
+			std::cout<<"\n";
+			game->setLeaderboard(ranking);
 			break;
 		}
 		//received new player info

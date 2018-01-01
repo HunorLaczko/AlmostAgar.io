@@ -9,7 +9,7 @@ Player::Player(int _id, sf::Vector2f _position, sf::TcpSocket *_tcpSocket)
 	name("unknown"), udpSocket(nullptr), playerIp(sf::IpAddress()),
 	speed(sf::Vector2f(0, 0)), velocity(sf::Vector2f(0, 0)), points(0), 
 	mapSize(sf::Vector2f(0, 0)), mapPosition(sf::Vector2f(0, 0)),
-	windowSize(sf::Vector2f(0, 0)), mousePosition(sf::Vector2f(0, 0))
+	windowSize(sf::Vector2f(0, 0)), mousePosition(sf::Vector2f(0, 0)), initReady(false)
 {
 	
 }
@@ -146,6 +146,16 @@ sf::Color Player::getColor() const {
 
 void Player::setColor(sf::Color _color) {
 	color = _color;
+}
+
+bool Player::getInitReady() const
+{
+	return initReady;
+}
+
+void Player::setInitReady(bool _initReady)
+{
+	initReady = _initReady;
 }
 
 
