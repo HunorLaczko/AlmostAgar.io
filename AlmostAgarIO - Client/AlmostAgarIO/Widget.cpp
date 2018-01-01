@@ -31,11 +31,6 @@ std::string Widget::getValue()
 	return _value;
 }
 
-void Widget::setValue(std::string value)
-{
-	_value = value;
-}
-
 void Widget::resize(float r)
 {
 	_x = r*_x;

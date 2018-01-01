@@ -7,8 +7,11 @@ Button::Button(float x, float y, float size_x, float size_y, std::string value)
 	: Widget(x, y, size_x, size_y, value)
 {
 }
+void Button::draw(sf::RenderWindow & window) {
 
-void Button::draw(sf::RenderWindow & window)
+}
+
+void lambdaButton::draw(sf::RenderWindow & window)
 {
 	sf::RectangleShape rectangle;
 	rectangle.setSize(sf::Vector2f(_size_x, _size_y));
@@ -36,7 +39,12 @@ void Button::draw(sf::RenderWindow & window)
 	}*/
 	//text.setStyle(sf::Text::Bold);
 	text.setColor(sf::Color::White);
-	if(_mousedown || _mouseover){
+	if (_selected) {
+		//text.setColor(sf::Color::Blue);
+		rectangle.setFillColor(sf::Color(215, 88, 0));
+		//rectangle.setOutlineColor(sf::Color::Cyan);
+	}
+	else if(_mousedown || _mouseover){
 		//text.setColor(sf::Color::Blue);
 		rectangle.setFillColor(sf::Color(245, 118, 0));
 		//rectangle.setOutlineColor(sf::Color::Cyan);
@@ -50,8 +58,12 @@ void Button::draw(sf::RenderWindow & window)
 	window.draw(rectangle);
 	window.draw(text);
 }
+void Button::handle(sf::Event event) {
 
-void Button::handle(sf::Event event)
+}
+
+
+void lambdaButton::handle(sf::Event event)
 {
 	if (event.type == sf::Event::MouseMoved)
 	{
@@ -68,6 +80,10 @@ void Button::handle(sf::Event event)
 		{
 			_mousedown = true;
 		}
+		else if(event.mouseButton.button == sf::Mouse::Left) {
+			_previousSelected = false;
+			_selected = false;
+		}
 	}
 	if (event.type == sf::Event::MouseButtonReleased)
 	{
@@ -78,14 +94,53 @@ void Button::handle(sf::Event event)
 				action();
 		}
 	}
+
+	if (event.type == sf::Event::TextEntered && _selected)
+	{
+		// Tab leütésre került
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Tab)) {
+			if (_previousSelected)
+				_tab();
+		}
+		// Enter leütésre került
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return)) {
+			_f();
+		}
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Tab) && (_selected != _previousSelected)) {
+		_previousSelected = _selected;
+	}
 }
 void Button::action() {
 }
 
-lambdaButton::lambdaButton(float x, float y, float size_x, float size_y, std::string value, std::function<void()> f) : Button(x, y, size_x, size_y, value)
+lambdaButton::lambdaButton(float x, float y, float size_x, float size_y, std::string value, std::function<void()> f, std::function<void()> tab_f) : Button(x, y, size_x, size_y, value)
 {
 	_f = f;
+	_tab = tab_f;
+	_selected = false;
+	_previousSelected = false;
 }
 void lambdaButton::action() {
 	_f();
+}
+
+void lambdaButton::setValue(std::string value)
+{
+	_value = value;
+}
+
+void lambdaButton::setSelected(bool selected)
+{
+	_selected = selected;
+}
+
+bool lambdaButton::isSelected()
+{
+	return _selected;
+}
+
+void lambdaButton::setTabFunc(std::function<void()> tab_f)
+{
+	_tab = tab_f;
 }

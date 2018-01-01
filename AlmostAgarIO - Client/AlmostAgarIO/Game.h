@@ -30,6 +30,8 @@ public:
 	void setFirst();
 	void setFood(const std::vector<sf::Vector2f>& _food, float foodRadius);
 	void updateFood(int index, sf::Vector2f newFood);
+	void keyPressed(int key);
+	void keyReleased(int key);
 private:
 	sf::Vector2f vec;
 	sf::Vector2f movement;
@@ -39,6 +41,7 @@ private:
 	int zoom_count;
 	std::vector<unsigned int> leaderboard;
 	bool gameover;
+	std::map<int, bool> specalkeys;
 
 	std::vector<sf::CircleShape> food;
 	//FoodGenerator gen;

@@ -3,6 +3,8 @@
 
 #include "stdafx.h"
 #include "Button.h"
+#include "TextEditor.h"
+#include "SimpleText.h"
 #include "Windows.h"
 //#include "Game.h"
 
@@ -17,13 +19,11 @@ int main()
 	bool fut = true;
 
 	std::vector<Widget*>  main_menu, game_over_menu;
-
-	TextEditor *serverIp = new TextEditor(300, 100, 400, 65, "127.0.0.1", "Szerver IP");
-	TextEditor *playerName = new TextEditor(300, 200, 400, 65, "", "Írd be a neved!");
-	main_menu.push_back(serverIp);
-	main_menu.push_back(playerName);
-
-
+	std::map<int, char> ip_filter{ {46,'.'} };
+	TextEditor *serverIp = new TextEditor(300, 100, 400, 65, "127.0.0.1", "Szerver IP",48,57, ip_filter, [&](){}, [&](){});
+	//int filter[] = {193,201,205,211,214,218,220,225,233,237,243,246,250,252,336,337,368,369};
+	std::map<int, char> name_filter{ { 193,'Á' },{ 201,'É' },{ 205,'Í' },{ 211,'Ó' },{ 214,'Ö' },{ 218,'Ú' } ,{ 220,'Ü' } ,{ 225,'á' } ,{ 233,'é' } ,{ 237,'í' } ,{ 243,'ó' } ,{ 246,'ö' } ,{ 250,'ú' } ,{ 252,'ü' } ,{ 336,'Õ' } ,{ 337,'õ' } ,{ 368,'Û' } ,{ 369 ,'Û' } };
+	TextEditor *playerName = new TextEditor(300, 200, 400, 65, "", "Írd be a neved!", 32, 126, name_filter, [&]() {}, [&]() {});
 
 	sf::ContextSettings settings;
 	settings.antialiasingLevel = 4;
@@ -32,7 +32,7 @@ int main()
 	window.setFramerateLimit(60);
 	window.setMouseCursorGrabbed(false);
 
-	lambdaButton *g1 = new lambdaButton(300 + 100, 300, 200, 50, "Játék",
+	lambdaButton *game = new lambdaButton(300 + 100, 300, 200, 50, "Játék",
 		[&]//mindent akarok használni
 	()
 	{
@@ -54,10 +54,9 @@ int main()
 			std::cout << answer << std::endl;
 		}
 	}
-	);
-	main_menu.push_back(g1);
+	, [&]() {});
 
-	lambdaButton *g2 = new lambdaButton(300 + 100, 400, 200, 50, "Kilépés",
+	lambdaButton *close = new lambdaButton(300 + 100, 400, 200, 50, "Kilépés",
 		[&]//mindent akarok használni
 	()
 	{
@@ -65,10 +64,47 @@ int main()
 		start = false;
 		fut = false;
 	}
-	);
-	main_menu.push_back(g2);
+	, [&]() {});
 
-	lambdaButton *newgame = new lambdaButton(300 + 100, 100, 200, 50, "Új játék",
+	serverIp->setTabFunc([&]()
+	{
+		serverIp->setSelected(false);
+		playerName->setSelected(true);
+	}
+	);
+	playerName->setTabFunc([&]()
+	{
+		playerName->setSelected(false);
+		game->setSelected(true);
+	}
+	);
+	game->setTabFunc([&]()
+	{
+		game->setSelected(false);
+		close->setSelected(true);
+	}
+	);
+	close->setTabFunc([&]()
+	{
+		close->setSelected(false);
+		serverIp->setSelected(true);
+	}
+	);
+	serverIp->setEnterFunc([&](){
+		game->action();
+	}
+	);
+	playerName->setEnterFunc([&]()
+	{
+		game->action();
+	}
+	);
+	main_menu.push_back(serverIp);
+	main_menu.push_back(playerName);
+	main_menu.push_back(game);
+	main_menu.push_back(close);
+
+	lambdaButton *newgame = new lambdaButton(300 + 100, 175, 200, 50, "Új játék",
 		[&]//mindent akarok használni
 	()
 	{
@@ -76,10 +112,9 @@ int main()
 		window.changeview(Views::game_view);
 		start = false;
 	}
-	);
-	game_over_menu.push_back(newgame);
+	, [&]() {});
 
-	lambdaButton *exit = new lambdaButton(300 + 100, 200, 200, 50, "Kilépés",
+	lambdaButton *exit = new lambdaButton(300 + 100, 250, 200, 50, "Kilépés",
 		[&]//mindent akarok használni
 	()
 	{
@@ -87,8 +122,25 @@ int main()
 		start = false;
 		fut = false;
 	}
+	, [&]() {});
+
+	SimpleText *gameover = new SimpleText(300 + 100, 100, 200, 50, "Game Over");
+
+	newgame->setTabFunc([&]()
+	{
+		newgame->setSelected(false);
+		exit->setSelected(true);
+	}
 	);
+	exit->setTabFunc([&]()
+	{
+		exit->setSelected(false);
+		newgame->setSelected(true);
+	}
+	);
+	game_over_menu.push_back(newgame);
 	game_over_menu.push_back(exit);
+	game_over_menu.push_back(gameover);
 
 
 	//Menü elemek átadása az ablaknak, majd IP és név betöltés
@@ -101,7 +153,7 @@ int main()
 		window.event_loop();
 	}
 
-	//IP és név mentés
+	//Biztonsági mentés(akkora kell, amikor a fõmenübõl lép ki)
 	window.save();
 	window.threadWait();
 	return 0;
