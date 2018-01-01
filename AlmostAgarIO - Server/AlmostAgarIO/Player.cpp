@@ -134,7 +134,7 @@ void Player::setMousePosition(sf::Vector2f _mousePosition)
 }
 void Player::initPosition()
 {
-	srand(time(0));
+	//srand(time(0));
 	position.x = rand() % (int)mapSize.x + mapPosition.x;
 	position.y = rand() % (int)mapSize.y + mapPosition.y;
 	//position = sf::Vector2f(2000, 2000);

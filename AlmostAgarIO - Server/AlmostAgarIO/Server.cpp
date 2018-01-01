@@ -3,6 +3,7 @@
 #include <string>
 #include <iostream>
 #include <algorithm>
+#include <cmath>
 
 
 Server::Server() : foodGenerator(sf::Vector2f(1000,750), sf::Vector2f(4000,3000))
@@ -210,7 +211,7 @@ void Server::run()
 							if (sf::Socket::Disconnected == status)
 							{
 								//(*it).second.getTcpSocket()->disconnect();
-								selector.remove(*(*it).second.getTcpSocket());
+								//selector.remove(*(*it).second.getTcpSocket());
 								
 								std::cout << "disconnected player: " << it->second.getId() << std::endl;
 								unsigned int id = it->second.getId();
@@ -359,20 +360,15 @@ void Server::updatePlayerPosition(int id, sf::Vector2f pos)
 				std::cout << "A " << player->getId() << " jatekos megette a kovektkezo jatekost: " << eatenID << std::endl;
 				//TODO barkinek megnovelni a player meretet valamennyivel , akar szintetlepve is majd
 				//itt ne az osszes radiust adjuk at annak aki megevett valakit
+				//player->setRadius(sqrt(player->getRadius()*player->getRadius() + it->second.getRadius()*it->second.getRadius()));
 			}
 		}
 	}
 	//if somebody ate someone
 	if (eatSomeOne == true)
 	{
-		//eatenID  ez a megett jatekos :)
 		deletePlayerFromRanking(eatenID);
-		//players.erase(eatenID);
 		playerDied(eatenID);
-
-		//TODO: Huni: send gameover packet
-		//TODO: Huni: checkranking
-		//TODO: Huni: delete eaten player
 	}
 }
 
