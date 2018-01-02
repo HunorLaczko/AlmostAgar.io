@@ -92,7 +92,8 @@ void Network::disconnectPlayer()
 
 void Network::init(sf::Vector2f _mapSize, sf::Vector2f _mapPosition, sf::Vector2f _windowSize)
 {
-	
+	//TODO Huni lefagy ha nincs szerver es megnyomod az uj jatekot!!!!
+
 	//sending initializing parameters
 	sf::Packet outPacket;
 	//std::cout << "checking name before sending: " << player->getName() << "\n";

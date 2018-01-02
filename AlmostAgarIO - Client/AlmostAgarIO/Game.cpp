@@ -16,7 +16,7 @@ void Game::func() {
 		close();
 	}
 	view.setViewport(sf::FloatRect(0, 0, 1, 1));
-	view.zoom(ZOOM);
+	//view.zoom(ZOOM);
 
 	//window.setMouseCursorVisible(false);
 	player.setRadius(radius);
@@ -201,11 +201,30 @@ void Game::counting(sf::RenderWindow & window)
 	}
 	network->getResponse();
 	//meret valtoztatas
-	if (player.isRadiusChanged() && (int)(player.getRadius() - Player::getDefRad()) % 5 == 0 && (player.getRadius() - Player::getDefRad()) == (int)(player.getRadius() - Player::getDefRad())) {
-		view.zoom(ZOOM);
+	int zoom_times = floor(player.getRadius() - Player::getDefRad()) / 5;
+
+	//if (player.isRadiusChanged() && (int)(player.getRadius() - Player::getDefRad()) % 5 == 0 && (player.getRadius() - Player::getDefRad()) == (int)(player.getRadius() - Player::getDefRad())) {
+	if (player.isRadiusChanged() && zoom_times != zoom_count) {
+		int m = zoom_times - zoom_count;
+		if (m > 0) {
+			for (int i = 0; i < m; i++) {
+				view.zoom(ZOOM);
+				std::cout << "ZOOOOOOOOMMMMMMM\n";
+				zoom_count++;
+
+			}
+
+		}
+		else if (m < 0) {
+			for (int i = 0; i < -m; i++) {
+				view.zoom(1/ZOOM);
+				std::cout << "UNZOOMING\n";
+				zoom_count--;
+			}
+		}
+		
 		player.setChange(false);
-		std::cout << "ZOOOOOOOOMMMMMMM\n";
-		zoom_count++;
+		std::cout << player.getRadius() - Player::getDefRad() << std::endl;
 	}
 	
 	/*
@@ -253,7 +272,7 @@ void Game::draw(sf::RenderWindow & window)
 		for (std::unordered_map<int, Player>::iterator it = enemies.begin(); it != enemies.end(); it++)
 		{
 			//if (it->second.getRadius() > player.getRadius() || (it->second.getRadius() == player.getRadius() && (rand() % 2) == 0))
-			if (it->second.getRadius() > player.getRadius())
+			if ((it->second.getRadius() + it->second.getPoints()) > (player.getRadius() + player.getPoints()))
 				smallerEnemy.push_back(it->second);
 			else
 				it->second.draw(window);

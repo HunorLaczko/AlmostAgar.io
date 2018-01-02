@@ -10,6 +10,7 @@ class Player
 	sf::Vector2f position;
 	sf::Vector2u windowSize;
 	float radius;
+	float points;
 	std::string name;
 	bool changed;
 	std::unordered_map<int, Player> enemies;
@@ -31,6 +32,8 @@ public:
 
 	void setWindowSize(sf::Vector2u _windowSize);
 	sf::Vector2u getWindowSize();
+
+	float getPoints();
 
 	void setRadius(float _radius);
 	float getRadius();

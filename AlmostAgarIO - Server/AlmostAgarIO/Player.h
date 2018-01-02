@@ -19,8 +19,9 @@ class Player
 	sf::Vector2f position;  //player position, in world coordinates (absolute coordinates)
 	sf::Vector2f speed;     //player speed
 	sf::Vector2f velocity;  //player velocity
+	float defRadius;    //default radius set in Player constructor
 	float radius;    //player's circle's radius
-	int points;				//player's points
+	float points;				//player's points above 330f.0 to reduce movement lag in client
 	sf::Vector2f mapSize;   //player's map size
 	sf::Vector2f mapPosition;//player's map's location relative to world coordinates
 	sf::Vector2f windowSize;//player's window size
@@ -51,6 +52,8 @@ public:
 
 	sf::Vector2f getWindowSize() const;
 	void setWindowSize(sf::Vector2f _windowSize);
+
+	float getPoints() const;
 
 	float getRadius() const;
 	void setRadius(float _radius);

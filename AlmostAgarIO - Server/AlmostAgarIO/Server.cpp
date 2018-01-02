@@ -135,7 +135,43 @@ void Server::run()
 								//(*it).second.getTcpSocket()->send(foodPacket);
 
 								//generating random color
-								player->setColor(sf::Color(rand() % 256, rand() % 256, rand() % 256));
+								std::vector<sf::Color> colors = 
+								{
+									sf::Color(128,0,0), sf::Color(139,0,0), sf::Color(165,42,42), sf::Color(178,34,34),
+									sf::Color(220,20,60), sf::Color(255,0,0), sf::Color(255,99,71), sf::Color(255,127,80),
+									sf::Color(205,92,92), sf::Color(240,128,128), sf::Color(233,150,122), sf::Color(250,128,114),
+									sf::Color(255,160,122), sf::Color(255,69,0), sf::Color(255,140,0), sf::Color(255,165,0),
+									sf::Color(255,215,0), sf::Color(184,134,11), sf::Color(218,165,32), sf::Color(238,232,170),
+									sf::Color(189,183,107), sf::Color(240,230,140), sf::Color(128,128,0), sf::Color(255,255,0),
+									sf::Color(154,205,50), sf::Color(85,107,47), sf::Color(107,142,35), sf::Color(124,252,0),
+									sf::Color(127,255,0), sf::Color(173,255,47), sf::Color(0,100,0), sf::Color(0,128,0),
+									sf::Color(34,139,34), sf::Color(0,255,0), sf::Color(50,205,50), sf::Color(144,238,144),
+									sf::Color(152,251,152), sf::Color(143,188,143), sf::Color(0,250,154), sf::Color(0,255,127),
+									sf::Color(46,139,87), sf::Color(102,205,170), sf::Color(60,179,113), sf::Color(32,178,170),
+									sf::Color(47,79,79), sf::Color(0,128,128), sf::Color(0,139,139), sf::Color(0,255,255),
+									sf::Color(0,255,255), sf::Color(224,255,255), sf::Color(0,206,209), sf::Color(64,224,208),
+									sf::Color(72,209,204), sf::Color(175,238,238), sf::Color(127,255,212), sf::Color(176,224,230),
+									sf::Color(95,158,160), sf::Color(70,130,180), sf::Color(100,149,237), sf::Color(0,191,255),
+									sf::Color(30,144,255), sf::Color(173,216,230), sf::Color(135,206,235), sf::Color(135,206,250),
+									sf::Color(25,25,112), sf::Color(0,0,128), sf::Color(0,0,139), sf::Color(0,0,205),
+									sf::Color(0,0,255), sf::Color(65,105,225), sf::Color(138,43,226), sf::Color(75,0,130),
+									sf::Color(72,61,139), sf::Color(106,90,205), sf::Color(123,104,238), sf::Color(147,112,219),
+									sf::Color(139,0,139), sf::Color(148,0,211), sf::Color(153,50,204), sf::Color(186,85,211),
+									sf::Color(128,0,128), sf::Color(216,191,216), sf::Color(221,160,221), sf::Color(238,130,238),
+									sf::Color(255,0,255), sf::Color(218,112,214), sf::Color(199,21,133), sf::Color(219,112,147),
+									sf::Color(255,20,147), sf::Color(255,105,180), sf::Color(255,182,193), sf::Color(255,192,203),
+									sf::Color(250,235,215), sf::Color(245,245,220), sf::Color(255,228,196), sf::Color(255,235,205),
+									sf::Color(245,222,179), sf::Color(255,248,220), sf::Color(255,250,205), sf::Color(250,250,210),
+									sf::Color(255,255,224), sf::Color(139,69,19), sf::Color(160,82,45), sf::Color(210,105,30),
+									sf::Color(205,133,63),  sf::Color(244,164,96), sf::Color(222,184,135), sf::Color(210,180,140),
+									sf::Color(188,143,143), sf::Color(255,228,181), sf::Color(255,222,173), sf::Color(255,218,185),
+									sf::Color(255,228,225), sf::Color(255,240,245), sf::Color(250,240,230), sf::Color(253,245,230),
+									sf::Color(255,239,213), sf::Color(255,245,238), sf::Color(112,128,144), sf::Color(220,220,220),
+									sf::Color(119,136,153), sf::Color(176,196,222), sf::Color(230,230,250), sf::Color(240,255,240), 
+								    sf::Color(105,105,105), sf::Color(128,128,128), sf::Color(169,169,169),	sf::Color(192,192,192),
+									sf::Color(211,211,211)
+								};
+								player->setColor(colors[rand() % colors.size()]);
 
 								//sending every player's name and color for new player
 								std::cout << "sending every player's name and color for new player\n";
@@ -240,7 +276,8 @@ void Server::run()
 			positionPacket << 2 << players.size();
 			for (std::unordered_map<int, Player>::iterator it = players.begin(); it != players.end(); it++)
 			{
-				positionPacket << it->first << it->second.getPosition().x << it->second.getPosition().y << it->second.getRadius();
+				//a vegen a getpoinst azert kell h a meret novekedes ellenere is elmentse a kliens az ellenseg 330feluli pontjait
+				positionPacket << it->first << it->second.getPosition().x << it->second.getPosition().y << (it->second.getRadius() + it->second.getPoints());
 			}
 
 			//generating food packet
@@ -296,8 +333,8 @@ bool Server::updatePlayerPosition(int id, sf::Vector2f pos)
 
 	sf::Vector2f vec;
 	sf::Vector2f distance(pos.x - player->getPosition().x, pos.y - player->getPosition().y);
-	float speed = (float)(3.2 - (0.005 * player->getRadius()));
-	if (speed <= 0.06f) speed = 0.06f;
+	float speed = (float)(3.2 - (0.005 * (player->getRadius() + player->getPoints())));
+	if (speed <= 0.6f) speed = 0.6f;
 
 	//std::cout << "Size: " << circle.getRadius() << " Speed: " << speed << std::endl;
 	float length = sqrt(distance.x*distance.x + distance.y*distance.y);
@@ -328,13 +365,14 @@ bool Server::updatePlayerPosition(int id, sf::Vector2f pos)
 		if (it->first != player->getId()) {
 			sf::Vector2f distancePlayer(player->getPosition().x - it->second.getPosition().x, player->getPosition().y - it->second.getPosition().y);
 			float lenghtPlayer = sqrt(distancePlayer.x*distancePlayer.x + distancePlayer.y*distancePlayer.y);
-			if (lenghtPlayer < player->getRadius() && player->getRadius() > (it->second.getRadius() + sizeDif)) {
+			if (lenghtPlayer < player->getRadius() && (player->getRadius() + player->getPoints()) > (it->second.getRadius() + it->second.getPoints() + sizeDif)) {
 				eatenID = it->first;
 				eatSomeOne = true;
 				std::cout << "A " << player->getId() << " jatekos megette a kovektkezo jatekost: " << eatenID << std::endl;
 				//TODO barkinek megnovelni a player meretet valamennyivel , akar szintetlepve is majd
 				//itt ne az osszes radiust adjuk at annak aki megevett valakit
-				//player->setRadius(sqrt(player->getRadius()*player->getRadius() + it->second.getRadius()*it->second.getRadius()));
+				
+				player->setRadius(sqrt(pow(player->getRadius() + player->getPoints(), 2) + pow(it->second.getRadius() + it->second.getPoints(), 2)));
 			}
 		}
 	}
@@ -363,7 +401,7 @@ void Server::updateFood(unsigned int id)
 		//check if player ate a food
 		if (lenght < player->getRadius()) {
 			food[i] = foodGenerator.updateElement(i);
-			player->setRadius(player->getRadius() + 0.5f);
+			player->setRadius(player->getRadius() + player->getPoints() + 0.5f);
 			foodToUpdate.emplace(i, food[i]);	
 			checkRanking();
 		}
@@ -373,7 +411,7 @@ void Server::updateFood(unsigned int id)
 struct less
 {
 	bool operator()(const Player& lhs, const Player& rhs) const {
-		return lhs.getRadius() < rhs.getRadius();
+		return (lhs.getRadius() + lhs.getPoints()) < (rhs.getRadius() + rhs.getPoints());
 	}
 };
 

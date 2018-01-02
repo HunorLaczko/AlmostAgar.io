@@ -11,7 +11,7 @@ Player::Player(int _id, sf::Vector2f _position, sf::TcpSocket *_tcpSocket)
 	mapSize(sf::Vector2f(0, 0)), mapPosition(sf::Vector2f(0, 0)),
 	windowSize(sf::Vector2f(0, 0)), mousePosition(sf::Vector2f(0, 0)), initReady(false)
 {
-	
+	defRadius = radius;
 }
 
 Player::~Player()
@@ -84,14 +84,28 @@ void Player::setWindowSize(sf::Vector2f _windowSize)
 	windowSize = _windowSize;
 }
 
+float Player::getPoints() const {
+	return points;
+}
+
+//itt az utkozes miatt nem adhatja vissza a raduis+points reszt
 float Player::getRadius() const
 {
 	return radius;
 }
 
+//itt mindig csak a 330 feletti elterest adja a pontokhoz
 void Player::setRadius(float _radius)
 {
-	radius = _radius;
+	if (_radius > 330.0f ) {
+		radius = 330.0f;
+		points = _radius - radius;
+		std::cout << "Points above 330.0f " << points << std::endl;
+	}
+	else {
+		points = 0;
+		radius = _radius;
+	}
 }
 
 sf::IpAddress Player::getPlayerIp() const

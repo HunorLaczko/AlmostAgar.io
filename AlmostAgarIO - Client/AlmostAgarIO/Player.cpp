@@ -14,7 +14,7 @@ Player::~Player()
 {
 }
 
-float Player::default_radius; //ez a qva sor hogy rohandjon meg kellett neki mert idiota :D
+float Player::default_radius;
 
 float Player::getDefRad() {
 	return default_radius;
@@ -54,11 +54,21 @@ sf::Vector2u Player::getWindowSize()
 	return windowSize;
 }
 
+float Player::getPoints() {
+	return points;
+}
+
 void Player::setRadius(float _radius)
 {
-	if(_radius != radius) 	changed = true;
-
-	radius = _radius;
+	if(_radius != (radius + points)) 	changed = true;
+	if (_radius > 330.0f) {
+		radius = 330.0f;
+		points = _radius - radius;
+	}
+	else {
+		points = 0.0f;
+		radius = _radius;
+	}
 }
 
 float Player::getRadius()
@@ -158,9 +168,9 @@ void Player::setEnemyColor(unsigned int id, sf::Color _color)
 void Player::draw(sf::RenderWindow & window)
 {
 	sf::CircleShape circle;
-	circle.setFillColor(sf::Color(0, 250, 0));
+	circle.setFillColor(color);
 	circle.setOutlineThickness(-5);
-	circle.setOutlineColor(sf::Color(0, 150, 0));
+	circle.setOutlineColor(sf::Color(0, 0, 0));
 	circle.setRadius(radius);
 	circle.scale(1, 1);
 	circle.setOrigin(radius, radius);
