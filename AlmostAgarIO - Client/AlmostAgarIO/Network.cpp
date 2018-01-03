@@ -323,9 +323,8 @@ void Network::getResponse()
 void Network::sendKey(int key, bool active)
 {
 	sf::Packet keyPacket;
-	//TODO fejlesztes billentyuk berakasa
 	//if upgrade key pressed
-	if (key == 0)
+	if (key == 4 || key == 16 || key == 17 || key == 22)
 	{
 		keyPacket << 10 << player->getId() << key;
 		tcpSocket.send(keyPacket);

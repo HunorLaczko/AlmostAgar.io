@@ -203,11 +203,9 @@ void Server::run()
 							else if (type == 10)
 							{
 								unsigned int id;
-								char key;
 								int keyCode;
 								packet >> id >> keyCode;
-								key = (char)keyCode;
-								it->second.updateSkill(key);
+								it->second.updateSkill(keyCode);
 							}
 							//receive skill use
 							else if (type == 11)
@@ -216,13 +214,27 @@ void Server::run()
 								int keyCode;
 								bool active;
 								packet >> id >> keyCode >> active;
-								if (keyCode == 3 && active)
+								if (keyCode == 3)
 								{
-									it->second.speedActivate();
+									if (active)
+									{
+										it->second.speedActivate();
+									}
+									else
+									{
+										it->second.speedDeActivate();
+									}
 								}
-								else if (keyCode == 18 && active)
+								else if (keyCode == 18)
 								{
-									it->second.invisibleActivate();
+									if (active)
+									{
+										it->second.invisibleActivate();
+									}
+									else
+									{
+										it->second.invisibleDeActivate();
+									}
 								}
 							}
 						}

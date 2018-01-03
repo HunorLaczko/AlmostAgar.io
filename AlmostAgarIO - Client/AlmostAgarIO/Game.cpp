@@ -46,7 +46,7 @@ Game::Game() : thread(&Game::func, this)
 	zoom_count = 0;
 	gameover = false;
 	//Speciális képességekhez a bilentyűk(számozás abc szerint): a-0, s-18, d-3
-	specalkeys = {{ 0,false },{ 18,false } ,{ 3,false } };
+	specalkeys = { { 0,false },{ 18,false } ,{ 3,false }, {4, false},{ 16, false },{ 17, false },{ 22, false } };
 }
 
 Game::~Game()
