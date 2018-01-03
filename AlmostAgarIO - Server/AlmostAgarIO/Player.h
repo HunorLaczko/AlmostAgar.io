@@ -29,6 +29,24 @@ class Player
 	sf::Color color; //player's color
 	bool initReady;
 
+	//need for skills
+	sf::Clock invClockReload; 
+	sf::Clock invClockUse;
+	bool invisibleAvailable; //you can use skill
+	bool invisibleActive; //skill is active
+	int invisibleTime; //reload time in milisec for skill
+	//bool updateInvisble; //if update is available
+
+	sf::Clock speedClockReload;
+	sf::Clock speedClockUse;
+	bool speedAvailable; //you can use skill
+	bool speedActive;	//skill is active
+	int speedTime;		//reload time in milisec for skill
+	//bool updateSpeed; //if update is available
+
+	int numberOfUpdate; //number of updated skills
+	int canUpdateNumber; //number of available updates 0 if no update for client
+
 public:
 	Player(int id, sf::Vector2f _position, sf::TcpSocket *tcpSocket);
 	~Player();
@@ -76,5 +94,17 @@ public:
 	bool getInitReady() const;
 	void setInitReady(bool _initReady);
 
+	//skills functions
+	void skillChecking(); //ez nezi a skillek kezeleset, aktivalja es elveszi
+
+	bool isInvisible(); //aktiv e a skill
+	bool isSpeeding(); //active e a skill
+	void invisibleActivate(); //ezt kell meghivni hogy aktivaljuk
+	void speedActivate(); // ezt kell meghivni hogy aktivaljuk
+
+	void updateSkill(char key); //ez fejleszti a skilleket
+	//bool canUpdataInv(); //van e adott pontszam a fejlesztesre 
+	//bool canUpdateSpeed(); //van e adott pontszam a fejlesztesre
+	int getUpdateAvailable();
 };
 

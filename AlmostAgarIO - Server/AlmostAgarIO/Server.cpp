@@ -141,7 +141,7 @@ void Server::run()
 									sf::Color(220,20,60), sf::Color(255,0,0), sf::Color(255,99,71), sf::Color(255,127,80),
 									sf::Color(205,92,92), sf::Color(240,128,128), sf::Color(233,150,122), sf::Color(250,128,114),
 									sf::Color(255,160,122), sf::Color(255,69,0), sf::Color(255,140,0), sf::Color(255,165,0),
-									sf::Color(255,215,0), sf::Color(184,134,11), sf::Color(218,165,32), sf::Color(238,232,170),
+									sf::Color(255,215,0), sf::Color(184,134,11), sf::Color(218,165,32), sf::Color(245,222,179),
 									sf::Color(189,183,107), sf::Color(240,230,140), sf::Color(128,128,0), sf::Color(255,255,0),
 									sf::Color(154,205,50), sf::Color(85,107,47), sf::Color(107,142,35), sf::Color(124,252,0),
 									sf::Color(127,255,0), sf::Color(173,255,47), sf::Color(0,100,0), sf::Color(0,128,0),
@@ -149,8 +149,8 @@ void Server::run()
 									sf::Color(152,251,152), sf::Color(143,188,143), sf::Color(0,250,154), sf::Color(0,255,127),
 									sf::Color(46,139,87), sf::Color(102,205,170), sf::Color(60,179,113), sf::Color(32,178,170),
 									sf::Color(47,79,79), sf::Color(0,128,128), sf::Color(0,139,139), sf::Color(0,255,255),
-									sf::Color(0,255,255), sf::Color(224,255,255), sf::Color(0,206,209), sf::Color(64,224,208),
-									sf::Color(72,209,204), sf::Color(175,238,238), sf::Color(127,255,212), sf::Color(176,224,230),
+									sf::Color(0,255,255), sf::Color(0,206,209), sf::Color(64,224,208), sf::Color(255,228,225),
+									sf::Color(72,209,204), sf::Color(127,255,212), sf::Color(176,224,230), sf::Color(255,235,205),
 									sf::Color(95,158,160), sf::Color(70,130,180), sf::Color(100,149,237), sf::Color(0,191,255),
 									sf::Color(30,144,255), sf::Color(173,216,230), sf::Color(135,206,235), sf::Color(135,206,250),
 									sf::Color(25,25,112), sf::Color(0,0,128), sf::Color(0,0,139), sf::Color(0,0,205),
@@ -160,16 +160,12 @@ void Server::run()
 									sf::Color(128,0,128), sf::Color(216,191,216), sf::Color(221,160,221), sf::Color(238,130,238),
 									sf::Color(255,0,255), sf::Color(218,112,214), sf::Color(199,21,133), sf::Color(219,112,147),
 									sf::Color(255,20,147), sf::Color(255,105,180), sf::Color(255,182,193), sf::Color(255,192,203),
-									sf::Color(250,235,215), sf::Color(245,245,220), sf::Color(255,228,196), sf::Color(255,235,205),
-									sf::Color(245,222,179), sf::Color(255,248,220), sf::Color(255,250,205), sf::Color(250,250,210),
-									sf::Color(255,255,224), sf::Color(139,69,19), sf::Color(160,82,45), sf::Color(210,105,30),
+									sf::Color(255,228,196), sf::Color(139,69,19), sf::Color(160,82,45), sf::Color(210,105,30),
 									sf::Color(205,133,63),  sf::Color(244,164,96), sf::Color(222,184,135), sf::Color(210,180,140),
 									sf::Color(188,143,143), sf::Color(255,228,181), sf::Color(255,222,173), sf::Color(255,218,185),
-									sf::Color(255,228,225), sf::Color(255,240,245), sf::Color(250,240,230), sf::Color(253,245,230),
-									sf::Color(255,239,213), sf::Color(255,245,238), sf::Color(112,128,144), sf::Color(220,220,220),
+									sf::Color(255,239,213), sf::Color(112,128,144), sf::Color(220,220,220),	sf::Color(211,211,211),
 									sf::Color(119,136,153), sf::Color(176,196,222), sf::Color(230,230,250), sf::Color(240,255,240), 
-								    sf::Color(105,105,105), sf::Color(128,128,128), sf::Color(169,169,169),	sf::Color(192,192,192),
-									sf::Color(211,211,211)
+								    sf::Color(105,105,105), sf::Color(128,128,128), sf::Color(169,169,169),	sf::Color(192,192,192)
 								};
 								player->setColor(colors[rand() % colors.size()]);
 
@@ -267,7 +263,6 @@ void Server::run()
 			}
 		}
 
-
 		if (clock.getElapsedTime() > sf::milliseconds(33))
 		{
 			//std::cout << "nr of players: " << players.size() << "\n";
@@ -334,7 +329,26 @@ bool Server::updatePlayerPosition(int id, sf::Vector2f pos)
 	sf::Vector2f vec;
 	sf::Vector2f distance(pos.x - player->getPosition().x, pos.y - player->getPosition().y);
 	float speed = (float)(3.2 - (0.005 * (player->getRadius() + player->getPoints())));
-	if (speed <= 0.6f) speed = 0.6f;
+	if (speed <= 0.6f) speed = 0.6f; //0.06f volt igy talan nem lesz csiga lassu ahogy nezem
+	
+	//TODO skillekhez
+	player->skillChecking(); // modify speed if need
+
+	//TODO updateSkill() kell valahova amit mindig meghiv majd a szerver, es leellenorzi minden jatekosra, es kikuldi amit kell
+	//itt most tesztelessel tudom ezt megoldani, es tobbszor is lehet majd egymas utan meghivni ha 
+	char key = ' ';
+	if (player->getUpdateAvailable() > 0) {
+		key = 'm'; //itt most cska tesztelni kellett a fix karakter, de lehet átírni majd ahogyan konnyebb, ez sebesseget nez
+	}
+	player->updateSkill(key);
+
+	//teszteles a gyorsitasskillhez
+	player->speedActivate();
+
+	//ez mar nem a teszt ez alatt
+	if (player->isSpeeding()) {
+		speed += 1.5;
+	}
 
 	//std::cout << "Size: " << circle.getRadius() << " Speed: " << speed << std::endl;
 	float length = sqrt(distance.x*distance.x + distance.y*distance.y);
@@ -360,9 +374,10 @@ bool Server::updatePlayerPosition(int id, sf::Vector2f pos)
 	int eatenID = -1;
 	float sizeDif = 5; //meret kulonbseg ahhoz h megeegyem a kisebbet
 
-	for (std::unordered_map<int, Player>::iterator it = players.begin(); it != players.end() && !eatSomeOne; it++)
+	//TODO skillekhez ha lathatatlan ne nezze az utkozest - elvileg kesz az iffeknel
+	for (std::unordered_map<int, Player>::iterator it = players.begin(); it != players.end() && !eatSomeOne && player->isInvisible() == false ; it++)
 	{
-		if (it->first != player->getId()) {
+		if (it->first != player->getId() && it->second.isInvisible() == false) {
 			sf::Vector2f distancePlayer(player->getPosition().x - it->second.getPosition().x, player->getPosition().y - it->second.getPosition().y);
 			float lenghtPlayer = sqrt(distancePlayer.x*distancePlayer.x + distancePlayer.y*distancePlayer.y);
 			if (lenghtPlayer < player->getRadius() && (player->getRadius() + player->getPoints()) > (it->second.getRadius() + it->second.getPoints() + sizeDif)) {
@@ -393,11 +408,15 @@ void Server::setFood(unsigned int id)
 void Server::updateFood(unsigned int id)
 {
 	Player* player = &players.at(id);
+	//ha lathatatlan akkor ne is nezze a kaja reszet
+	if (player->isInvisible()) return;
+
 	float foodRadius = foodGenerator.getFoodRadius();
 	for (int i = 0; i < food.size(); i++) {
 		sf::Vector2f distance(player->getPosition().x - food[i].x, player->getPosition().y - food[i].y);
 		float lenght = sqrt(distance.x*distance.x + distance.y*distance.y);
 
+		//TODO skillekhez hogy kajat ne egyen ha lathatatlan
 		//check if player ate a food
 		if (lenght < player->getRadius()) {
 			food[i] = foodGenerator.updateElement(i);
