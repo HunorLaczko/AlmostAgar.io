@@ -119,11 +119,6 @@ void Player::setRadius(float _radius)
 
 	speed = (float)(3.2 - (0.005 * (radius + points)));
 	if (speed <= 0.6f) speed = 0.6f;
-
-	if (speedActive) {
-		speed += speedBoost;
-	}
-
 }
 
 sf::IpAddress Player::getPlayerIp() const
@@ -354,6 +349,9 @@ bool Player::getSpeedAvailable()
 }
 
 float Player::getSpeed() {
+	if (speedActive) {
+		return speed + speedBoost;
+	}
 	return speed;
 }
 
