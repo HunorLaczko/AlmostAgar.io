@@ -110,7 +110,7 @@ void Player::setRadius(float _radius)
 	if (_radius > 330.0f ) {
 		radius = 330.0f;
 		points = _radius - radius;
-		std::cout << "Points above 330(virtual radius): " << points << std::endl;
+		//std::cout << "Points above 330(virtual radius): " << points << std::endl;
 	}
 	else {
 		points = 0;
@@ -266,35 +266,39 @@ void Player::speedActivate() {
 }
 
 //TODO ellenorizni hogy tenyleg fejleszthet-e
-void Player::updateSkill(char key) {
+void Player::updateSkill(int key) {
 	int point = 2 * (radius - defRadius + points);
 	canUpdateNumber = floor(point / 150) - numberOfUpdate; 
 
+	//debughoz
+	std::cout << canUpdateNumber << "db fejlesztes elerheto " << id << ". jatekos szamara\n";
+	
+	//4-e, 16-q, 17-r, 22-w
 	if ( canUpdateNumber > 0) {
 		switch (key)
 		{
-		case 'q':{
+		case 16:{
 			//update invisibility reload time
 			invisibleTime -= 500; //ennyivel kevesebb ideig tolt
 			numberOfUpdate++;
 			std::cout << "Lathatatlansag ujratoltest fejlesztett a(z) " << id << ". jatekos\n";
 			break;
 		}
-		case 'w': {
+		case 4: {
 			//update speed reload time
 			speedTime -= 500; //ennyivel kevesebb ideig tolt
 			numberOfUpdate++;
 			std::cout << "Sebesseg ujratoltest fejlesztett a(z) " << id << ". jatekos\n";
 			break;
 		}
-		case 'e': {
+		case 22: {
 			//update invisibility duration time
 			invisibleDuration += 500;
 			numberOfUpdate++;
 			std::cout << "Lathatatlansag idotartamot fejlesztett a(z) " << id << ". jatekos\n";
 			break;
 		}
-		case 'r': {
+		case 17: {
 			//update speed boost
 			speedBoost += 0.25f;
 			numberOfUpdate++;

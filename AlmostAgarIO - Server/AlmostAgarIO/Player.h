@@ -108,7 +108,7 @@ public:
 	void invisibleActivate(); //ezt kell meghivni hogy aktivaljuk
 	void speedActivate(); // ezt kell meghivni hogy aktivaljuk
 
-	void updateSkill(char key); //ez fejleszti a skilleket
+	void updateSkill(int key); //ez fejleszti a skilleket
 	//bool canUpdataInv(); //van e adott pontszam a fejlesztesre 
 	//bool canUpdateSpeed(); //van e adott pontszam a fejlesztesre
 	int getUpdateAvailable();
