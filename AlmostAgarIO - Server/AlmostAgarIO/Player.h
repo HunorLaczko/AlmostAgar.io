@@ -38,6 +38,7 @@ class Player
 	//bool updateInvisble; //if update is available
 	bool invisibilityChanged;
 	bool invisibleAvailableChanged;
+	int invisibleDuration; //inv. duraturion can upgrade
 
 	sf::Clock speedClockReload;
 	sf::Clock speedClockUse;
@@ -46,6 +47,8 @@ class Player
 	int speedTime;		//reload time in milisec for skill
 	//bool updateSpeed; //if update is available
 	bool speedAvailableChanged;
+	int speedDuration; //speed duration
+	float speedBoost; //speed boost can upgrade
 
 	int numberOfUpdate; //number of updated skills
 	int canUpdateNumber; //number of available updates 0 if no update for client
@@ -123,5 +126,8 @@ public:
 	bool getSpeedAvailable();
 
 	float getSpeed();
+
+	void invisibleDeActivate();
+	void speedDeActivate();
 };
 

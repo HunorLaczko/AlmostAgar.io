@@ -225,9 +225,15 @@ void Player::setEnemyInvisible(unsigned int id, bool _invisible)
 void Player::draw(sf::RenderWindow & window)
 {
 	sf::CircleShape circle;
-	circle.setFillColor(color);
 	circle.setOutlineThickness(-5);
-	circle.setOutlineColor(sf::Color(0, 0, 0));
+	if (invisible) {
+		circle.setFillColor(sf::Color(color.r, color.g, color.b, 50));
+		circle.setOutlineColor(sf::Color(0, 0, 0, 50));
+	}
+	else {
+		circle.setFillColor(color);
+		circle.setOutlineColor(sf::Color(0, 0, 0));
+	}
 	circle.setRadius(radius);
 	circle.scale(1, 1);
 	circle.setOrigin(radius, radius);

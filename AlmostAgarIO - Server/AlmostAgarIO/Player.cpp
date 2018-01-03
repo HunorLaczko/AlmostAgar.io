@@ -7,12 +7,12 @@
 Player::Player(int _id, sf::Vector2f _position, sf::TcpSocket *_tcpSocket)
 	: id(_id), position(_position), tcpSocket(_tcpSocket), radius(80),
 	name("unknown"), udpSocket(nullptr), playerIp(sf::IpAddress()),
-	speed(sf::Vector2f(0, 0)), velocity(sf::Vector2f(0, 0)), points(0),
+	speed(0), velocity(sf::Vector2f(0, 0)), points(0),
 	mapSize(sf::Vector2f(0, 0)), mapPosition(sf::Vector2f(0, 0)),
 	windowSize(sf::Vector2f(0, 0)), mousePosition(sf::Vector2f(0, 0)), initReady(false),
 	invisibleActive(false), speedActive(false), invisibleTime(30000), speedTime(40000),
-	/*updateInvisble(false), updateSpeed(false),*/ invisibleAvailable(false), speedAvailable(false),
-	numberOfUpdate(0), canUpdateNumber(0)
+	invisibleAvailable(false), speedAvailable(false), numberOfUpdate(0), canUpdateNumber(0),
+	invisibleDuration(5000), speedDuration(4000), speedBoost(1.0f)
 {
 	defRadius = radius;
 	invClockReload.restart();
@@ -121,7 +121,7 @@ void Player::setRadius(float _radius)
 	if (speed <= 0.6f) speed = 0.6f;
 
 	if (speedActive) {
-		speed += 1.5;
+		speed += speedBoost;
 	}
 
 }
@@ -218,28 +218,14 @@ void Player::skillChecking() {
 		std::cout << "Speed elerheto " << id << ". jatekos szamara\n";
 	}
 
-	//ha megnyomtak a kepesseg aktivlasat invisibleActivated() es speedActivated() fuggvennyel lehet
-	/*if (invisibleAvailable && invisibleActive) {
-		invisibleAvailable = false;
-		invClockReload.restart();
-	}
-
-	if (speedAvailable && speedActive) {
-		speedClockUse.restart();
-		speedAvailable = false;
-		speedClockReload.restart();
-	}
-	*/
-	//TODO valaki csokkenteni a meretet vagy a pontjat a hatarig ha kell nekunk ez
-
-	//TODO a hasznalati idot a skillekhez kitalalni, fix idok jelenleg 5sec es 4sec
-	if (invClockUse.getElapsedTime() > sf::milliseconds(5000) && invisibleActive) {
+	//skillek idejenek lejarata
+	if (invClockUse.getElapsedTime() > sf::milliseconds(invisibleDuration) && invisibleActive) {
 		invisibleActive = false;
 		std::cout << "Lathatatlansag ideje lejart\n";
 		invisibilityChanged = true;
 	}
 
-	if (speedClockUse.getElapsedTime() > sf::milliseconds(4000) && speedActive) {
+	if (speedClockUse.getElapsedTime() > sf::milliseconds(speedDuration) && speedActive) {
 		speedActive = false;
 		std::cout << "Speed ideje lejart\n";
 	}
@@ -280,54 +266,42 @@ void Player::speedActivate() {
 }
 
 //TODO ellenorizni hogy tenyleg fejleszthet-e
-sf::Clock tmp; //TODO torolni ezt mert csak teszteles miatt van bent
 void Player::updateSkill(char key) {
 	int point = 2 * (radius - defRadius + points);
 	canUpdateNumber = floor(point / 150) - numberOfUpdate; 
-	// 150 a pontok szama, ezzel egesz turheto meg a fejlesztes, a vegere pedig picit nehezebb mar de 100 ala nem jo menni
 
-	if (tmp.getElapsedTime() > sf::milliseconds(10000)) {
-		std::cout << canUpdateNumber << "db fejlesztes elerheto " << id << ". jatekos szamara\n";
-		tmp.restart();
-	}
-
-	//int updateNumber = floor(point / 150); // ennyi pont szamit egy szintnek
-	//if(updateNumber != numberOfUpdate){
-		//int m = updateNumber - numberOfUpdate;
 	if ( canUpdateNumber > 0) {
 		switch (key)
 		{
-		case 'n':{
-			//updateInvisble = false;
+		case 'q':{
+			//update invisibility reload time
 			invisibleTime -= 500; //ennyivel kevesebb ideig tolt
 			numberOfUpdate++;
-			std::cout <<"Lathatatlansagot fejlesztett a(z) " << id << ". jatekos\n";
+			std::cout << "Lathatatlansag ujratoltest fejlesztett a(z) " << id << ". jatekos\n";
 			break;
 		}
-		case 'm': {
-			//updateSpeed = false;
+		case 'w': {
+			//update speed reload time
 			speedTime -= 500; //ennyivel kevesebb ideig tolt
 			numberOfUpdate++;
-			std::cout << "Sebesseget fejlesztett a(z) " << id << ". jatekos\n";
+			std::cout << "Sebesseg ujratoltest fejlesztett a(z) " << id << ". jatekos\n";
+			break;
+		}
+		case 'e': {
+			//update invisibility duration time
+			invisibleDuration += 500;
+			numberOfUpdate++;
+			std::cout << "Lathatatlansag idotartamot fejlesztett a(z) " << id << ". jatekos\n";
+			break;
+		}
+		case 'r': {
+			//update speed boost
+			speedBoost += 0.25f;
+			numberOfUpdate++;
+			std::cout << "Sebesseg merteket fejlesztett a(z) " << id << ". jatekos\n";
 			break;
 		}
 		}
-
-		/* teszteleshez kell majd kitorolheto ha mar rendben van, regi kod, cska biztonsagi menteskent van kitorolheto majd 
-		for (int i = 0; i < m; i++) {
-			if (updateInvisble) {
-				updateInvisble = false;
-				invisibleTime -= 500; //ennyivel kevesebb ideig tolt
-				numberOfUpdate++;
-			}
-			else if (updateSpeed) {
-				updateSpeed = false;
-				updateSpeed -= 500; //ennyivel kevesebb ideig tolt
-				numberOfUpdate++;
-			}
-		}
-		*/
-		
 	}
 }
 
@@ -375,17 +349,28 @@ bool Player::getSpeedAvailable()
 	return speedAvailable;
 }
 
-/*
-bool Player::canUpdataInv() {
-	return updateInvisble;
-}
-
-bool Player::canUpdateSpeed() {
-	return updateSpeed;
-}
-*/
-
 float Player::getSpeed() {
 	return speed;
 }
 
+void Player::invisibleDeActivate() {
+	if (invisibleActive) {
+		invisibleActive = false;
+		std::cout << "Lathatatlansag deaktivalva " << id << ". jatekos szamara\n";
+
+		invisibleAvailable = false;
+		invClockReload.restart();
+
+		invisibilityChanged = true;
+	}
+}
+
+void Player::speedDeActivate() {
+	if (speedActive) {
+		speedActive = false;
+		std::cout << "Speed deaktivalva " << id << ". jatekos szamara\n";
+
+		speedAvailable = false;
+		speedClockReload.restart();
+	}
+}
