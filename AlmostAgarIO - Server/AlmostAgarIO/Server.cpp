@@ -379,35 +379,14 @@ bool Server::updatePlayerPosition(int id, sf::Vector2f pos)
 
 	sf::Vector2f vec;
 	sf::Vector2f distance(pos.x - player->getPosition().x, pos.y - player->getPosition().y);
-	//a speed legyen a playerben es a setradiusba szamolja ezt
-	float speed = (float)(3.2 - (0.005 * (player->getRadius() + player->getPoints())));
-	if (speed <= 0.6f) speed = 0.6f; //0.06f volt igy talan nem lesz csiga lassu ahogy nezem
-	
-	//TODO skillekhez
+
 	player->skillChecking(); // modify speed if need
 
-	//TODO updateSkill() kell valahova amit mindig meghiv majd a szerver, es leellenorzi minden jatekosra, es kikuldi amit kell
-	//itt most tesztelessel tudom ezt megoldani, es tobbszor is lehet majd egymas utan meghivni ha 
-	/*char key = ' ';
-	if (player->getUpdateAvailable() > 0) {
-		key = 'm'; //itt most cska tesztelni kellett a fix karakter, de lehet átírni majd ahogyan konnyebb, ez sebesseget nez
-	}*/
-	//player->updateSkill(key);
-
-	//teszteles a gyorsitasskillhez
-	//player->speedActivate();
-
-	//ez mar nem a teszt ez alatt
-	//ez a playerbe legyen, ne itt
-	if (player->isSpeeding()) {
-		speed += 1.5;
-	}
-
-	//std::cout << "Size: " << circle.getRadius() << " Speed: " << speed << std::endl;
+	
 	float length = sqrt(distance.x*distance.x + distance.y*distance.y);
-	//ugy kell hogy itt is a playertol kerdezzuk le a sebesseget
-	vec.x = speed * distance.x / length;
-	vec.y = speed * distance.y / length;
+
+	vec.x = player->getSpeed() * distance.x / length;
+	vec.y = player->getSpeed() * distance.y / length;
 
 	if (abs(distance.x) < 10 || ((player->getPosition().x - vec.x) <= player->getMapPosition().x && vec.x <= 0) || ((player->getPosition().x + vec.x) >= (player->getMapPosition().x + player->getMapSize().x) && vec.x >= 0) /*|| !(window.mapPixelToCoords(sf::Mouse::getPosition(window)).x > background.getPosition().x && window.mapPixelToCoords(sf::Mouse::getPosition(window)).x < (background.getPosition().x + texture.getSize().x))*/) {
 		vec.x = 0;
@@ -415,15 +394,9 @@ bool Server::updatePlayerPosition(int id, sf::Vector2f pos)
 	if (abs(distance.y) < 10 || ((player->getPosition().y - vec.y) <= player->getMapPosition().y && vec.y <= 0) || ((player->getPosition().y - vec.y) >= (player->getMapPosition().y + player->getMapSize().y) && vec.y >= 0)/*|| !(window.mapPixelToCoords(sf::Mouse::getPosition(window)).y > background.getPosition().y && window.mapPixelToCoords(sf::Mouse::getPosition(window)).y < (background.getPosition().y + texture.getSize().y))*/) {
 		vec.y = 0;
 	}
-	//std::cout << "playerPos: " << player->getPosition().x << "," << player->getPosition().y << "\n";
 	pos = player->getPosition() + vec;
-	//std::cout << "vec: " << vec.x << "," << vec.y << " dist: " << distance.x << "," << distance.y << " length: " << length << "\n";
-	//std::cout << "vec: " << vec.x << "," << vec.y << " pos: " << pos.x << "," << pos.y << "\n";
 	player->setPosition(pos);
-	//std::cout << "playerPos: " << player->getPosition().x << "," << player->getPosition().y << "\n";
-
-
-
+	
 	bool eatSomeOne = false;
 	int eatenID = -1;
 	float sizeDif = 5; //meret kulonbseg ahhoz h megeegyem a kisebbet

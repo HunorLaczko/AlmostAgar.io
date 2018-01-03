@@ -17,7 +17,7 @@ class Player
 	unsigned short udpPortReceive;
 	unsigned short udpPortSend;
 	sf::Vector2f position;  //player position, in world coordinates (absolute coordinates)
-	sf::Vector2f speed;     //player speed
+	float speed;     //player speed
 	sf::Vector2f velocity;  //player velocity
 	float defRadius;    //default radius set in Player constructor
 	float radius;    //player's circle's radius
@@ -121,5 +121,7 @@ public:
 
 	bool getInvisibleAvailable();
 	bool getSpeedAvailable();
+
+	float getSpeed();
 };
 

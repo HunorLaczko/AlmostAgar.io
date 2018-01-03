@@ -9,7 +9,7 @@ Player::Player()
 	name = "Anonymous";
 	canUpgradeNumber = 0;
 	invisibleAvailable = false;
-	speedAvailable = true;
+	speedAvailable = false;
 }
 
 
