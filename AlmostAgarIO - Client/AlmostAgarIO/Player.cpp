@@ -10,6 +10,7 @@ Player::Player()
 	canUpgradeNumber = 0;
 	invisibleAvailable = false;
 	speedAvailable = false;
+	invisible = false;
 }
 
 
@@ -126,6 +127,9 @@ void Player::reset()
 	id = -1;
 	position = sf::Vector2f(0, 0);
 	enemies.clear();
+	invisibleAvailable = false;
+	speedAvailable = false;
+	invisible = false;
 }
 
 void Player::resetEnemies()

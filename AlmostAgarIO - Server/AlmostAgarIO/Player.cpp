@@ -245,6 +245,7 @@ void Player::invisibleActivate() {
 		std::cout << "Lathatatlansag aktivalva " << id << ". jatekos szamara\n";
 
 		invisibleAvailable = false;
+		invisibleAvailableChanged = true;
 		invClockReload.restart();
 
 		invisibilityChanged = true;
@@ -258,6 +259,7 @@ void Player::speedActivate() {
 		std::cout << "Speed aktivalva " << id << ". jatekos szamara\n";
 
 		speedAvailable = false;
+		speedAvailableChanged = true;
 		speedClockReload.restart();
 	}
 }
@@ -363,6 +365,7 @@ void Player::invisibleDeActivate() {
 		std::cout << "Lathatatlansag deaktivalva " << id << ". jatekos szamara\n";
 
 		invisibleAvailable = false;
+		invisibleAvailableChanged = true;
 		invClockReload.restart();
 
 		invisibilityChanged = true;
@@ -375,6 +378,7 @@ void Player::speedDeActivate() {
 		std::cout << "Speed deaktivalva " << id << ". jatekos szamara\n";
 
 		speedAvailable = false;
+		speedAvailableChanged = true;
 		speedClockReload.restart();
 	}
 }
