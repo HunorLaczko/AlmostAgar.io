@@ -108,6 +108,8 @@ void Windows::event_loop(){
 				}
 				case sf::Event::Resized: {
 					game.resize(event.size, getSize());
+					size_x = event.size.width;
+					size_y = event.size.height;
 					break;
 				}
 				case sf::Event::KeyPressed: {

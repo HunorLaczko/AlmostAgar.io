@@ -17,7 +17,7 @@ void Game::func() {
 	}
 	view.setViewport(sf::FloatRect(0, 0, 1, 1));
 	//view.zoom(ZOOM);
-
+	texture.setSmooth(true);
 	//window.setMouseCursorVisible(false);
 	player.setRadius(radius);
 	player.setPosition(sf::Vector2f((float)texture2.getSize().x / 2, (float)texture2.getSize().y / 2));
@@ -27,6 +27,7 @@ void Game::func() {
 	map.scale(1, 1);
 	background.scale(1, 1);
 	map.setPosition(1000, 750);
+	
 
 	finished = true;
 	std::cout << "Betolto szal leall!" << std::endl;

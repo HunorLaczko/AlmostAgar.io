@@ -114,13 +114,15 @@ int main()
 	}
 	, [&]() {});
 
-	lambdaButton *exit = new lambdaButton(300 + 100, 250, 200, 50, "Kilépés",
+	lambdaButton *exit = new lambdaButton(300 + 100, 250, 200, 50, "Fõmenü",
 		[&]//mindent akarok használni
 	()
 	{
-		window.close();
+		//window.close();
+		window.changeview(Views::main_menu_view);
 		start = false;
-		fut = false;
+		fut = true;
+
 	}
 	, [&]() {});
 
