@@ -7,7 +7,7 @@
 Player::Player(int _id, sf::Vector2f _position, sf::TcpSocket *_tcpSocket)
 	: id(_id), position(_position), tcpSocket(_tcpSocket), radius(80),
 	name("unknown"), udpSocket(nullptr), playerIp(sf::IpAddress()),
-	speed(0), velocity(sf::Vector2f(0, 0)), points(0),
+	velocity(sf::Vector2f(0, 0)), points(0),
 	mapSize(sf::Vector2f(0, 0)), mapPosition(sf::Vector2f(0, 0)),
 	windowSize(sf::Vector2f(0, 0)), mousePosition(sf::Vector2f(0, 0)), initReady(false),
 	invisibleActive(false), speedActive(false), invisibleTime(30000), speedTime(40000),
@@ -22,6 +22,8 @@ Player::Player(int _id, sf::Vector2f _position, sf::TcpSocket *_tcpSocket)
 	invisibilityChanged = true;
 	invisibleAvailableChanged = true;
 	speedAvailableChanged = true;
+	speed = (float)(3.2 - (0.005 * (radius + points)));
+	if (speed <= 0.6f) speed = 0.6f;
 }
 
 Player::~Player()
