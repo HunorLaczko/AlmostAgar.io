@@ -47,7 +47,14 @@ Game::Game() : thread(&Game::func, this)
 	gameover = false;
 	//Speciális képességekhez a bilentyűk(számozás abc szerint): a-0, s-18, d-3
 	specalkeys = { { 0,false },{ 18,false } ,{ 3,false }, {4, false},{ 16, false },{ 17, false },{ 22, false } };
-	//specalkeys_value = {Letter(10,10,50,50,"s",sf::Color(255,0,0)),Letter(65,10,50,50,"d",sf::Color(255,0,0))};
+	specalkeys_value = {
+		new Letter(0,0,40,40,"S",sf::Color(255,0,0), 0),
+		new Letter(0,0,40,40,"D",sf::Color(255,0,0), 1),
+		new Letter(0,0,40,40,"Q",sf::Color(255,0,0), 2),
+		new Letter(0,0,40,40,"W",sf::Color(255,0,0), 3),
+		new Letter(0,0,40,40,"E",sf::Color(255,0,0), 4),
+		new Letter(0,0,40,40,"R",sf::Color(255,0,0), 5)
+	};
 }
 
 Game::~Game()
@@ -68,7 +75,7 @@ void Game::setFirst() {
 
 void Game::setFood(const std::vector<sf::Vector2f>& _food, float foodRadius)
 {
-	for (int i = 0; i < 1000; i++) {
+	for (int i = 0; i < _food.size(); i++) {
 		sf::CircleShape circ(foodRadius);
 		circ.setPosition(_food[i]);
 		circ.setFillColor(sf::Color(rand() % 255, rand() % 255, rand() % 255));
@@ -250,6 +257,7 @@ void Game::draw(sf::RenderWindow & window)
 	//view.move(movement);
 	view.setCenter(player.getPosition());
 	
+	
 	//TODO Bálint: ha szervertől megvan a leaderboard, akkor szerint átírni:
 
 	//smaller enemy drawing
@@ -284,11 +292,20 @@ void Game::draw(sf::RenderWindow & window)
 		for (int i = 0; i < smallerEnemy.size(); i++) {
 			smallerEnemy[i].draw(window);
 		}
-		/*for (unsigned i = 0; i < specalkeys_value.size(); i++) {
-			specalkeys_value[i].draw(window);
+
+		//ronda megoldas tudom :(
+		bool a = player.getUpgradeAvailable() > 0; //TODO Huni nezd meg hogy ha mukodik a fuggveny ez jo lesz-e
+		bool tmp[] = {player.getInvisibleAvailable(), player.getSpeedAvailable(), a, a, a, a};
+
+		for (unsigned i = 0; i < specalkeys_value.size(); i++) {
+			if (tmp[i] == true) {
+				specalkeys_value[i]->changeStatus(Letter::Status::Active);
+			}
+			else if (tmp[i] == false) {
+				specalkeys_value[i]->changeStatus(Letter::Status::Loading);
+			}
+			specalkeys_value[i]->draw(window);
 		}
-		/*Letter st = Letter(10, 10, 50, 50, "s",sf::Color(255,0,0));
-		st.draw(window);*/
 	}
 	window.display();
 }

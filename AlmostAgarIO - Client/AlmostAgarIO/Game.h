@@ -43,7 +43,7 @@ private:
 	std::vector<unsigned int> leaderboard;
 	bool gameover;
 	std::map<int, bool> specalkeys;
-	//std::vector<Letter> specalkeys_value;
+	std::vector<Letter*> specalkeys_value;
 
 	std::vector<sf::CircleShape> food;
 	//FoodGenerator gen;
