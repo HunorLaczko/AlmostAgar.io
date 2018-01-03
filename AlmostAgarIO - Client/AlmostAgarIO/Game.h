@@ -1,6 +1,5 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-#include "FoodGenerator.h"
 #include "Network.h"
 #include "Player.h"
 #include "Letter.h"

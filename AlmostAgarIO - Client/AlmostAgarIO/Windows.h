@@ -4,7 +4,6 @@
 #include "Button.h"
 #include "TextEditor.h"
 #include <SFML/Graphics.hpp>
-#include "FoodGenerator.h"
 #include "Network.h"
 #include "Player.h"
 #include "Game.h"
