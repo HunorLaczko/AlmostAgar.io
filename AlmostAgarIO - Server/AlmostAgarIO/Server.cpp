@@ -272,25 +272,20 @@ void Server::run()
 							packet >> type;
 							int id;
 							sf::Vector2f pos;
-
-							//Player player;
-
-							switch (type)
-							{
+														
 								//received location
-							case 1:
+							if(type == 1)
 							{
 								packet >> id >> pos.x >> pos.y;
 								//might cause problem with iterator if somebody dies in this update that's why I check this
 								if (updatePlayerPosition(id, pos))
 								{
-									continue;
+									break;
 								}
 								updateFood(id);
-								break;
 							}
 
-							}
+							
 						}
 					}
 				}
