@@ -238,6 +238,7 @@ void Player::draw(sf::RenderWindow & window)
 	circle.scale(1, 1);
 	circle.setOrigin(radius, radius);
 	circle.setPosition(position);
+	circle.setPointCount(100);
 
 	sf::Font font;
 	if (!font.loadFromFile("arial.ttf")) std::cout << "Couldn't load font file!" << std::endl;

@@ -47,6 +47,7 @@ Game::Game() : thread(&Game::func, this)
 	gameover = false;
 	//Speciális képességekhez a bilentyűk(számozás abc szerint): a-0, s-18, d-3
 	specalkeys = { { 0,false },{ 18,false } ,{ 3,false }, {4, false},{ 16, false },{ 17, false },{ 22, false } };
+	//specalkeys_value = {Letter(10,10,50,50,"s",sf::Color(255,0,0)),Letter(65,10,50,50,"d",sf::Color(255,0,0))};
 }
 
 Game::~Game()
@@ -283,6 +284,11 @@ void Game::draw(sf::RenderWindow & window)
 		for (int i = 0; i < smallerEnemy.size(); i++) {
 			smallerEnemy[i].draw(window);
 		}
+		/*for (unsigned i = 0; i < specalkeys_value.size(); i++) {
+			specalkeys_value[i].draw(window);
+		}
+		/*Letter st = Letter(10, 10, 50, 50, "s",sf::Color(255,0,0));
+		st.draw(window);*/
 	}
 	window.display();
 }

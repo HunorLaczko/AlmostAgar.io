@@ -153,6 +153,7 @@
     <ClInclude Include="Button.h" />
     <ClInclude Include="FoodGenerator.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="Letter.h" />
     <ClInclude Include="Network.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="SimpleText.h" />
@@ -167,6 +168,7 @@
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="FoodGenerator.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="Letter.cpp" />
     <ClCompile Include="Network.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="SimpleText.cpp" />

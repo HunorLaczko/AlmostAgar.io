@@ -3,6 +3,7 @@
 #include "FoodGenerator.h"
 #include "Network.h"
 #include "Player.h"
+#include "Letter.h"
 #include<SFML/Network.hpp>
 
 class Network;
@@ -42,6 +43,7 @@ private:
 	std::vector<unsigned int> leaderboard;
 	bool gameover;
 	std::map<int, bool> specalkeys;
+	//std::vector<Letter> specalkeys_value;
 
 	std::vector<sf::CircleShape> food;
 	//FoodGenerator gen;
