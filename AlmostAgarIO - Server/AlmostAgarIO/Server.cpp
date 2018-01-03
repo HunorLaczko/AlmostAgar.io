@@ -199,9 +199,31 @@ void Server::run()
 
 								
 							}
-							else if (type == 4)
+							//receive skill upgrade
+							else if (type == 10)
 							{
-								//
+								unsigned int id;
+								char key;
+								int keyCode;
+								packet >> id >> keyCode;
+								key = (char)keyCode;
+								it->second.updateSkill(key);
+							}
+							//receive skill use
+							else if (type == 11)
+							{
+								unsigned int id;
+								int keyCode;
+								bool active;
+								packet >> id >> keyCode >> active;
+								if (keyCode == 3 && active)
+								{
+									it->second.speedActivate();
+								}
+								else if (keyCode == 18 && active)
+								{
+									it->second.invisibleActivate();
+								}
 							}
 						}
 						else
@@ -310,7 +332,36 @@ void Server::run()
 					it->second.getTcpSocket()->send(rankingPacket);
 					rankingChanged = false;
 				}
-			  	
+
+				//sending skill upgrade message
+				if (it->second.getUpdateAvailable() > 0)
+				{
+					sf::Packet upgradePacket;
+					upgradePacket << 9 << it->second.getUpdateAvailable();
+				}
+
+				//sending my invisibility for everyone if it changed
+				if (it->second.getInvisibilityChanged())
+				{
+					sf::Packet invisiblePacket;
+					invisiblePacket << 12 << it->second.getId() << it->second.isInvisible();
+
+					for (std::unordered_map<int, Player>::iterator it2 = players.begin(); it2 != players.end(); it2++)
+					{
+						it2->second.getTcpSocket()->send(invisiblePacket);
+					}
+					it->second.setInvisibilityChanged(false);
+				}	
+
+				//sending skill availabity's if changed
+				if (it->second.getInvisibleAvailableChanged() || it->second.getSpeedAvailableChanged())
+				{
+					sf::Packet skillAvailablePacket;
+					skillAvailablePacket << 13 << it->second.getInvisibleAvailable() << it->second.getSpeedAvailable();
+					it->second.getTcpSocket()->send(skillAvailablePacket);
+					it->second.setInvisibleAvailableChanged(false);
+					it->second.setSpeedAvailableChanged(false);
+				}
 			}
 			clock.restart();
 			foodToUpdate.clear();
@@ -328,6 +379,7 @@ bool Server::updatePlayerPosition(int id, sf::Vector2f pos)
 
 	sf::Vector2f vec;
 	sf::Vector2f distance(pos.x - player->getPosition().x, pos.y - player->getPosition().y);
+	//a speed legyen a playerben es a setradiusba szamolja ezt
 	float speed = (float)(3.2 - (0.005 * (player->getRadius() + player->getPoints())));
 	if (speed <= 0.6f) speed = 0.6f; //0.06f volt igy talan nem lesz csiga lassu ahogy nezem
 	
@@ -336,22 +388,24 @@ bool Server::updatePlayerPosition(int id, sf::Vector2f pos)
 
 	//TODO updateSkill() kell valahova amit mindig meghiv majd a szerver, es leellenorzi minden jatekosra, es kikuldi amit kell
 	//itt most tesztelessel tudom ezt megoldani, es tobbszor is lehet majd egymas utan meghivni ha 
-	char key = ' ';
+	/*char key = ' ';
 	if (player->getUpdateAvailable() > 0) {
 		key = 'm'; //itt most cska tesztelni kellett a fix karakter, de lehet átírni majd ahogyan konnyebb, ez sebesseget nez
-	}
-	player->updateSkill(key);
+	}*/
+	//player->updateSkill(key);
 
 	//teszteles a gyorsitasskillhez
-	player->speedActivate();
+	//player->speedActivate();
 
 	//ez mar nem a teszt ez alatt
+	//ez a playerbe legyen, ne itt
 	if (player->isSpeeding()) {
 		speed += 1.5;
 	}
 
 	//std::cout << "Size: " << circle.getRadius() << " Speed: " << speed << std::endl;
 	float length = sqrt(distance.x*distance.x + distance.y*distance.y);
+	//ugy kell hogy itt is a playertol kerdezzuk le a sebesseget
 	vec.x = speed * distance.x / length;
 	vec.y = speed * distance.y / length;
 
@@ -384,9 +438,6 @@ bool Server::updatePlayerPosition(int id, sf::Vector2f pos)
 				eatenID = it->first;
 				eatSomeOne = true;
 				std::cout << "A " << player->getId() << " jatekos megette a kovektkezo jatekost: " << eatenID << std::endl;
-				//TODO barkinek megnovelni a player meretet valamennyivel , akar szintetlepve is majd
-				//itt ne az osszes radiust adjuk at annak aki megevett valakit
-				
 				player->setRadius(sqrt(pow(player->getRadius() + player->getPoints(), 2) + pow(it->second.getRadius() + it->second.getPoints(), 2)));
 			}
 		}
@@ -450,6 +501,7 @@ void Server::deletePlayerFromRanking(int id)
 		if (ranking[i].getId() == id)
 		{
 			ranking.erase(ranking.begin() + i);
+			rankingChanged = true;
 			return;
 		}
 	}

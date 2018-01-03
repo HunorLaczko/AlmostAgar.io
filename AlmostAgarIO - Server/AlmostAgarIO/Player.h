@@ -36,6 +36,8 @@ class Player
 	bool invisibleActive; //skill is active
 	int invisibleTime; //reload time in milisec for skill
 	//bool updateInvisble; //if update is available
+	bool invisibilityChanged;
+	bool invisibleAvailableChanged;
 
 	sf::Clock speedClockReload;
 	sf::Clock speedClockUse;
@@ -43,6 +45,7 @@ class Player
 	bool speedActive;	//skill is active
 	int speedTime;		//reload time in milisec for skill
 	//bool updateSpeed; //if update is available
+	bool speedAvailableChanged;
 
 	int numberOfUpdate; //number of updated skills
 	int canUpdateNumber; //number of available updates 0 if no update for client
@@ -106,5 +109,17 @@ public:
 	//bool canUpdataInv(); //van e adott pontszam a fejlesztesre 
 	//bool canUpdateSpeed(); //van e adott pontszam a fejlesztesre
 	int getUpdateAvailable();
+
+	bool getInvisibilityChanged();
+	void setInvisibilityChanged(bool _invisibilityChanged);
+
+	bool getInvisibleAvailableChanged();
+	void setInvisibleAvailableChanged(bool _invisibleAvailableChanged);
+
+	bool getSpeedAvailableChanged();
+	void setSpeedAvailableChanged(bool _speedAvailableChanged);
+
+	bool getInvisibleAvailable();
+	bool getSpeedAvailable();
 };
 

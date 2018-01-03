@@ -7,6 +7,9 @@ Player::Player()
 {
 	changed = false;
 	name = "Anonymous";
+	canUpgradeNumber = 0;
+	invisibleAvailable = false;
+	speedAvailable = true;
 }
 
 
@@ -163,6 +166,60 @@ sf::Color Player::getEnemyColor(unsigned int id)
 void Player::setEnemyColor(unsigned int id, sf::Color _color)
 {
 	enemies[id].setColor(_color);
+}
+
+int Player::getUpgradeAvailable() {
+	return canUpgradeNumber;
+}
+
+void Player::upgradedSkill()
+{
+	canUpgradeNumber--;
+}
+
+void Player::canUpgrade(int numberOfUpgrades)
+{
+	canUpgradeNumber += numberOfUpgrades;
+}
+
+bool Player::getInvisibleAvailable()
+{
+	return invisibleAvailable;
+}
+
+void Player::setInvisibleAvailable(bool _invisibleAvailable)
+{
+	invisibleAvailable = _invisibleAvailable;
+}
+
+bool Player::getSpeedAvailable()
+{
+	return speedAvailable;
+}
+
+void Player::setSpeedAvailable(bool _speedAvailable)
+{
+	speedAvailable = _speedAvailable;
+}
+
+bool Player::getInvisible()
+{
+	return invisible;
+}
+
+void Player::setInvisible(bool _invisible)
+{
+	invisible = _invisible;
+}
+
+bool Player::getEnemyInvisible(unsigned int id)
+{
+	return enemies[id].getInvisible();
+}
+
+void Player::setEnemyInvisible(unsigned int id, bool _invisible)
+{
+	enemies[id].setInvisible(_invisible);
 }
 
 void Player::draw(sf::RenderWindow & window)

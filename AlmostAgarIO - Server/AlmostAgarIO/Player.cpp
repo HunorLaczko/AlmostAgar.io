@@ -19,6 +19,9 @@ Player::Player(int _id, sf::Vector2f _position, sf::TcpSocket *_tcpSocket)
 	speedClockReload.restart();
 	invClockUse.restart();
 	speedClockUse.restart();
+	invisibilityChanged = true;
+	invisibleAvailableChanged = true;
+	speedAvailableChanged = true;
 }
 
 Player::~Player()
@@ -198,10 +201,12 @@ void Player::skillChecking() {
 	//skillek ujratoltesenek ellenorzese
 	if (invClockReload.getElapsedTime() > sf::milliseconds(invisibleTime) && invisibleAvailable == false) {
 		invisibleAvailable = true;
+		invisibleAvailableChanged = true;
 		std::cout << "Lathatatlansag elerheto " << id << ". jatekos szamara\n";
 	}
 	if (speedClockReload.getElapsedTime() > sf::milliseconds(speedTime) && speedAvailable == false) {
 		speedAvailable = true;
+		speedAvailableChanged = true;
 		std::cout << "Speed elerheto " << id << ". jatekos szamara\n";
 	}
 
@@ -223,6 +228,7 @@ void Player::skillChecking() {
 	if (invClockUse.getElapsedTime() > sf::milliseconds(5000) && invisibleActive) {
 		invisibleActive = false;
 		std::cout << "Lathatatlansag ideje lejart\n";
+		invisibilityChanged = true;
 	}
 
 	if (speedClockUse.getElapsedTime() > sf::milliseconds(4000) && speedActive) {
@@ -249,6 +255,8 @@ void Player::invisibleActivate() {
 
 		invisibleAvailable = false;
 		invClockReload.restart();
+
+		invisibilityChanged = true;
 	}
 }
 
@@ -263,6 +271,7 @@ void Player::speedActivate() {
 	}
 }
 
+//TODO ellenorizni hogy tenyleg fejleszthet-e
 sf::Clock tmp; //TODO torolni ezt mert csak teszteles miatt van bent
 void Player::updateSkill(char key) {
 	int point = 2 * (radius - defRadius + points);
@@ -316,6 +325,46 @@ void Player::updateSkill(char key) {
 
 int Player::getUpdateAvailable() {
 	return canUpdateNumber;
+}
+
+bool Player::getInvisibilityChanged()
+{
+	return invisibilityChanged;
+}
+
+void Player::setInvisibilityChanged(bool _invisibilityChanged)
+{
+	invisibilityChanged = _invisibilityChanged;
+}
+
+bool Player::getInvisibleAvailableChanged()
+{
+	return invisibleAvailableChanged;
+}
+
+void Player::setInvisibleAvailableChanged(bool _invisibleAvailableChanged)
+{
+	invisibleAvailableChanged = _invisibleAvailableChanged;
+}
+
+bool Player::getSpeedAvailableChanged()
+{
+	return speedAvailableChanged;
+}
+
+void Player::setSpeedAvailableChanged(bool _speedAvailableChanged)
+{
+	speedAvailableChanged = _speedAvailableChanged;
+}
+
+bool Player::getInvisibleAvailable()
+{
+	return invisibleAvailable;
+}
+
+bool Player::getSpeedAvailable()
+{
+	return speedAvailable;
 }
 
 /*

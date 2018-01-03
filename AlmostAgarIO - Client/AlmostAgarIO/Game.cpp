@@ -80,7 +80,7 @@ void Game::updateFood(int index, sf::Vector2f newFood)
 {
 	food[index].setPosition(newFood);
 }
-
+//TODO csak akkor hivd meg a sendkey-t ha a megfelelo skill elerheto
 void Game::keyPressed(int key)
 {
 	std::map<int, bool>::iterator it;

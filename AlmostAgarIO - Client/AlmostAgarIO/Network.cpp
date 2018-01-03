@@ -222,7 +222,7 @@ void Network::getResponse()
 				packet >> index >> newFood.x >> newFood.y;
 				game->updateFood(index, newFood);
 			}
-			std::cout << "received food update\n";
+			//std::cout << "received food update\n";
 			break;
 		}
 		
@@ -278,12 +278,65 @@ void Network::getResponse()
 			{
 				player->deleteEnemy(id);
 			}
+			break;
+		}
+		//receive skill upgrade possible message
+		case 9:
+		{
+			int numberOfUpgrades;
+			packet >> numberOfUpgrades;
+			player->canUpgrade(numberOfUpgrades);
+			std::cout << "received " << numberOfUpgrades << " upgrades\n";
+			break;
+		}
+		//receive invisibility info
+		case 12:
+		{
+			bool isInvisible;
+			packet >> id >> isInvisible;
+			std::cout << "player " << id << " invisibility: " << isInvisible << "\n";
+			if (id == player->getId())
+			{
+				player->setInvisible(isInvisible);
+			}
+			else
+			{
+				player->setEnemyInvisible(id, isInvisible);
+			}
+			break;
+		}
+		//receive skill availabity info
+		case 13:
+		{
+			bool invisibleAvailable, speedAvailable;
+			packet >> invisibleAvailable >> speedAvailable;
+			player->setInvisibleAvailable(invisibleAvailable);
+			player->setSpeedAvailable(speedAvailable);
+			std::cout << "received skill availabity info\n";
+			break;
 		}
 		}
 	}
 	tcpSocket.setBlocking(true);
 }
 
-void Network::sendKey(char key, bool active)
+void Network::sendKey(int key, bool active)
 {
+	sf::Packet keyPacket;
+	//TODO fejlesztes billentyuk berakasa
+	//if upgrade key pressed
+	if (key == 0)
+	{
+		keyPacket << 10 << player->getId() << key;
+		tcpSocket.send(keyPacket);
+		std::cout << "sent skill upgrade\n";
+	}
+	//if skill use key pressed 
+	//d is speed, s is invisibility
+	else if (key == 18 || key == 3)
+	{
+		keyPacket << 11 << player->getId() << key << active;
+		tcpSocket.send(keyPacket);
+		std::cout << "sent skill use\n";
+	}
 }

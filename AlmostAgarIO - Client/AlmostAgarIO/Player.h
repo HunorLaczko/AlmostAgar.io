@@ -16,6 +16,10 @@ class Player
 	std::unordered_map<int, Player> enemies;
 	sf::Color color;
 	static float default_radius;
+	int canUpgradeNumber;
+	bool invisibleAvailable;
+	bool speedAvailable;
+	bool invisible;		
 
 public:
 	Player();
@@ -66,7 +70,23 @@ public:
 
 	sf::Color getColor();
 	void setColor(sf::Color _color);
-	/*std::vector<sf::Vector2f> getFood();
-	void setFood(const std::vector<sf::Vector2f> _food);*/
+
+	int getUpgradeAvailable();	//get the number of upgrades available
+	void upgradedSkill();	//call this when we sent the upgrade to server
+	void canUpgrade(int numberOfUpgrades);	//call this when we received upgrade available from server
+	
+
+	bool getInvisible();
+	void setInvisible(bool _invisible);
+	bool getEnemyInvisible(unsigned int id);
+	void setEnemyInvisible(unsigned int id, bool _invisible);
+
+	//not yet used
+	bool getInvisibleAvailable();
+	void setInvisibleAvailable(bool _invisibleAvailable);
+
+	bool getSpeedAvailable();
+	void setSpeedAvailable(bool _speedAvailable);
+
 };
 
