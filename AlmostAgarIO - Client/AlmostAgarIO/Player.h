@@ -20,6 +20,7 @@ class Player
 	bool invisibleAvailable;
 	bool speedAvailable;
 	bool invisible;		
+	bool initReady;
 
 public:
 	Player();
@@ -88,5 +89,7 @@ public:
 	bool getSpeedAvailable();
 	void setSpeedAvailable(bool _speedAvailable);
 
+	bool getInitReady() const;
+	void setInitReady(bool _initReady);
 };
 

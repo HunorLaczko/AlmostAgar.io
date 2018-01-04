@@ -161,6 +161,7 @@ void Network::init(sf::Vector2f _mapSize, sf::Vector2f _mapPosition, sf::Vector2
 			std::cout << "set enemies color: " << (int)player->getEnemyColor(id).r << "," << (int)player->getEnemyColor(id).g << "," << (int)player->getEnemyColor(id).b << "\n";
 		}
 	}
+	player->setInitReady(true);
 	tcpSocket.setBlocking(false);
 }
 

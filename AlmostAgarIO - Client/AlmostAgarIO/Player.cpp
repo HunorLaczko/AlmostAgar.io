@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "Player.h"
 #include "iostream"
-#include "sstream"
 
 Player::Player()
 {
@@ -11,6 +10,7 @@ Player::Player()
 	invisibleAvailable = false;
 	speedAvailable = false;
 	invisible = false;
+	initReady = false;
 }
 
 
@@ -226,8 +226,19 @@ void Player::setEnemyInvisible(unsigned int id, bool _invisible)
 	enemies[id].setInvisible(_invisible);
 }
 
+bool Player::getInitReady() const
+{
+	return initReady;
+}
+
+void Player::setInitReady(bool _initReady)
+{
+	initReady = _initReady;
+}
+
 void Player::draw(sf::RenderWindow & window)
 {
+	if (!initReady) return;
 	sf::CircleShape circle;
 	circle.setOutlineThickness(-5);
 	if (invisible) {
@@ -250,10 +261,10 @@ void Player::draw(sf::RenderWindow & window)
 	sf::Text text;
 	text.setFont(font);
 	///Debug:koordináták is
-	std::ostringstream ss;
-	ss << name << "\n" << position.x <<", " << position.y;
-	text.setString(ss.str());
-	//text.setString(name);
+	//std::ostringstream ss;
+	//ss << name << "\n" << position.x <<", " << position.y;
+	//text.setString(ss.str());
+	text.setString(name);
 	text.setColor(sf::Color::White);
 	text.setStyle(sf::Text::Bold);
 	text.setOutlineColor(sf::Color::Black);
@@ -270,3 +281,4 @@ void Player::draw(sf::RenderWindow & window)
 	window.draw(text);
 
 }
+
