@@ -14,9 +14,6 @@ Server::Server() : foodGenerator(sf::Vector2f(1000,750), sf::Vector2f(4000,3000)
 	selector.add(listener);
 	selector.add(testListener);
 	running = true;
-	//udpSocket.bind(udpPortReceive);
-	//udpSocket.setBlocking(false);
-	//selector.add(udpSocket);
 	clock.restart();
 	foodGenerator.generateFood(1000);
 	food = foodGenerator.getFood();
@@ -51,30 +48,27 @@ void Server::run()
 			if (selector.isReady(listener))
 			{
 				// The listener is ready: there is a pending connection
-				//std::unique_ptr<sf::TcpSocket> client = std::make_unique<sf::TcpSocket>();
 				sf::TcpSocket* client = new sf::TcpSocket();
 				if (listener.accept(*client) == sf::Socket::Done)
 				{
-					//std::cout << client->getRemotePort();
 					// Add the new client to the clients list
-					///TODO: should randomize start position
-					players.insert(std::make_pair(id,(Player(id, sf::Vector2f(3000, 2000), client))));
+					players.insert(std::make_pair(id,(Player(id, client))));
 					id++;
 					// Add the new client to the selector so that we will
 					// be notified when he sends something
-					//selector.add(*players.back().getTcpSocket());
 					selector.add(*client);
 					players.at(id - 1).setPlayerIp(client->getRemoteAddress());
-					//should check if player name aleady exists?
+					
 					sf::Packet packet;
 					packet << 0;
-					//packet << players.back().getId();
 					packet << id - 1;
 					packet << players.at(id - 1).getRadius();
+
 					//add player to ranking and refresh order
 					ranking.push_back(&players.at(id - 1));
 					rankingChanged = true;
 					checkRanking();
+
 					if (client->send(packet) != sf::Socket::Done) //Send client id
 						std::cout << "Error sending id" << std::endl;
 					else
@@ -88,7 +82,6 @@ void Server::run()
 					selector.add(*players.at(id - 1).bindUdpSocket(udpPortReceive, udpPortSend));
 					std::cout << "received udp ports from client: " << udpPortReceive << " , " << udpPortSend << "\n";
 				}
-
 			}			
 			
 			else
@@ -118,13 +111,11 @@ void Server::run()
 								std::string name;
 								
 								packet >> id >> _mapSize.x >> _mapSize.y >> _mapPosition.x >> _mapPosition.y >> _windowSize.x >> _windowSize.y >> name;// >> udpPortReceive >> udpPortSend;
-								//Player *player = &players.find(id)->second;
 								Player* player = &players.at(id);
 								player->setMapSize(_mapSize);
 								player->setMapPosition(_mapPosition);
 								player->setWindowSize(_windowSize);
 								player->setName(name);
-								//selector.add(*player->bindUdpSocket(udpPortReceive, udpPortSend));
 
 								sf::Packet initPacket;
 
@@ -134,7 +125,6 @@ void Server::run()
 								sf::Packet initPositionPacket;
 								initPositionPacket << player->getId() << player->getPosition().x << player->getPosition().y;
 								initPacket << player->getId() << player->getPosition().x << player->getPosition().y;
-								//(*it).second.getTcpSocket()->send(initPositionPacket);
 
 								//sending whole food vector to client
 								sf::Packet foodPacket;
@@ -144,7 +134,6 @@ void Server::run()
 								{
 									initPacket << f.x << f.y;
 								}
-								//(*it).second.getTcpSocket()->send(foodPacket);
 
 								//generating random color
 								std::vector<sf::Color> colors = 
@@ -190,7 +179,6 @@ void Server::run()
 									initPacket << it2->second.getId() << it2->second.getName() << (int)it2->second.getColor().r << (int)it2->second.getColor().g << (int)it2->second.getColor().b;
 									std::cout << "id: " << it2->second.getId() << " name: " << it2->second.getName() << " color: (" <<(int)it2->second.getColor().r << "," << (int)it2->second.getColor().g << "," << (int)it2->second.getColor().b << ")\n";
 								}
-								//(*it).second.getTcpSocket()->send(nameAndColorPacket);
 								(*it).second.getTcpSocket()->send(initPacket);
 								it->second.setInitReady(true);
 
@@ -213,10 +201,7 @@ void Server::run()
 									rankingPacket << player->getId();
 								}
 								it->second.getTcpSocket()->send(rankingPacket);
-								
-								
-
-								//player->setPosition(sf::Vector2f((_mapPosition.x+_mapSize.x/2),(_mapPosition.y+_mapSize.y/2)));
+						
 								std::cout << "\nreceived init params: "<<player->getPosition().x<<", "<<player->getPosition().y<<"\n";
 
 								
@@ -307,7 +292,6 @@ void Server::run()
 
 		if (clock.getElapsedTime() > sf::milliseconds(33))
 		{
-			//std::cout << "nr of players: " << players.size() << "\n";
 			//generating packet with all players' location
 			sf::Packet positionPacket;
 			positionPacket << 2 << players.size();
@@ -355,7 +339,7 @@ void Server::run()
 				//sending ranking if changed
 				if (rankingChanged)
 				{	
-					std::cout << "sent ranking update\n";
+					//std::cout << "sent ranking update\n";
 					it->second.getTcpSocket()->send(rankingPacket);
 				}
 
@@ -431,7 +415,6 @@ bool Server::updatePlayerPosition(int id, sf::Vector2f pos)
 	int eatenID = -1;
 	float sizeDif = 5; //meret kulonbseg ahhoz h megeegyem a kisebbet
 
-	//TODO skillekhez ha lathatatlan ne nezze az utkozest - elvileg kesz az iffeknel
 	for (std::unordered_map<int, Player>::iterator it = players.begin(); it != players.end() && !eatSomeOne && player->isInvisible() == false ; it++)
 	{
 		if (it->first != player->getId() && it->second.isInvisible() == false) {
@@ -455,9 +438,6 @@ bool Server::updatePlayerPosition(int id, sf::Vector2f pos)
 	return false;
 }
 
-void Server::setFood(unsigned int id)
-{
-}
 
 void Server::updateFood(unsigned int id)
 {
@@ -470,7 +450,6 @@ void Server::updateFood(unsigned int id)
 		sf::Vector2f distance(player->getPosition().x - food[i].x, player->getPosition().y - food[i].y);
 		float lenght = sqrt(distance.x*distance.x + distance.y*distance.y);
 
-		//TODO skillekhez hogy kajat ne egyen ha lathatatlan
 		//check if player ate a food
 		if (lenght < player->getRadius()) {
 			food[i] = foodGenerator.updateElement(i);
@@ -490,10 +469,6 @@ struct greater
 
 void Server::checkRanking()
 {
-	std::cout << "ranking: ";
-	for (Player *p : ranking) std::cout << p->getId() << "(" << p->getRadius() + p->getPoints() << ") ";
-	std::cout << "\n";
-
 	if (std::is_sorted(std::begin(ranking), std::end(ranking), greater()))
 		return;
 	

@@ -4,12 +4,11 @@
 #include <SFML/Network.hpp>
 
 
-Player::Player(int _id, sf::Vector2f _position, sf::TcpSocket *_tcpSocket)
-	: id(_id), position(_position), tcpSocket(_tcpSocket), radius(80),
-	name("unknown"), udpSocket(nullptr), playerIp(sf::IpAddress()),
-	velocity(sf::Vector2f(0, 0)), points(0),
+Player::Player(int _id, sf::TcpSocket *_tcpSocket)
+	: id(_id), position(sf::Vector2f(0,0)), tcpSocket(_tcpSocket), radius(80),
+	name("unknown"), udpSocket(nullptr), playerIp(sf::IpAddress()), points(0),
 	mapSize(sf::Vector2f(0, 0)), mapPosition(sf::Vector2f(0, 0)),
-	windowSize(sf::Vector2f(0, 0)), mousePosition(sf::Vector2f(0, 0)), initReady(false),
+	windowSize(sf::Vector2f(0, 0)), initReady(false),
 	invisibleActive(false), speedActive(false), invisibleTime(30000), speedTime(40000),
 	invisibleAvailable(false), speedAvailable(false), numberOfUpdate(0), canUpdateNumber(0),
 	invisibleDuration(5000), speedDuration(4000), speedBoost(1.0f)
@@ -156,15 +155,6 @@ unsigned short Player::getUdpPortReceive() const
 	return udpPortReceive;
 }
 
-sf::Vector2f Player::getMousePosition() const
-{
-	return mousePosition;
-}
-
-void Player::setMousePosition(sf::Vector2f _mousePosition)
-{
-	mousePosition = _mousePosition;
-}
 void Player::initPosition()
 {
 	//srand(time(0));

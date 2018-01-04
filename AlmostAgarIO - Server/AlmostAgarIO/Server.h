@@ -14,8 +14,6 @@ class Server
 	std::unordered_map<int, Player> players;
 	sf::SocketSelector selector;
 	unsigned short port = 50000;
-	//unsigned short udpPortReceive = 50015;
-	//unsigned short udpPortSend = 50016;
 	unsigned int id;
 	sf::Vector2f position;
 	sf::Clock clock;
@@ -29,7 +27,6 @@ class Server
 	bool rankingChanged;
 
 	bool updatePlayerPosition(int id, sf::Vector2f pos);	//returns true if somebody died
-	void setFood(unsigned int id);
 	void updateFood(unsigned int id);
 	void checkRanking();
 	void deletePlayerFromRanking(int id);

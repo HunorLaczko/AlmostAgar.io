@@ -18,14 +18,12 @@ class Player
 	unsigned short udpPortSend;
 	sf::Vector2f position;  //player position, in world coordinates (absolute coordinates)
 	float speed;     //player speed
-	sf::Vector2f velocity;  //player velocity
 	float defRadius;    //default radius set in Player constructor
 	float radius;    //player's circle's radius
 	float points;				//player's points above 330f.0 to reduce movement lag in client
 	sf::Vector2f mapSize;   //player's map size
 	sf::Vector2f mapPosition;//player's map's location relative to world coordinates
 	sf::Vector2f windowSize;//player's window size
-	sf::Vector2f mousePosition;
 	sf::Color color; //player's color
 	bool initReady;
 
@@ -57,7 +55,7 @@ class Player
 	bool canUpdateNumberChanged;
 
 public:
-	Player(int id, sf::Vector2f _position, sf::TcpSocket *tcpSocket);
+	Player(int id, sf::TcpSocket *tcpSocket);
 	~Player();
 
 	sf::TcpSocket* getTcpSocket() const;
