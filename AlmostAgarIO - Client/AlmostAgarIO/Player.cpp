@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Player.h"
 #include "iostream"
-
+#include "sstream"
 
 Player::Player()
 {
@@ -250,7 +250,10 @@ void Player::draw(sf::RenderWindow & window)
 	sf::Text text;
 	text.setFont(font);
 	///Debug:koordináták is
-	text.setString(name+'\n'+ std::to_string(position.x)+", "+std::to_string(position.y));
+	std::ostringstream ss;
+	ss << name << "\n" << position.x <<", " << position.y;
+	text.setString(ss.str());
+	//text.setString(name);
 	text.setColor(sf::Color::White);
 	text.setStyle(sf::Text::Bold);
 	text.setOutlineColor(sf::Color::Black);
