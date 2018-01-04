@@ -503,7 +503,9 @@ void Server::playerDied(unsigned int id)
 	}
 	selector.remove(*players.at(id).getTcpSocket());
 	players.at(id).getTcpSocket()->disconnect();
+	delete players.at(id).getTcpSocket();
 	selector.remove(*players.at(id).getUdpSocket());
 	players.at(id).getUdpSocket()->unbind();
+	delete players.at(id).getUdpSocket();
 	players.erase(id);
 }
