@@ -424,7 +424,7 @@ bool Server::updatePlayerPosition(int id, sf::Vector2f pos)
 				eatenID = it->first;
 				eatSomeOne = true;
 				std::cout << "A " << player->getId() << " jatekos megette a kovektkezo jatekost: " << eatenID << std::endl;
-				player->setRadius(sqrt(pow(player->getRadius() + player->getPoints(), 2) + pow(it->second.getRadius() + it->second.getPoints(), 2)));
+				player->setRadius(floor(sqrt(pow(player->getRadius() + player->getPoints(), 2) + pow(it->second.getRadius() + it->second.getPoints(), 2)) / 0.5)*0.5);
 			}
 		}
 	}

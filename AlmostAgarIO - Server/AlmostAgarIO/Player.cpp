@@ -219,6 +219,11 @@ void Player::skillChecking() {
 		std::cout << "Speed elerheto " << id << ". jatekos szamara\n";
 	}
 
+	//TODO skillek pontlevonasa
+	int point = 2 * (radius - defRadius + points);
+	int lvl = floor(point / 150);
+
+
 	//skillek idejenek lejarata
 	if (invClockUse.getElapsedTime() > sf::milliseconds(invisibleDuration) && invisibleActive) {
 		invisibleActive = false;
@@ -276,7 +281,7 @@ void Player::updateSkill(int key) {
 	if (oldCanUpdateNumber != canUpdateNumber)  canUpdateNumberChanged = true;
 
 	//debughoz
-	std::cout << canUpdateNumber << "db fejlesztes elerheto " << id << ". jatekos szamara\n";
+	//std::cout << canUpdateNumber << "db fejlesztes elerheto " << id << ". jatekos szamara\n";
 	
 	//4-e, 16-q, 17-r, 22-w
 	if ( canUpdateNumber > 0) {
