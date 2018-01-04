@@ -30,6 +30,7 @@ class Player
 	bool initReady;
 
 	//need for skills
+	sf::Clock foodInvTime;
 	sf::Clock invClockReload; 
 	sf::Clock invClockUse;
 	bool invisibleAvailable; //you can use skill
@@ -40,6 +41,7 @@ class Player
 	bool invisibleAvailableChanged;
 	int invisibleDuration; //inv. duraturion can upgrade
 
+	sf::Clock foodSpeedTime;
 	sf::Clock speedClockReload;
 	sf::Clock speedClockUse;
 	bool speedAvailable; //you can use skill

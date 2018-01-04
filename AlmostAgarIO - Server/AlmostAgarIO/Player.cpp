@@ -211,29 +211,54 @@ void Player::skillChecking() {
 	if (invClockReload.getElapsedTime() > sf::milliseconds(invisibleTime) && invisibleAvailable == false) {
 		invisibleAvailable = true;
 		invisibleAvailableChanged = true;
-		std::cout << "Lathatatlansag elerheto " << id << ". jatekos szamara\n";
+		std::cout << "Lathatatlansag elerheto a(z)" << id << ". jatekos szamara\n";
 	}
 	if (speedClockReload.getElapsedTime() > sf::milliseconds(speedTime) && speedAvailable == false) {
 		speedAvailable = true;
 		speedAvailableChanged = true;
-		std::cout << "Speed elerheto " << id << ". jatekos szamara\n";
+		std::cout << "Speed elerheto a(z)" << id << ". jatekos szamara\n";
 	}
 
-	//TODO skillek pontlevonasa
+	//skillek pontlevonasa
 	int point = 2 * (radius - defRadius + points);
 	int lvl = floor(point / 150);
 
+	if (invisibleActive && (floor((point - 1) / 150) < lvl || (radius - 0.5f) < defRadius)) {
+		std::cout << "Elfogyott a pontja a(z) "<< id << ". jatekosnak...\n";
+		invisibleActive = false;
+		speedActive = false;
+		invisibilityChanged = true;
+	}
+	else if (invisibleActive && foodInvTime.getElapsedTime() > sf::milliseconds(100)) {
+		setRadius(radius + points - 0.5f);
+		foodInvTime.restart();
+	}
+
+	point = 2 * (radius - defRadius + points);
+	lvl = floor(point / 150);
+
+	//ez azert kell mert ha meg -1 pont lehet attol meg -2 nem lehet biztosan
+	if (speedActive && (floor((point - 1) / 150) < lvl || (radius - 0.5f) < defRadius)) {
+		std::cout << "Elfogyott a pontja a(z) " << id << ". jatekosnak\n";
+		invisibleActive = false;
+		speedActive = false;
+		invisibilityChanged = true;
+	}
+	else if (speedActive && foodSpeedTime.getElapsedTime() > sf::milliseconds(100)) {
+		setRadius(radius + points - 0.5f);
+		foodSpeedTime.restart();
+	}
 
 	//skillek idejenek lejarata
 	if (invClockUse.getElapsedTime() > sf::milliseconds(invisibleDuration) && invisibleActive) {
 		invisibleActive = false;
-		std::cout << "Lathatatlansag ideje lejart\n";
+		std::cout << "Lathatatlansag ideje lejart a(z) " << id << ". jatekosnak\n";
 		invisibilityChanged = true;
 	}
 
 	if (speedClockUse.getElapsedTime() > sf::milliseconds(speedDuration) && speedActive) {
 		speedActive = false;
-		std::cout << "Speed ideje lejart\n";
+		std::cout << "Speed ideje lejart a(z) " << id << ". jatekosnak\n";
 	}
 }
 
@@ -258,6 +283,8 @@ void Player::invisibleActivate() {
 		invClockReload.restart();
 
 		invisibilityChanged = true;
+
+		foodInvTime.restart();
 	}
 }
 
@@ -270,6 +297,8 @@ void Player::speedActivate() {
 		speedAvailable = false;
 		speedAvailableChanged = true;
 		speedClockReload.restart();
+		
+		foodSpeedTime.restart();
 	}
 }
 
@@ -375,9 +404,9 @@ void Player::invisibleDeActivate() {
 		invisibleActive = false;
 		std::cout << "Lathatatlansag deaktivalva " << id << ". jatekos szamara\n";
 
-		invisibleAvailable = false;
-		invisibleAvailableChanged = true;
-		invClockReload.restart();
+		//invisibleAvailable = false;
+		//invisibleAvailableChanged = true;
+		//invClockReload.restart();
 
 		invisibilityChanged = true;
 	}
@@ -388,9 +417,9 @@ void Player::speedDeActivate() {
 		speedActive = false;
 		std::cout << "Speed deaktivalva " << id << ". jatekos szamara\n";
 
-		speedAvailable = false;
-		speedAvailableChanged = true;
-		speedClockReload.restart();
+		//speedAvailable = false;
+		//speedAvailableChanged = true;
+		//speedClockReload.restart();
 	}
 }
 
