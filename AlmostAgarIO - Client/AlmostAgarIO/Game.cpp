@@ -290,7 +290,7 @@ void Game::draw(sf::RenderWindow & window)
 
 		//Játékosok
 		bool larger = true;
-		for (int i = leaderboard.size(); i >= 0; i--) {
+		for (int i = leaderboard.size()-1; i >= 0; i--) {
 			if (larger && player.getEnemyRadius(leaderboard[i]) > player.getRadius()) {
 				larger = false;
 				player.draw(window, true);
