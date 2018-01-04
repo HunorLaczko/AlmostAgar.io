@@ -33,5 +33,7 @@ public:
 	void getResponse();
 	void sendKey(int key, bool active);
 
+	bool test();
+
 };
 
