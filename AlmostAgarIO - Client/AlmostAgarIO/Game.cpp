@@ -302,6 +302,7 @@ void Game::draw(sf::RenderWindow & window)
 		if (larger) {
 			player.draw(window,true);
 		}
+		player.drawscore(window);
 
 		//ronda megoldas tudom :(
 		bool a = player.getUpgradeAvailable() > 0; //TODO Huni nezd meg hogy ha mukodik a fuggveny ez jo lesz-e

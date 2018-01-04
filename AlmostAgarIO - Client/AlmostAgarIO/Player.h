@@ -69,6 +69,7 @@ public:
 	void setEnemyColor(unsigned int id, sf::Color _color);
 
 	void draw(sf::RenderWindow & window, bool self_draw);
+	void drawscore(sf::RenderWindow & window);
 
 	sf::Color getColor();
 	void setColor(sf::Color _color);
