@@ -268,43 +268,39 @@ void Game::counting(sf::RenderWindow & window)
 
 void Game::draw(sf::RenderWindow & window)
 {
+	//std::cout << leaderboard.size() << std::endl;
 	//view.move(movement);
 	view.setCenter(player.getPosition());
-	
-	
-	//TODO Bálint: ha szervertől megvan a leaderboard, akkor szerint átírni:
-
-	//smaller enemy drawing
-	std::vector<Player> smallerEnemy;
 	
 	window.clear(sf::Color::Black);
 
 	if (finished) {
+		//Háttér
 		window.setView(view);
 		window.draw(background);
 		window.draw(map);
+
+		//Kaja
 		for (int i = 0; i < food.size(); i++) {
 			if ((window.mapPixelToCoords(sf::Vector2i(0, 0)).x + view.getSize().x) > food[i].getPosition().x && window.mapPixelToCoords(sf::Vector2i(0, 0)).x < food[i].getPosition().x &&
 				(window.mapPixelToCoords(sf::Vector2i(0, 0)).y + view.getSize().y) > food[i].getPosition().y && window.mapPixelToCoords(sf::Vector2i(0, 0)).y < food[i].getPosition().y) {
 				window.draw(food[i]);
 			}
 		}
-		//nem tudom miért nem tudok iterálni ...
-		//talan igy?
-		std::unordered_map<int, Player> enemies = player.getEnemies();
-		for (std::unordered_map<int, Player>::iterator it = enemies.begin(); it != enemies.end(); it++)
-		{
-			//if (it->second.getRadius() > player.getRadius() || (it->second.getRadius() == player.getRadius() && (rand() % 2) == 0))
-			if ((it->second.getRadius() + it->second.getPoints()) > (player.getRadius() + player.getPoints()))
-				smallerEnemy.push_back(it->second);
-			else
-				it->second.draw(window);
+
+		//Játékosok
+		bool larger = true;
+		for (int i = leaderboard.size(); i >= 0; i--) {
+			if (larger && player.getEnemyRadius(leaderboard[i]) > player.getRadius()) {
+				larger = false;
+				player.draw(window, true);
+			}
+			if (player.hasThisEnemy(leaderboard[i])) {
+				player.getEnemyById(leaderboard[i]).draw(window,false);
+			}
 		}
-
-		player.draw(window);
-
-		for (int i = 0; i < smallerEnemy.size(); i++) {
-			smallerEnemy[i].draw(window);
+		if (larger) {
+			player.draw(window,true);
 		}
 
 		//ronda megoldas tudom :(

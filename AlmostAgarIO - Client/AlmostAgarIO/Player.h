@@ -61,13 +61,14 @@ public:
 	void setEnemyName(unsigned int id, std::string _name);
 
 	Player getEnemyById(unsigned int id);
+	bool hasThisEnemy(unsigned int id);
 
 	int getEnemyRadius(unsigned int id);
 
 	sf::Color getEnemyColor(unsigned int id);
 	void setEnemyColor(unsigned int id, sf::Color _color);
 
-	void draw(sf::RenderWindow & window);
+	void draw(sf::RenderWindow & window, bool self_draw);
 
 	sf::Color getColor();
 	void setColor(sf::Color _color);
@@ -91,5 +92,6 @@ public:
 
 	bool getInitReady() const;
 	void setInitReady(bool _initReady);
+	void setEnemyInitReady(bool _initReady);
 };
 
