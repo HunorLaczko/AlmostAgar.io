@@ -245,13 +245,13 @@ void Player::setInitReady(bool _initReady)
 	initReady = _initReady;
 }
 
-void Player::setEnemyInitReady(bool _initReady) {
+void Player::setEnemyInitReady(unsigned int id, bool _initReady) {
 	enemies[id].initReady = _initReady;
 }
 
-void Player::draw(sf::RenderWindow & window,bool self_draw)
+void Player::draw(sf::RenderWindow & window)
 {
-	if (!initReady && self_draw) return;
+	if (!initReady) return;
 	sf::CircleShape circle;
 	circle.setOutlineThickness(-5);
 	if (invisible) {

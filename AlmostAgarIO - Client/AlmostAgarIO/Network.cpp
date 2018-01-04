@@ -206,7 +206,7 @@ void Network::getResponse()
 				else
 				{
 					player->updateEnemy(id, pos, radius);
-					player->setEnemyInitReady(true);
+					player->setEnemyInitReady(id,true);
 				}
 			}
 
@@ -267,7 +267,7 @@ void Network::getResponse()
 			packet >> id >> name >> color.r >> color.g >> color.b;
 			player->setEnemyName(id, name);
 			player->setEnemyColor(id, color);
-			player->setEnemyInitReady(true);
+			player->setEnemyInitReady(id,true);
 			break;
 		}
 		//receive game over message

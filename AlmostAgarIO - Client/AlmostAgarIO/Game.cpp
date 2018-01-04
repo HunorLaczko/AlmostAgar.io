@@ -289,14 +289,14 @@ void Game::draw(sf::RenderWindow & window)
 		for (int i = leaderboard.size()-1; i >= 0; i--) {
 			if (larger && player.getEnemyRadius(leaderboard[i]) > player.getRadius()) {
 				larger = false;
-				player.draw(window, true);
+				player.draw(window);
 			}
 			if (player.hasThisEnemy(leaderboard[i])) {
-				player.getEnemyById(leaderboard[i]).draw(window,false);
+				player.getEnemyById(leaderboard[i]).draw(window);
 			}
 		}
 		if (larger) {
-			player.draw(window,true);
+			player.draw(window);
 		}
 		player.drawscore(window);
 

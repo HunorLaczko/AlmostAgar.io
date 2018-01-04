@@ -68,7 +68,7 @@ public:
 	sf::Color getEnemyColor(unsigned int id);
 	void setEnemyColor(unsigned int id, sf::Color _color);
 
-	void draw(sf::RenderWindow & window, bool self_draw);
+	void draw(sf::RenderWindow & window);
 	void drawscore(sf::RenderWindow & window);
 
 	sf::Color getColor();
@@ -93,6 +93,6 @@ public:
 
 	bool getInitReady() const;
 	void setInitReady(bool _initReady);
-	void setEnemyInitReady(bool _initReady);
+	void setEnemyInitReady(unsigned int id, bool _initReady);
 };
 
