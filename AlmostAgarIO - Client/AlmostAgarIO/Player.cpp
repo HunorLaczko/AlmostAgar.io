@@ -143,9 +143,12 @@ void Player::deleteEnemy(unsigned int id)
 	enemies.erase(id);
 }
 
-std::string Player::getEnemyName(unsigned int id)
+std::string Player::getEnemyName(unsigned int e_id)
 {
-	return enemies[id].getName();
+	if (id == e_id)
+		return name;
+	else
+		return enemies[e_id].getName();
 }
 
 void Player::setEnemyName(unsigned int id, std::string _name)

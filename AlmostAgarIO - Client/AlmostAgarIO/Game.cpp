@@ -3,6 +3,7 @@
 #include "Game.h"
 #include "iostream"
 #include <unordered_map>
+#include <sstream>
 
 void Game::func() {
 	std::cout << "Betoltes elindult...\n";
@@ -299,6 +300,37 @@ void Game::draw(sf::RenderWindow & window)
 			player.draw(window);
 		}
 		player.drawscore(window);
+
+		//Ranglista
+		float top_margin = 10;
+
+		sf::Font font;
+		if (!font.loadFromFile("arial.ttf")) std::cout << "Couldn't load font file!" << std::endl;
+
+		bool player_drawed = false;
+		for (unsigned int i = 0; i <  leaderboard.size(); i++) {
+			if (player.getId() == leaderboard[i] || (i < 4) || (i<5 && player_drawed)) {
+				sf::Text draw_leaderboard;
+				draw_leaderboard.setFont(font);
+				std::ostringstream ss_leaderboard;
+				ss_leaderboard << i + 1 << ". " << player.getEnemyName(leaderboard[i]);
+				draw_leaderboard.setCharacterSize(12);
+				draw_leaderboard.setString(ss_leaderboard.str());
+				if (player.getId() == leaderboard[i]) {
+					draw_leaderboard.setColor(sf::Color(255,80,80));
+					player_drawed = true;
+				}
+				else {
+					draw_leaderboard.setColor(sf::Color::White);
+				}
+				draw_leaderboard.setStyle(sf::Text::Bold);
+				draw_leaderboard.setOutlineColor(sf::Color(25,25,25));
+				draw_leaderboard.setOutlineThickness(1);
+				draw_leaderboard.setPosition(window.getView().getCenter().x + window.getView().getSize().x / 2 - draw_leaderboard.getLocalBounds().width - 10, window.getView().getCenter().y - window.getView().getSize().y / 2 + top_margin);
+				window.draw(draw_leaderboard);
+				top_margin += draw_leaderboard.getLocalBounds().height + 5;
+			}
+		}
 
 		//ronda megoldas tudom :(
 		bool a = player.getUpgradeAvailable() > 0; //TODO Huni nezd meg hogy ha mukodik a fuggveny ez jo lesz-e
