@@ -249,7 +249,8 @@ void Player::draw(sf::RenderWindow & window)
 
 	sf::Text text;
 	text.setFont(font);
-	text.setString(name);
+	///Debug:koordináták is
+	text.setString(name+'\n'+ std::to_string(position.x)+", "+std::to_string(position.y));
 	text.setColor(sf::Color::White);
 	text.setStyle(sf::Text::Bold);
 	text.setOutlineColor(sf::Color::Black);
