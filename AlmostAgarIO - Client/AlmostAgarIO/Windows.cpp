@@ -105,6 +105,7 @@ void Windows::event_loop(){
 					changeview(Views::game_over_menu_view);
 					//game.disconnect();//Lejjebb raktam
 					//close();
+					break;
 				}
 				case sf::Event::Resized: {
 					game.resize(event.size, getSize());
