@@ -121,7 +121,7 @@ void Player::setRadius(float _radius)
 	}
 	int oldCanUpdateNumber = canUpdateNumber;
 	int point = 2 * (radius - defRadius + points);
-	canUpdateNumber = floor(point / 20) - numberOfUpdate;
+	canUpdateNumber = floor(point / 150) - numberOfUpdate;
 	if(oldCanUpdateNumber != canUpdateNumber)  canUpdateNumberChanged = true;
 	speed = (float)(3.2 - (0.005 * (radius + points)));
 	if (speed <= 0.6f) speed = 0.6f;
@@ -272,7 +272,7 @@ void Player::speedActivate() {
 void Player::updateSkill(int key) {
 	int oldCanUpdateNumber = canUpdateNumber;
 	int point = 2 * (radius - defRadius + points);
-	canUpdateNumber = floor(point / 20) - numberOfUpdate; 
+	canUpdateNumber = floor(point / 150) - numberOfUpdate; 
 	if (oldCanUpdateNumber != canUpdateNumber)  canUpdateNumberChanged = true;
 
 	//debughoz
