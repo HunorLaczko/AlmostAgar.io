@@ -23,8 +23,8 @@ Player::Player(int _id, sf::Vector2f _position, sf::TcpSocket *_tcpSocket)
 	invisibleAvailableChanged = true;
 	speedAvailableChanged = true;
 	canUpdateNumberChanged = true;
-	speed = (float)(3.2 - (0.005 * (radius + points)));
-	if (speed <= 0.6f) speed = 0.6f;
+	speed = (float)(3.2 - (0.005 * (radius - defRadius + points)));
+	if (speed < 1.5f) speed = 1.5f;
 }
 
 Player::~Player()
@@ -123,8 +123,8 @@ void Player::setRadius(float _radius)
 	int point = 2 * (radius - defRadius + points);
 	canUpdateNumber = floor(point / 150) - numberOfUpdate;
 	if(oldCanUpdateNumber != canUpdateNumber)  canUpdateNumberChanged = true;
-	speed = (float)(3.2 - (0.005 * (radius + points)));
-	if (speed <= 0.6f) speed = 0.6f;
+	speed = (float)(3.2 - (0.005 * (radius - defRadius + points)));
+	if (speed < 1.5f) speed = 1.5f;
 }
 
 sf::IpAddress Player::getPlayerIp() const
@@ -320,6 +320,8 @@ void Player::updateSkill(int key) {
 			//update invisibility reload time
 			invisibleTime -= 500; //ennyivel kevesebb ideig tolt
 			numberOfUpdate++;
+			canUpdateNumber--;
+			canUpdateNumberChanged = true;
 			std::cout << "Lathatatlansag ujratoltest fejlesztett a(z) " << id << ". jatekos\n";
 			break;
 		}
@@ -327,6 +329,8 @@ void Player::updateSkill(int key) {
 			//update speed reload time
 			speedTime -= 500; //ennyivel kevesebb ideig tolt
 			numberOfUpdate++;
+			canUpdateNumber--;
+			canUpdateNumberChanged = true;
 			std::cout << "Sebesseg ujratoltest fejlesztett a(z) " << id << ". jatekos\n";
 			break;
 		}
@@ -334,6 +338,8 @@ void Player::updateSkill(int key) {
 			//update invisibility duration time
 			invisibleDuration += 500;
 			numberOfUpdate++;
+			canUpdateNumber--;
+			canUpdateNumberChanged = true;
 			std::cout << "Lathatatlansag idotartamot fejlesztett a(z) " << id << ". jatekos\n";
 			break;
 		}
@@ -341,6 +347,8 @@ void Player::updateSkill(int key) {
 			//update speed boost
 			speedBoost += 0.25f;
 			numberOfUpdate++;
+			canUpdateNumber--;
+			canUpdateNumberChanged = true;
 			std::cout << "Sebesseg merteket fejlesztett a(z) " << id << ". jatekos\n";
 			break;
 		}
