@@ -3,15 +3,16 @@
 #include "Button.h"
 #include <iostream>
 
-Button::Button(float x, float y, float size_x, float size_y, std::string value)
+Button::Button(float x, float y, float size_x, float size_y, std::string value, std::function<void()> f, std::function<void()> tab_f)
 	: Widget(x, y, size_x, size_y, value)
 {
+	_f = f;
+	_tab = tab_f;
+	_selected = false;
+	_previousSelected = false;
 }
-void Button::draw(sf::RenderWindow & window) {
 
-}
-
-void lambdaButton::draw(sf::RenderWindow & window)
+void Button::draw(sf::RenderWindow & window)
 {
 	sf::RectangleShape rectangle;
 	rectangle.setSize(sf::Vector2f(_size_x, _size_y));
@@ -58,12 +59,9 @@ void lambdaButton::draw(sf::RenderWindow & window)
 	window.draw(rectangle);
 	window.draw(text);
 }
-void Button::handle(sf::Event event) {
-
-}
 
 
-void lambdaButton::handle(sf::Event event)
+void Button::handle(sf::Event event)
 {
 	if (event.type == sf::Event::MouseMoved)
 	{
@@ -111,36 +109,27 @@ void lambdaButton::handle(sf::Event event)
 		_previousSelected = _selected;
 	}
 }
-void Button::action() {
-}
 
-lambdaButton::lambdaButton(float x, float y, float size_x, float size_y, std::string value, std::function<void()> f, std::function<void()> tab_f) : Button(x, y, size_x, size_y, value)
-{
-	_f = f;
-	_tab = tab_f;
-	_selected = false;
-	_previousSelected = false;
-}
-void lambdaButton::action() {
+void Button::action() {
 	_f();
 }
 
-void lambdaButton::setValue(std::string value)
+void Button::setValue(std::string value)
 {
 	_value = value;
 }
 
-void lambdaButton::setSelected(bool selected)
+void Button::setSelected(bool selected)
 {
 	_selected = selected;
 }
 
-bool lambdaButton::isSelected()
+bool Button::isSelected()
 {
 	return _selected;
 }
 
-void lambdaButton::setTabFunc(std::function<void()> tab_f)
+void Button::setTabFunc(std::function<void()> tab_f)
 {
 	_tab = tab_f;
 }

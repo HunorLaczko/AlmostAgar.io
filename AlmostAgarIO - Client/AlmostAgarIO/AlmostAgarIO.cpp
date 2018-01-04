@@ -35,7 +35,7 @@ int main()
 
 	SimpleText *errors = new SimpleText(300 + 100, 25, 200, 50, "");
 
-	lambdaButton *game = new lambdaButton(300 + 100, 300, 200, 50, "Játék",
+	Button *game = new Button(300 + 100, 300, 200, 50, "Játék",
 		[&]//mindent akarok használni
 	()
 	{
@@ -61,7 +61,7 @@ int main()
 	}
 	, [&]() {});
 
-	lambdaButton *close = new lambdaButton(300 + 100, 400, 200, 50, "Kilépés",
+	Button *close = new Button(300 + 100, 400, 200, 50, "Kilépés",
 		[&]//mindent akarok használni
 	()
 	{
@@ -110,7 +110,7 @@ int main()
 	main_menu.push_back(errors);
 	main_menu.push_back(close);
 
-	lambdaButton *newgame = new lambdaButton(300 + 100, 175, 200, 50, "Új játék",
+	Button *newgame = new Button(300 + 100, 175, 200, 50, "Új játék",
 		[&]//mindent akarok használni
 	()
 	{
@@ -120,7 +120,7 @@ int main()
 	}
 	, [&]() {});
 
-	lambdaButton *exit = new lambdaButton(300 + 100, 250, 200, 50, "Fõmenü",
+	Button *exit = new Button(300 + 100, 250, 200, 50, "Fõmenü",
 		[&]//mindent akarok használni
 	()
 	{
