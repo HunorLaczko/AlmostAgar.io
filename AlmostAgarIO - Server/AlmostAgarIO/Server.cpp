@@ -72,7 +72,7 @@ void Server::run()
 					packet << id - 1;
 					packet << players.at(id - 1).getRadius();
 					//add player to ranking and refresh order
-					ranking.push_back(players.at(id - 1));
+					ranking.push_back(&players.at(id - 1));
 					rankingChanged = true;
 					checkRanking();
 					if (client->send(packet) != sf::Socket::Done) //Send client id
@@ -204,6 +204,16 @@ void Server::run()
 									if(it2->second.getId() != it->second.getId())
 										(*it2).second.getTcpSocket()->send(newPlayer);
 								}
+
+								//generating ranking packet for new player
+								sf::Packet rankingPacket;
+								rankingPacket << 6 << ranking.size();
+								for (Player *player : ranking)
+								{
+									rankingPacket << player->getId();
+								}
+								it->second.getTcpSocket()->send(rankingPacket);
+								
 								
 
 								//player->setPosition(sf::Vector2f((_mapPosition.x+_mapSize.x/2),(_mapPosition.y+_mapSize.y/2)));
@@ -307,20 +317,27 @@ void Server::run()
 				positionPacket << it->first << it->second.getPosition().x << it->second.getPosition().y << (it->second.getRadius() + it->second.getPoints());
 			}
 
+
 			//generating food packet
 			sf::Packet foodPacket;
-			foodPacket << 4 << foodToUpdate.size();
-			for (std::unordered_map<int, sf::Vector2f>::iterator it = foodToUpdate.begin(); it != foodToUpdate.end(); it++)
+			if (foodToUpdate.size() != 0)
 			{
-				foodPacket << it->first << it->second.x << it->second.y;
+				foodPacket << 4 << foodToUpdate.size();
+				for (std::unordered_map<int, sf::Vector2f>::iterator it = foodToUpdate.begin(); it != foodToUpdate.end(); it++)
+				{
+					foodPacket << it->first << it->second.x << it->second.y;
+				}
 			}
 
 			//generating ranking packet
 			sf::Packet rankingPacket;
-			rankingPacket << 6 << ranking.size();
-			for (Player player : ranking)
+			if (rankingChanged)
 			{
-				rankingPacket << player.getId();
+				rankingPacket << 6 << ranking.size();
+				for (Player *player : ranking)
+				{
+					rankingPacket << player->getId();
+				}
 			}
 
 			for (std::unordered_map<int, Player>::iterator it = players.begin(); it != players.end(); it++)
@@ -340,7 +357,6 @@ void Server::run()
 				{	
 					std::cout << "sent ranking update\n";
 					it->second.getTcpSocket()->send(rankingPacket);
-					rankingChanged = false;
 				}
 
 				//sending skill upgrade message
@@ -378,6 +394,7 @@ void Server::run()
 			}
 			clock.restart();
 			foodToUpdate.clear();
+			rankingChanged = false;
 
 			//std::cout << "sent new positions\n";
 		}
@@ -464,19 +481,23 @@ void Server::updateFood(unsigned int id)
 	}
 }
 
-struct less
+struct greater
 {
-	bool operator()(const Player& lhs, const Player& rhs) const {
-		return (lhs.getRadius() + lhs.getPoints()) < (rhs.getRadius() + rhs.getPoints());
+	bool operator()(Player* lhs, Player* rhs) const {
+		return (lhs->getRadius() + lhs->getPoints()) > (rhs->getRadius() + rhs->getPoints());
 	}
 };
 
 void Server::checkRanking()
 {
-	if (std::is_sorted(std::begin(ranking), std::end(ranking), less()))
-		return;
+	std::cout << "ranking: ";
+	for (Player *p : ranking) std::cout << p->getId() << "(" << p->getRadius() + p->getPoints() << ") ";
+	std::cout << "\n";
 
-	std::sort(std::begin(ranking), std::end(ranking), less());
+	if (std::is_sorted(std::begin(ranking), std::end(ranking), greater()))
+		return;
+	
+	std::sort(std::begin(ranking), std::end(ranking), greater());
 	rankingChanged = true;
 }
 
@@ -484,7 +505,7 @@ void Server::deletePlayerFromRanking(int id)
 {
 	for (size_t i = 0; i < ranking.size(); i++)
 	{
-		if (ranking[i].getId() == id)
+		if (ranking[i]->getId() == id)
 		{
 			ranking.erase(ranking.begin() + i);
 			rankingChanged = true;

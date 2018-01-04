@@ -22,7 +22,7 @@ class Server
 	FoodGenerator foodGenerator;
 	std::vector<sf::Vector2f> food;
 	std::unordered_map<int, sf::Vector2f> foodToUpdate;
-	std::vector<Player> ranking;
+	std::vector<Player*> ranking;
 	sf::TcpListener testListener;
 
 	bool running;
