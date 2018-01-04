@@ -46,7 +46,9 @@ private:
 	std::vector<Letter*> specalkeys_value;
 
 	std::vector<sf::CircleShape> food;
-	//FoodGenerator gen;
+	sf::Vector2f oldPos;
+	float ZOOM;
+
 
 	sf::Sprite map, background;
 	sf::Texture texture, texture2;

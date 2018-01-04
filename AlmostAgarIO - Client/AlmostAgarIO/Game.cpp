@@ -4,11 +4,6 @@
 #include "iostream"
 #include <unordered_map>
 
-float ZOOM = 1.01f; //1%-os zoom
-float radius = 30;
-const float radius2 = 7;
-sf::Vector2f oldPos(0, 0);
-
 void Game::func() {
 	std::cout << "Betoltes elindult...\n";
 	if (!texture.loadFromFile("palya.jpg") || !texture2.loadFromFile("background.png"))
@@ -19,7 +14,7 @@ void Game::func() {
 	//view.zoom(ZOOM);
 	texture.setSmooth(true);
 	//window.setMouseCursorVisible(false);
-	player.setRadius(radius);
+	//player.setRadius(radius);
 	player.setPosition(sf::Vector2f((float)texture2.getSize().x / 2, (float)texture2.getSize().y / 2));
 	///view.reset((sf::FloatRect(circle.getPosition().x - getSize().x / 2, circle.getPosition().y - getSize().y / 2, getSize().x, getSize().y)));
 	map.setTexture(texture);
@@ -41,8 +36,10 @@ Game::Game() : thread(&Game::func, this)
 	thread.launch();
 	sf::Vector2f vec(0, 0);
 	sf::Vector2f movement(0, 0);
+	sf::Vector2f oldPos(0, 0);
+	ZOOM = 1.01f; //1%-os zoom
 	sf::Clock clock;
-	bool first = true;
+	first = true;
 	network = new Network(this);
 	zoom_count = 0;
 	gameover = false;
@@ -184,9 +181,8 @@ void Game::disconnect()
 void Game::counting(sf::RenderWindow & window)
 {
 	if (first) {
-		view.setCenter(player.getPosition().x, player.getPosition().y);
 		view.reset((sf::FloatRect(player.getPosition().x - (float)window.getSize().x / 2, player.getPosition().y - (float)window.getSize().y / 2, (float)window.getSize().x, (float)window.getSize().y)));
-		//view.setCenter(3000, 2000);
+		view.setCenter(player.getPosition().x, player.getPosition().y);
 		//view.reset((sf::FloatRect(3000- (float)window.getSize().x / 2, 2000 - (float)window.getSize().y / 2, (float)window.getSize().x, (float)window.getSize().y)));
 		first = false;
 	}
