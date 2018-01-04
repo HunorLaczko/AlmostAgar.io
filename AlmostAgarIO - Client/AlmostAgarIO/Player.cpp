@@ -183,7 +183,7 @@ void Player::upgradedSkill()
 
 void Player::canUpgrade(int numberOfUpgrades)
 {
-	canUpgradeNumber += numberOfUpgrades;
+	canUpgradeNumber = numberOfUpgrades;
 }
 
 bool Player::getInvisibleAvailable()

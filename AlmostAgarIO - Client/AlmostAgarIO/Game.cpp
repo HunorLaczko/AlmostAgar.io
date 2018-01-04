@@ -92,6 +92,9 @@ void Game::updateFood(int index, sf::Vector2f newFood)
 //TODO csak akkor hivd meg a sendkey-t ha a megfelelo skill elerheto
 void Game::keyPressed(int key)
 {
+	if (key == 18 && !player.getInvisibleAvailable()) return;
+	if (key == 3 && !player.getSpeedAvailable()) return;
+	if ((key == 4 || key == 16 || key == 17 || key == 22) && player.getUpgradeAvailable() <= 0) return;
 	std::map<int, bool>::iterator it;
 	it = specalkeys.find(key);
 	if (it != specalkeys.end()) {
@@ -104,9 +107,14 @@ void Game::keyPressed(int key)
 
 void Game::keyReleased(int key)
 {
+	
+	
 	std::map<int, bool>::iterator it;
 	it = specalkeys.find(key);
 	if (it != specalkeys.end()) {
+		if (it->second == false && key == 18 && !player.getInvisibleAvailable()) return;
+		if (it->second == false && key == 3 && !player.getSpeedAvailable()) return;
+		if (key == 4 || key == 16 || key == 17 || key == 22) { it->second = false; return; }
 		it->second = false;
 		network->sendKey(key,false);
 	}

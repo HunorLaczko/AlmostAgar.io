@@ -22,6 +22,7 @@ Player::Player(int _id, sf::Vector2f _position, sf::TcpSocket *_tcpSocket)
 	invisibilityChanged = true;
 	invisibleAvailableChanged = true;
 	speedAvailableChanged = true;
+	canUpdateNumberChanged = true;
 	speed = (float)(3.2 - (0.005 * (radius + points)));
 	if (speed <= 0.6f) speed = 0.6f;
 }
@@ -118,7 +119,10 @@ void Player::setRadius(float _radius)
 		points = 0;
 		radius = _radius;
 	}
-
+	int oldCanUpdateNumber = canUpdateNumber;
+	int point = 2 * (radius - defRadius + points);
+	canUpdateNumber = floor(point / 20) - numberOfUpdate;
+	if(oldCanUpdateNumber != canUpdateNumber)  canUpdateNumberChanged = true;
 	speed = (float)(3.2 - (0.005 * (radius + points)));
 	if (speed <= 0.6f) speed = 0.6f;
 }
@@ -266,8 +270,10 @@ void Player::speedActivate() {
 
 //TODO ellenorizni hogy tenyleg fejleszthet-e
 void Player::updateSkill(int key) {
+	int oldCanUpdateNumber = canUpdateNumber;
 	int point = 2 * (radius - defRadius + points);
-	canUpdateNumber = floor(point / 150) - numberOfUpdate; 
+	canUpdateNumber = floor(point / 20) - numberOfUpdate; 
+	if (oldCanUpdateNumber != canUpdateNumber)  canUpdateNumberChanged = true;
 
 	//debughoz
 	std::cout << canUpdateNumber << "db fejlesztes elerheto " << id << ". jatekos szamara\n";
@@ -381,4 +387,14 @@ void Player::speedDeActivate() {
 		speedAvailableChanged = true;
 		speedClockReload.restart();
 	}
+}
+
+bool Player::getCanUpdateNumberChanged()
+{
+	return canUpdateNumberChanged;
+}
+
+void Player::setCanUpdateNumberChanged(bool _canUpdateNumberChanged)
+{
+	canUpdateNumberChanged = _canUpdateNumberChanged;
 }

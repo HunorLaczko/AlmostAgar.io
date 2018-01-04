@@ -81,7 +81,7 @@ public:
 	bool getEnemyInvisible(unsigned int id);
 	void setEnemyInvisible(unsigned int id, bool _invisible);
 
-	//not yet used
+
 	bool getInvisibleAvailable();
 	void setInvisibleAvailable(bool _invisibleAvailable);
 

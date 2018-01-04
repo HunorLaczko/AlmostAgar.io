@@ -52,6 +52,7 @@ class Player
 
 	int numberOfUpdate; //number of updated skills
 	int canUpdateNumber; //number of available updates 0 if no update for client
+	bool canUpdateNumberChanged;
 
 public:
 	Player(int id, sf::Vector2f _position, sf::TcpSocket *tcpSocket);
@@ -129,5 +130,8 @@ public:
 
 	void invisibleDeActivate();
 	void speedDeActivate();
+
+	bool getCanUpdateNumberChanged();
+	void setCanUpdateNumberChanged(bool _canUpdateNumberChanged);
 };
 

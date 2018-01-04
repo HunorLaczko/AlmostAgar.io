@@ -49,6 +49,7 @@ void Network::connectPlayer(Player *_player)
 	if (status != sf::Socket::Done)
 	{
 		std::cout << "Player could not connect\n";
+		return;
 	}
 	else
 	{

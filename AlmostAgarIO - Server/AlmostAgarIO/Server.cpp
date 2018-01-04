@@ -43,7 +43,7 @@ void Server::run()
 				sf::TcpSocket* client = new sf::TcpSocket();
 				if (listener.accept(*client) == sf::Socket::Done)
 				{
-					std::cout << client->getRemotePort();
+					//std::cout << client->getRemotePort();
 					// Add the new client to the clients list
 					///TODO: should randomize start position
 					players.insert(std::make_pair(id,(Player(id, sf::Vector2f(3000, 2000), client))));
@@ -243,21 +243,12 @@ void Server::run()
 							std::cout << status;
 							if (sf::Socket::Disconnected == status)
 							{
-								//(*it).second.getTcpSocket()->disconnect();
-								//selector.remove(*(*it).second.getTcpSocket());
-								
 								std::cout << "disconnected player: " << it->second.getId() << std::endl;
 								unsigned int id = it->second.getId();
 								it++;
 								deletePlayerFromRanking(id);
-								//needs testing
 								playerDied(id);
 								continue;
-									//players.erase(it++);
-									
-								//it = players.erase(it);
-								//if (players.size() == 0) break;
-								//it = players.begin();
 							}
 						}
 					}
@@ -341,10 +332,13 @@ void Server::run()
 				}
 
 				//sending skill upgrade message
-				if (it->second.getUpdateAvailable() > 0)
+				if (it->second.getUpdateAvailable() >= 0 && it->second.getCanUpdateNumberChanged())
 				{
 					sf::Packet upgradePacket;
 					upgradePacket << 9 << it->second.getUpdateAvailable();
+					it->second.setCanUpdateNumberChanged(false);
+					std::cout << "sent " << it->second.getUpdateAvailable() << " upgrades to player " << it->second.getId() << '\n';
+					it->second.getTcpSocket()->send(upgradePacket);
 				}
 
 				//sending my invisibility for everyone if it changed
