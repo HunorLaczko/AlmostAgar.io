@@ -42,7 +42,7 @@ void Network::connectPlayer(Player *_player)
 	udpSocket.bind(serverUdpPortReceive); // .bind(serverUdpPortReceive, serverIP)
 	udpSocket.setBlocking(false);
 
-	sf::Socket::Status status = tcpSocket.connect(serverIp, serverTcpPort);
+	sf::Socket::Status status = tcpSocket.connect(serverIp, serverTcpPort,sf::seconds(1));
 	//tcpSocket.setBlocking(false);
 	//tcpSocket.setBlocking(true);
 	//udpSocket.bind(serverUdpPortReceive);
@@ -339,4 +339,22 @@ void Network::sendKey(int key, bool active)
 		tcpSocket.send(keyPacket);
 		std::cout << "sent skill use\n";
 	}
+}
+
+bool Network::test()
+{
+	sf::Socket::Status status = tcpSocket.connect(serverIp, serverTcpPort+1, sf::seconds(1));
+	if (status != sf::Socket::Done)
+	{
+		std::cout << "Connection failed\n";
+		tcpSocket.disconnect();
+		return false;
+	}
+	if (status == sf::Socket::Done)
+	{
+		std::cout << "Connection can be established\n";
+		tcpSocket.disconnect();
+		return true;
+	}
+	
 }
