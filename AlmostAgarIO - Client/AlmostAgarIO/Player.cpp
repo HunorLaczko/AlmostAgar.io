@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Player.h"
 #include "iostream"
+#include <sstream>
 
 Player::Player()
 {
@@ -273,10 +274,21 @@ void Player::draw(sf::RenderWindow & window)
 		text.setCharacterSize(2*radius/name.size());
 	else
 		text.setCharacterSize(2 * radius / 3);
+	text.setPosition(circle.getPosition().x - text.getLocalBounds().width / 2, circle.getPosition().y - text.getCharacterSize()/2);
 
-	text.setOrigin(text.getLocalBounds().width / 2, text.getLocalBounds().height / 2);
-	text.setPosition(circle.getPosition());
+	sf::Text score;
+	score.setFont(font);
+	std::ostringstream ss_score;
+	ss_score << round(2 *(radius+points- default_radius));
+	score.setCharacterSize(45);
+	score.setString(ss_score.str());
+	score.setColor(sf::Color::White);
+	score.setStyle(sf::Text::Bold);
+	score.setOutlineColor(sf::Color::Black);
+	score.setOutlineThickness(2);
+	score.setPosition(window.getView().getCenter().x - score.getLocalBounds().width / 2, window.getView().getCenter().y - window.getView().getSize().y / 2 + 10);
 
+	window.draw(score);
 	window.draw(circle);
 	window.draw(text);
 
