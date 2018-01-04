@@ -10,7 +10,9 @@ Server::Server() : foodGenerator(sf::Vector2f(1000,750), sf::Vector2f(4000,3000)
 {
 	id = 0;
 	listener.listen(port);
+	testListener.listen(port + 1);
 	selector.add(listener);
+	selector.add(testListener);
 	running = true;
 	//udpSocket.bind(udpPortReceive);
 	//udpSocket.setBlocking(false);
@@ -35,6 +37,16 @@ void Server::run()
 		// Make the selector wait for data on any socket
 		if (selector.wait())
 		{
+			//if testlistener received something
+			if (selector.isReady(testListener)) {
+				sf::TcpSocket* client = new sf::TcpSocket();
+				if (testListener.accept(*client) == sf::Socket::Done)
+				{
+					std::cout << "received test\n";
+					delete client;
+				}
+				
+			}
 			// Test the listener
 			if (selector.isReady(listener))
 			{
