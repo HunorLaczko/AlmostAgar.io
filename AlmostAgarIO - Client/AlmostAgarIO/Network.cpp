@@ -206,6 +206,7 @@ void Network::getResponse()
 				else
 				{
 					player->updateEnemy(id, pos, radius);
+					player->setEnemyInitReady(true);
 				}
 			}
 
