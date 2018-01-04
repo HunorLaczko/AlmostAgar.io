@@ -24,7 +24,7 @@ public:
 	void set(std::vector<Widget*> menu, std::vector<Widget*> game_over);
 	void Windows::changeview(Views view);
 	void initGame(sf::IpAddress _serverIp,sf::String _playerName);
-	std::string validate(std::string _serverIp, std::string _playerName);
+	std::string validate();
 	void threadWait();
 	void load();
 	void save();

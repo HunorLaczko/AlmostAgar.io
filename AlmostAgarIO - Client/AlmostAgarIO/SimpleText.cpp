@@ -23,7 +23,7 @@ void SimpleText::draw(sf::RenderWindow & window)
 	//Szöveg beállítása:
 	text.setString(_value);
 	text.setCharacterSize(_size_y*0.5);
-	text.setPosition(_x + (_size_y- text.getGlobalBounds().width)/2+ text.getGlobalBounds().width/2, _y + _size_y*0.2);
+	text.setPosition(_x + (_size_x- text.getGlobalBounds().width)/2, _y + (_size_y - text.getGlobalBounds().height)/2);
 	text.setStyle(sf::Text::Bold);
 
 	// Szöveg beállítása:

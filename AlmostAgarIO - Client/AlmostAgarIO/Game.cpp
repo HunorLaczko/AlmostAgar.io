@@ -120,6 +120,11 @@ void Game::keyReleased(int key)
 	}
 }
 
+bool Game::testServer()
+{
+	return network->test();
+}
+
 void Game::resize(sf::Event::SizeEvent event_size, sf::Vector2u window_size) {
 	setView(sf::View(sf::FloatRect(0.f, 0.f, (float) event_size.width, (float) event_size.height)));
 	view.reset((sf::FloatRect(player.getPosition().x - (float) window_size.x / 2, player.getPosition().y - (float) window_size.y / 2, (float) window_size.x, (float) window_size.y)));

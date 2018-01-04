@@ -32,6 +32,7 @@ public:
 	void updateFood(int index, sf::Vector2f newFood);
 	void keyPressed(int key);
 	void keyReleased(int key);
+	bool testServer();
 private:
 	sf::Vector2f vec;
 	sf::Vector2f movement;

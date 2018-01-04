@@ -32,6 +32,9 @@ int main()
 	window.setFramerateLimit(60);
 	window.setMouseCursorGrabbed(false);
 
+
+	SimpleText *errors = new SimpleText(300 + 100, 25, 200, 50, "");
+
 	lambdaButton *game = new lambdaButton(300 + 100, 300, 200, 50, "Játék",
 		[&]//mindent akarok használni
 	()
@@ -41,17 +44,19 @@ int main()
 		std::cout << "Nev: " << playerName->getValue() << std::endl;
 		}*/
 		//window.close();
-		std::string answer = window.validate(serverIp->getValue(), playerName->getValue());
+		window.initGame(sf::IpAddress(serverIp->getValue()), playerName->getValue());
+		std::string answer = window.validate();
 		//Ha minden renben, akkor kezdõdjön a játék, ha nem, akkor hibaüzenet
 		if (answer == "OK") {
+			errors->setValue("Töltés...");
 			window.threadWait();
-			window.initGame(sf::IpAddress(serverIp->getValue()), playerName->getValue());
+			errors->setValue("");
 			window.changeview(Views::game_view);
 			start = true;
 		}
-		else {
-			//TODO Bálint: Hibaüzenet kiírása
-			std::cout << answer << std::endl;
+		else if(answer == "WRONGIP") {
+			errors->setValue("Ezen az IP címen nincs szerver!");
+			serverIp->setSelected(true);
 		}
 	}
 	, [&]() {});
@@ -102,6 +107,7 @@ int main()
 	main_menu.push_back(serverIp);
 	main_menu.push_back(playerName);
 	main_menu.push_back(game);
+	main_menu.push_back(errors);
 	main_menu.push_back(close);
 
 	lambdaButton *newgame = new lambdaButton(300 + 100, 175, 200, 50, "Új játék",
