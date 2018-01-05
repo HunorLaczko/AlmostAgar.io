@@ -107,6 +107,11 @@ void Player::setChange(bool _change) {
 	changed = _change;
 }
 
+int Player::getScore()
+{
+	return round(2 * (radius + points - default_radius));
+}
+
 std::unordered_map<int, Player> &Player::getEnemies()
 {
 	return enemies;
@@ -169,14 +174,28 @@ bool Player::hasThisEnemy(unsigned int e_id)
 		return false;
 }
 
-int Player::getEnemyRadius(unsigned int id)
+int Player::getEnemyRadius(unsigned int e_id)
 {
-	return enemies[id].getRadius();
+	if (e_id == id)
+		return radius;
+	else
+		return enemies[e_id].getRadius();
 }
 
-sf::Color Player::getEnemyColor(unsigned int id)
+int Player::getEnemyScore(unsigned int e_id)
 {
-	return enemies[id].getColor();
+	if (e_id == id)
+		return getScore();
+	else
+		return enemies[e_id].getScore();
+}
+
+sf::Color Player::getEnemyColor(unsigned int e_id)
+{
+	if (e_id == id)
+		return color;
+	else
+		return enemies[e_id].getColor();
 }
 
 void Player::setEnemyColor(unsigned int id, sf::Color _color)
@@ -304,7 +323,7 @@ void Player::drawscore(sf::RenderWindow & window)
 	sf::Text score;
 	score.setFont(font);
 	std::ostringstream ss_score;
-	ss_score << round(2 * (radius + points - default_radius));
+	ss_score << getScore();
 	score.setCharacterSize(45);
 	score.setString(ss_score.str());
 	score.setColor(sf::Color::White);

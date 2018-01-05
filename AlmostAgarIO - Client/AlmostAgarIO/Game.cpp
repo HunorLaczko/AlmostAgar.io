@@ -313,7 +313,7 @@ void Game::draw(sf::RenderWindow & window)
 				sf::Text draw_leaderboard;
 				draw_leaderboard.setFont(font);
 				std::ostringstream ss_leaderboard;
-				ss_leaderboard << i + 1 << ". " << player.getEnemyName(leaderboard[i]);
+				ss_leaderboard << i + 1 << ". " << player.getEnemyName(leaderboard[i]) << " (" << player.getEnemyScore(leaderboard[i]) << ")";
 				draw_leaderboard.setCharacterSize(12);
 				draw_leaderboard.setString(ss_leaderboard.str());
 				if (player.getId() == leaderboard[i]) {

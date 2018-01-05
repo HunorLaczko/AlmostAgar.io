@@ -49,6 +49,8 @@ public:
 	bool isRadiusChanged();
 	void setChange(bool _change);
 
+	int getScore();
+
 	std::unordered_map<int, Player> &getEnemies();
 	void setEnemies(std::unordered_map<int, Player> _enemies);
 	void updateEnemy(int id, sf::Vector2f position, float radius);
@@ -64,6 +66,8 @@ public:
 	bool hasThisEnemy(unsigned int id);
 
 	int getEnemyRadius(unsigned int id);
+
+	int getEnemyScore(unsigned int id);
 
 	sf::Color getEnemyColor(unsigned int id);
 	void setEnemyColor(unsigned int id, sf::Color _color);
