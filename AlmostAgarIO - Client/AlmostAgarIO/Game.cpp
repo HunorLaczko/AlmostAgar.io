@@ -54,6 +54,8 @@ Game::Game() : thread(&Game::func, this)
 		new Letter(0,0,40,40,"E",sf::Color(255,0,0), 4),
 		new Letter(0,0,40,40,"R",sf::Color(255,0,0), 5)
 	};
+	//Ranglistához:
+	if (!_font.loadFromFile("arial.ttf")) std::cout << "Couldn't load font file!" << std::endl;
 }
 
 Game::~Game()
@@ -121,6 +123,11 @@ void Game::keyReleased(int key)
 bool Game::testServer()
 {
 	return network->test();
+}
+
+bool Game::isLoeaded()
+{
+	return finished;
 }
 
 void Game::resize(sf::Event::SizeEvent event_size, sf::Vector2u window_size) {
@@ -300,18 +307,13 @@ void Game::draw(sf::RenderWindow & window)
 			player.draw(window);
 		}
 		player.drawscore(window);
-
 		//Ranglista
 		float top_margin = 10;
-
-		sf::Font font;
-		if (!font.loadFromFile("arial.ttf")) std::cout << "Couldn't load font file!" << std::endl;
-
 		bool player_drawed = false;
 		for (unsigned int i = 0; i <  leaderboard.size(); i++) {
 			if (player.getId() == leaderboard[i] || (i < 4) || (i<5 && player_drawed)) {
 				sf::Text draw_leaderboard;
-				draw_leaderboard.setFont(font);
+				draw_leaderboard.setFont(_font);
 				std::ostringstream ss_leaderboard;
 				ss_leaderboard << i + 1 << ". " << player.getEnemyName(leaderboard[i]) << " (" << player.getEnemyScore(leaderboard[i]) << ")";
 				draw_leaderboard.setCharacterSize(12);

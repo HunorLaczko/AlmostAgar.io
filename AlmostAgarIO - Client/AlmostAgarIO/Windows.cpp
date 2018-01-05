@@ -233,10 +233,12 @@ void Windows::initGame(sf::IpAddress _serverIp,sf::String _playerName)
 
 std::string Windows::validate()
 {
-	if (game.testServer())
-		return "OK";
-	else
+	if (!game.testServer())
 		return "WRONGIP";
+	else if(!game.isLoeaded())
+		return "LOADING";
+	else
+		return "OK";
 }
 
 void Windows::set(std::vector<Widget*>  _menu, std::vector<Widget*> _game_over)

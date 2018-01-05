@@ -33,7 +33,9 @@ public:
 	void keyPressed(int key);
 	void keyReleased(int key);
 	bool testServer();
+	bool isLoeaded();
 private:
+	sf::Font _font;
 	sf::Vector2f vec;
 	sf::Vector2f movement;
 	sf::Clock clock;

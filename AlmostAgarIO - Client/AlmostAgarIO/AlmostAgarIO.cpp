@@ -48,7 +48,6 @@ int main()
 		std::string answer = window.validate();
 		//Ha minden renben, akkor kezdõdjön a játék, ha nem, akkor hibaüzenet
 		if (answer == "OK") {
-			errors->setValue("Töltés...");
 			window.threadWait();
 			errors->setValue("");
 			window.changeview(Views::game_view);
@@ -57,6 +56,9 @@ int main()
 		else if(answer == "WRONGIP") {
 			errors->setValue("Ezen az IP címen nincs szerver!");
 			serverIp->setSelected(true);
+		}
+		else if (answer == "LOADING") {
+			errors->setValue("Próbálkozz késõbb, a játék, még töltödik!");
 		}
 	}
 	, [&]() {});
@@ -106,8 +108,8 @@ int main()
 	);
 	main_menu.push_back(serverIp);
 	main_menu.push_back(playerName);
-	main_menu.push_back(game);
 	main_menu.push_back(errors);
+	main_menu.push_back(game);
 	main_menu.push_back(close);
 
 	Button *newgame = new Button(300 + 100, 175, 200, 50, "Új játék",
