@@ -109,8 +109,23 @@ void Windows::event_loop(){
 				}
 				case sf::Event::Resized: {
 					game.resize(event.size, getSize());
+					float r = 1;
+					float r_x = (float)event.size.width / (float)size_x;
+					float r_y = (float)event.size.height / (float)size_y;
+					if (r_x == 1)
+						r = r_y;
+					else if (r_y = 1)
+						r = r_x;
+					else
+						r = std::min(r_x, r_y);
 					size_x = event.size.width;
 					size_y = event.size.height;
+					for (unsigned i = 0; i < menu.size(); i++) {
+						menu[i]->resize(r);
+					}
+					for (unsigned i = 0; i < game_over.size(); i++) {
+						game_over[i]->resize(r);
+					}
 					break;
 				}
 				case sf::Event::KeyPressed: {
@@ -180,8 +195,11 @@ void Windows::event_loop(){
 						r = r_x;
 					else
 						r = std::min(r_x, r_y);
-					for (unsigned i = 0; i < widgets.size(); i++) {
-						widgets[i]->resize(r);
+					for (unsigned i = 0; i < menu.size(); i++) {
+						menu[i]->resize(r);
+					}
+					for (unsigned i = 0; i < game_over.size(); i++) {
+						game_over[i]->resize(r);
 					}
 					size_x = event.size.width;
 					size_y = event.size.height;
