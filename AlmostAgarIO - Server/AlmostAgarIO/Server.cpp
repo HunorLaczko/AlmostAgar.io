@@ -448,10 +448,10 @@ void Server::updateFood(unsigned int id)
 	float foodRadius = foodGenerator.getFoodRadius();
 	for (int i = 0; i < food.size(); i++) {
 		sf::Vector2f distance(player->getPosition().x - food[i].x, player->getPosition().y - food[i].y);
-		float lenght = sqrt(distance.x*distance.x + distance.y*distance.y);
+		float lenght = (distance.x*distance.x + distance.y*distance.y);
 
 		//check if player ate a food
-		if (lenght < player->getRadius()) {
+		if (lenght < player->getRadius()*player->getRadius()) {
 			food[i] = foodGenerator.updateElement(i);
 			player->setRadius(player->getRadius() + player->getPoints() + 0.5f);
 			foodToUpdate.emplace(i, food[i]);	
