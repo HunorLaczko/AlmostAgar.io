@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Widget.h"
-
 #include <string>
 #include <functional>
 

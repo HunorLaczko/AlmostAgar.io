@@ -39,13 +39,11 @@ void Network::setIp(sf::IpAddress _serverIp)
 void Network::connectPlayer(Player *_player)
 {
 	player = _player;
-	udpSocket.bind(serverUdpPortReceive); // .bind(serverUdpPortReceive, serverIP)
+	udpSocket.bind(serverUdpPortReceive);
 	udpSocket.setBlocking(false);
 
 	sf::Socket::Status status = tcpSocket.connect(serverIp, serverTcpPort,sf::seconds(1));
-	//tcpSocket.setBlocking(false);
-	//tcpSocket.setBlocking(true);
-	//udpSocket.bind(serverUdpPortReceive);
+
 	if (status != sf::Socket::Done)
 	{
 		std::cout << "Player could not connect\n";
@@ -53,12 +51,9 @@ void Network::connectPlayer(Player *_player)
 	}
 	else
 	{
-		//std::cout << "Player connected, local port: " << tcpSocket.getLocalPort() << "\n";
-
 		sf::Packet packet;
 		if (tcpSocket.receive(packet) == sf::Socket::Done)
 		{
-			//std::cout << "received something\n";
 			int type;
 			packet >> type;
 			if (type == 0) //connected to server
@@ -88,18 +83,12 @@ void Network::disconnectPlayer()
 {
 	tcpSocket.disconnect();
 	udpSocket.unbind();
-	//delete player;
 }
 
 void Network::init(sf::Vector2f _mapSize, sf::Vector2f _mapPosition, sf::Vector2f _windowSize)
 {
-	//TODO Huni lefagy ha nincs szerver es megnyomod az uj jatekot!!!!
-
-	//sending initializing parameters
 	sf::Packet outPacket;
-	//std::cout << "checking name before sending: " << player->getName() << "\n";
 	outPacket << 3 << player->getId() << _mapSize.x << _mapSize.y << _mapPosition.x << _mapPosition.y << _windowSize.x << _windowSize.y << player->getName();// << serverUdpPortSend << serverUdpPortReceive;
-	//std::cout << udpSocket.send(outPacket, serverIp, serverUdpPortSend) << std::endl;
 	tcpSocket.send(outPacket);
 
 	sf::Packet initPacket;
@@ -107,7 +96,6 @@ void Network::init(sf::Vector2f _mapSize, sf::Vector2f _mapPosition, sf::Vector2
 
 	//receiving initial position
 	sf::Packet initPositionPacket;
-	//tcpSocket.receive(initPositionPacket);
 	unsigned int id;
 	unsigned int playerId = player->getId();
 	initPacket >> id;
@@ -118,9 +106,7 @@ void Network::init(sf::Vector2f _mapSize, sf::Vector2f _mapPosition, sf::Vector2
 		player->setPosition(pos);
 	}
 
-	//receiving initially the whole food vector
 	sf::Packet foodPacket;
-	//tcpSocket.receive(foodPacket);
 	std::vector<sf::Vector2f> food;
 	size_t foodSize;
 	float foodRadius;
@@ -137,7 +123,6 @@ void Network::init(sf::Vector2f _mapSize, sf::Vector2f _mapPosition, sf::Vector2
 	//receiving other players' names and colors
 	std::cout << "receiving other players' names and colors\n";
 	sf::Packet nameAndColorPacket;
-	//tcpSocket.receive(nameAndColorPacket);
 	size_t packetSize;
 	std::string name;
 	sf::Color color;
@@ -169,7 +154,6 @@ void Network::sendPosition(sf::Vector2f position)
 {
 	sf::Packet outPacket;
 	outPacket << 1 << player->getId() << position.x << position.y;
-	//std::cout << udpSocket.send(outPacket, serverIp, serverUdpPortSend) << std::endl;
 	udpSocket.send(outPacket, serverIp, serverUdpPortSend);
 }
 
@@ -180,13 +164,12 @@ void Network::getResponse()
 	unsigned short udpPortReceivedFrom;
 	if (udpSocket.receive(packet, sender, udpPortReceivedFrom) == sf::Socket::Done)
 	{
-		//std::cout << "getResponse: received something\n";
 		int type;
 		unsigned int id;
 		packet >> type;
 		switch (type)
 		{
-			//received new pos
+		//received new pos
 		case 2:
 		{
 			sf::Vector2f pos;
@@ -194,7 +177,6 @@ void Network::getResponse()
 			float radius;
 			int myId = player->getId();
 			packet >> playersSize;
-			//if (playersSize != player->getEnemies().size() + 1) player->resetEnemies();
 			for (size_t i = 0; i < playersSize; i++)
 			{
 				packet >> id >> pos.x >> pos.y >> radius;
@@ -225,7 +207,6 @@ void Network::getResponse()
 				packet >> index >> newFood.x >> newFood.y;
 				game->updateFood(index, newFood);
 			}
-			//std::cout << "received food update\n";
 			break;
 		}
 		

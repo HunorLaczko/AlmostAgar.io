@@ -20,6 +20,5 @@ public:
 	std::string getValue();
 	virtual void setValue(std::string value)=0;
 	void resize(float r);
-	//virtual bool is_selected(int mouse_x, int mouse_y) const;
 };
 

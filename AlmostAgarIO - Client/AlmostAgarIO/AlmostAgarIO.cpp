@@ -21,7 +21,6 @@ int main()
 	std::vector<Widget*>  main_menu, game_over_menu;
 	std::map<int, char> ip_filter{ {46,'.'} };
 	TextEditor *serverIp = new TextEditor(300, 100, 400, 65, "127.0.0.1", "Szerver IP",48,57, ip_filter, [&](){}, [&](){});
-	//int filter[] = {193,201,205,211,214,218,220,225,233,237,243,246,250,252,336,337,368,369};
 	std::map<int, char> name_filter{ { 193,'Á' },{ 201,'É' },{ 205,'Í' },{ 211,'Ó' },{ 214,'Ö' },{ 218,'Ú' } ,{ 220,'Ü' } ,{ 225,'á' } ,{ 233,'é' } ,{ 237,'í' } ,{ 243,'ó' } ,{ 246,'ö' } ,{ 250,'ú' } ,{ 252,'ü' } ,{ 336,'Õ' } ,{ 337,'õ' } ,{ 368,'Û' } ,{ 369 ,'Û' } };
 	TextEditor *playerName = new TextEditor(300, 200, 400, 65, "", "Írd be a neved!", 32, 126, name_filter, [&]() {}, [&]() {});
 
@@ -39,11 +38,6 @@ int main()
 		[&]//mindent akarok használni
 	()
 	{
-		/*if (!serverIp->isempty() && !playerName->isempty()) {
-		std::cout << "IP: " << serverIp->getValue() << std::endl;
-		std::cout << "Nev: " << playerName->getValue() << std::endl;
-		}*/
-		//window.close();
 		window.initGame(sf::IpAddress(serverIp->getValue()), playerName->getValue());
 		std::string answer = window.validate();
 		//Ha minden renben, akkor kezdõdjön a játék, ha nem, akkor hibaüzenet
@@ -58,7 +52,7 @@ int main()
 			serverIp->setSelected(true);
 		}
 		else if (answer == "LOADING") {
-			errors->setValue("Próbálkozz késõbb, a játék, még töltödik!");//Csúnya, de Windows.validate-be is át kell írni, ha itt átírod
+			errors->setValue("Próbálkozz késõbb, a játék, még töltödik!");
 		}
 	}
 	, [&]() {});
@@ -116,7 +110,6 @@ int main()
 		[&]//mindent akarok használni
 	()
 	{
-		//window.close();
 		window.changeview(Views::game_view);
 		start = false;
 	}
@@ -126,11 +119,9 @@ int main()
 		[&]//mindent akarok használni
 	()
 	{
-		//window.close();
 		window.changeview(Views::main_menu_view);
 		start = false;
 		fut = true;
-
 	}
 	, [&]() {});
 

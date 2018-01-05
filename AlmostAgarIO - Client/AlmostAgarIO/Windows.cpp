@@ -6,22 +6,6 @@
 #include <fstream>
 #include <string>
 
-
-/*(Game osztályban van)
-float ZOOM = 1.01f; //1%-os zoom
-float radius = 30;
-const float radius2 = 7;
-sf::Vector2f oldPos(0, 0);*/
-
-/*
-static const float WIDTH = 1000.0f;
-static const float HEIGHT = 563.0f;
-float ZOOM = 1.1f; //10%-os zoom
-float radius = 30;
-float radius2 = 7;
-srand(time(0));
-sf::CircleShape circle(radius);
-*/
 Windows::Windows()
 	:RenderWindow()
 {
@@ -49,7 +33,6 @@ Windows::Windows(sf::WindowHandle handle, const sf::ContextSettings & settings)
 
 Windows::~Windows()
 {
-
 }
 
 void Windows::threadWait() {
@@ -88,14 +71,12 @@ void Windows::save()
 
 void Windows::event_loop(){
 	if (viewid == Views::game_view) {
-	//	sf::sleep(sf::Time(sf::milliseconds(10)));
 	//Játék megnyitása/megjelenítése, kapcsolódás
 		game.connect();
 		//Eseménykezelés
 		while (isOpen() && !viewChanged && !game.isOver())
 		{
 			sf::Event event;
-			//std::vector<sf::CircleShape> food = gen.getFood();
 			while (pollEvent(event))
 			{
 
@@ -103,8 +84,6 @@ void Windows::event_loop(){
 				{
 				case sf::Event::Closed: {
 					changeview(Views::game_over_menu_view);
-					//game.disconnect();//Lejjebb raktam
-					//close();
 					break;
 				}
 				case sf::Event::Resized: {
@@ -131,7 +110,6 @@ void Windows::event_loop(){
 				case sf::Event::KeyPressed: {
 					if (event.key.code == sf::Keyboard::Escape) {
 						changeview(Views::game_over_menu_view);
-						//close();
 					}
 					game.keyPressed(event.text.unicode);
 					break;
@@ -154,13 +132,11 @@ void Windows::event_loop(){
 			changeview(Views::game_over_menu_view);
 		}
 		//Kilépés a játékból, kapcsolat bontás
-		//first = true;
 		game.setFirst();
-		game.disconnect();//Átraktam ide
+		game.disconnect();
 	}
 	else {
 		setView(sf::View(sf::FloatRect(0, 0, size_x, size_y)));
-		//view.reset((sf::FloatRect(0, 0, getSize().x, getSize().y)));
 		std::vector<Widget*> widgets;
 		if (viewid == Views::main_menu_view) {
 			widgets = menu;
@@ -180,7 +156,6 @@ void Windows::event_loop(){
 				}
 				//Amblak zárárs
 				if (event.type == sf::Event::Closed) {
-					///destruktor hívás???
 					close();
 				}
 

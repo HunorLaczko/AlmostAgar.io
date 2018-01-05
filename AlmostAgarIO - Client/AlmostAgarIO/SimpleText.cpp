@@ -35,8 +35,6 @@ void SimpleText::draw(sf::RenderWindow & window)
 }
 
 
-
-
 //Átmenetileg:
 void SimpleText::handle(sf::Event event)
 {

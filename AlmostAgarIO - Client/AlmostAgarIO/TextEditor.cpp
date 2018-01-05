@@ -75,34 +75,12 @@ void TextEditor::draw(sf::RenderWindow & window)
 		szin = sf::Color(100, 100, 255);
 	}
 	rectangle.setOutlineColor(szin);
-
-	/*
-	///feljebb vittem a konstruktorba:
-	// Betûtipus betöltés
-	sf::Font font;
-	font.loadFromFile("Lora-Regular.ttf");
-
-
-	// Szöveg létrehozása
-	sf::Text text(_value, font);*/
-
-
-// Betûtipus betöltés:
-//sf::Font font;
-//font.loadFromFile("Lora-Regular.ttf");
-// Szöveg létrehozása
-//sf::Text _text(_value, font);
-
 	//Szöveg beállítása:
 	text.setString(_value);
 	text.setCharacterSize(_size_y*0.5);
 	text.setPosition(_x + _size_y*0.2, _y + _size_y*0.2);
 	text.setStyle(sf::Text::Bold);
-
-//_text.setCharacterSize(_size_y*0.5);
-//_text.setPosition(_x + _size_y*0.2, _y + _size_y*0.2+5);
-//_text.setStyle(sf::Text::Bold);
-
+	
 	// Kurzor létrehozása:
 	sf::RectangleShape line(sf::Vector2f(_size_y*0.6, _size_y/40));
 	line.rotate(90);
@@ -110,16 +88,13 @@ void TextEditor::draw(sf::RenderWindow & window)
 
 	// Szöveg és a kurzor beállítása(ha üres, valamint, ha nem üres):
 	if (_value == "") {
-//_text.setString(_empty_value);
 		sf::Color szin(150, 150, 150);
-//_text.setColor(szin);
 		text.setString(_empty_value);
 		text.setColor(szin); 
 		line.setPosition(text.getPosition().x, text.getPosition().y);
 	}
 	else{
 		sf::Color szin(0, 0, 0);
-//_text.setColor(szin);
 		text.setColor(szin);
 		if (_cursor_posxid == 0) {
 			//Kurzor az elejére
@@ -134,12 +109,9 @@ void TextEditor::draw(sf::RenderWindow & window)
 			line.setPosition(text.findCharacterPos(_cursor_posxid).x , text.getPosition().y);
 		}
 	}
-//std::cout << text.findCharacterPos(1).y << " , " << text.getLocalBounds().height << std::endl;
-	
 
 	// Kirajzolás:
 	window.draw(rectangle);
-//window.draw(_text);
 	if (_selected)
 		window.draw(line);
 	window.draw(text);
@@ -178,22 +150,17 @@ void TextEditor::handle(sf::Event event)
 			else {
 				for (unsigned i = 0; i < _value.size() - 1; i++) {
 					//Melyik betühöz, illetve a betü bal vagy jobb oldalára tegye a kurzort:
-					///Felosztás: 60-40
-					///if ((text.findCharacterPos(_value.size() - i - 2).x + 11*(text.findCharacterPos(_value.size() - i - 1).x-text.findCharacterPos(_value.size() - i - 2).x)/ 20) < mouse_x && (text.findCharacterPos(_value.size() - i - 1).x +11*(text.findCharacterPos(_value.size() - i).x-text.findCharacterPos(_value.size() - i - 1).x)/ 20) > mouse_x) {
-					///Felosztás: 50-50
 					if ((text.findCharacterPos(_value.size() - i - 1).x + text.findCharacterPos(_value.size() - i - 2).x) / 2 < mouse_x && (text.findCharacterPos(_value.size() - i).x + text.findCharacterPos(_value.size() - i - 1).x) / 2 > mouse_x) {
 						_cursor_posxid = _value.size() -i - 1;
 						break;
 					}
 				}
 			}
-//std::cout << mouse_x << " vs " << (text.findCharacterPos(_value.size() - 1).x + text.getPosition().x + text.getLocalBounds().width) / 2 << " , " << _cursor_posxid << std::endl;
 			_previousSelected = true;
 			_selected = true;
 			_mousedown = true;
 		}
 		else if (event.mouseButton.button == sf::Mouse::Left) {
-			///már nem tudom miért írtam ide :D
 			_previousSelected = false;
 			_selected = false;
 		}

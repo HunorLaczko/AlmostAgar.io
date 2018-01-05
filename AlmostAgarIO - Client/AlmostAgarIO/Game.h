@@ -54,7 +54,6 @@ private:
 	sf::Vector2f oldPos;
 	float ZOOM;
 
-
 	sf::Sprite map, background;
 	sf::Texture texture, texture2;
 	Network* network;

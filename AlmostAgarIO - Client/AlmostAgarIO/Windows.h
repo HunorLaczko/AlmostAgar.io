@@ -8,7 +8,6 @@
 #include "Player.h"
 #include "Game.h"
 #include<SFML/Network.hpp>
-//#include "C:\SFML\include\SFML\Graphics\RenderWindow.hpp"
 enum Views { main_menu_view, game_view, game_over_menu_view };
 
 class Windows :

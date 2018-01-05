@@ -12,12 +12,9 @@ void Game::func() {
 		close();
 	}
 	view.setViewport(sf::FloatRect(0, 0, 1, 1));
-	//view.zoom(ZOOM);
+
 	texture.setSmooth(true);
-	//window.setMouseCursorVisible(false);
-	//player.setRadius(radius);
 	player.setPosition(sf::Vector2f((float)texture2.getSize().x / 2, (float)texture2.getSize().y / 2));
-	///view.reset((sf::FloatRect(circle.getPosition().x - getSize().x / 2, circle.getPosition().y - getSize().y / 2, getSize().x, getSize().y)));
 	map.setTexture(texture);
 	background.setTexture(texture2);
 	map.scale(1, 1);
@@ -28,8 +25,6 @@ void Game::func() {
 	finished = true;
 	_loaded();
 	std::cout << "Betolto szal leall!" << std::endl;
-
-
 }
 
 Game::Game() : thread(&Game::func, this)
@@ -91,7 +86,7 @@ void Game::updateFood(int index, sf::Vector2f newFood)
 {
 	food[index].setPosition(newFood);
 }
-//TODO csak akkor hivd meg a sendkey-t ha a megfelelo skill elerheto
+
 void Game::keyPressed(int key)
 {
 	if (key == 18 && !player.getInvisibleAvailable()) return;
@@ -179,7 +174,6 @@ void Game::init(sf::IpAddress _serverIp, sf::Vector2u window_size, sf::String _p
 void Game::connect()
 {	
 	network->connectPlayer(&player);
-	//player.resetEnemies();
 	network->init(sf::Vector2f(map.getLocalBounds().width, map.getLocalBounds().height), (sf::Vector2f)map.getPosition(), (sf::Vector2f)player.getWindowSize());
 	std::cout << "player pos in init: " << player.getPosition().x << ", " << player.getPosition().y << std::endl;
 	gameover = false;
@@ -190,7 +184,6 @@ void Game::disconnect()
 	network->disconnectPlayer();
 	food.clear();
 	player.reset();
-	//delete network;
 }
 
 void Game::counting(sf::RenderWindow & window)
@@ -198,32 +191,10 @@ void Game::counting(sf::RenderWindow & window)
 	if (first) {
 		view.reset((sf::FloatRect(player.getPosition().x - (float)window.getSize().x / 2, player.getPosition().y - (float)window.getSize().y / 2, (float)window.getSize().x, (float)window.getSize().y)));
 		view.setCenter(player.getPosition().x, player.getPosition().y);
-		//view.reset((sf::FloatRect(3000- (float)window.getSize().x / 2, 2000 - (float)window.getSize().y / 2, (float)window.getSize().x, (float)window.getSize().y)));
 		first = false;
 	}
 	
-	/*
-	//Számolás
-	sf::Vector2f distance(window.mapPixelToCoords(sf::Mouse::getPosition(window)).x - player.getPosition().x, window.mapPixelToCoords(sf::Mouse::getPosition(window)).y - player.getPosition().y);
-	float speed = 2.2f - (0.005f*player.getRadius());
-	if (speed <= 0.6f) speed = 0.6f;
-
-	float length = sqrt(distance.x*distance.x + distance.y*distance.y);
-	vec.x = speed * distance.x / length;
-	vec.y = speed * distance.y / length;
-	
-	if (abs(distance.x) < 2 || ((player.getPosition().x - vec.x) <= map.getPosition().x && vec.x <= 0) || ((player.getPosition().x + vec.x) >= (map.getPosition().x + map.getLocalBounds().width) && vec.x >= 0)) {
-		vec.x = 0;
-	}
-	if (abs(distance.y) < 2 || ((player.getPosition().y - vec.y) <= map.getPosition().y && vec.y <= 0) || ((player.getPosition().y - vec.y) >= (map.getPosition().y + map.getLocalBounds().height) && vec.y >= 0)) {
-		vec.y = 0;
-	}
-
-
-	*/
 	//Pozició küldés/fogadás
-	//circle.move(vec);
-	//player.setPosition(circle.getPosition());
 	if (clock.getElapsedTime() > sf::milliseconds(33)) {
 		network->sendPosition(sf::Vector2f(window.mapPixelToCoords(sf::Mouse::getPosition(window)).x, window.mapPixelToCoords(sf::Mouse::getPosition(window)).y));
 		oldPos = player.getPosition();
@@ -236,7 +207,6 @@ void Game::counting(sf::RenderWindow & window)
 	//meret valtoztatas
 	int zoom_times = floor(player.getRadius() - Player::getDefRad()) / 5;
 
-	//if (player.isRadiusChanged() && (int)(player.getRadius() - Player::getDefRad()) % 5 == 0 && (player.getRadius() - Player::getDefRad()) == (int)(player.getRadius() - Player::getDefRad())) {
 	if (player.isRadiusChanged() && zoom_times != zoom_count) {
 		int m = zoom_times - zoom_count;
 		if (m > 0) {
@@ -259,28 +229,12 @@ void Game::counting(sf::RenderWindow & window)
 		player.setChange(false);
 		std::cout << player.getRadius() - Player::getDefRad() << std::endl;
 	}
-	
-	/*
-	//kamera mozgas szamolasa
-	sf::Vector2f distFromCenter(player.getPosition().x - view.getCenter().x, player.getPosition().y - view.getCenter().y);
-	float lenght2 = sqrt(distFromCenter.x * distFromCenter.x + distFromCenter.y*distFromCenter.y);
-	movement.x = speed * distFromCenter.x / lenght2;
-	movement.y = speed * distFromCenter.y / lenght2;
-
-	if (abs(distFromCenter.x) < 20 || (vec.x == 0 && vec.y == 0)) {
-		movement.x = 0;
-	}
-	if (abs(distFromCenter.y) < 20 || (vec.x == 0 && vec.y == 0)) {
-		movement.y = 0;
-	}
-	*/
 }
 
 
 void Game::draw(sf::RenderWindow & window)
 {
-	//std::cout << leaderboard.size() << std::endl;
-	//view.move(movement);
+
 	view.setCenter(player.getPosition());
 	
 	window.clear(sf::Color::Black);
@@ -367,8 +321,7 @@ void Game::draw(sf::RenderWindow & window)
 		leaderboard_bg.setSize(sf::Vector2f(185 +10, top_margin-10+10));//185(meret), 10(5+5 a padding); -10(top-margin),10(5+5 a padding)
 		window.draw(leaderboard_bg);
 
-		//ronda megoldas tudom :(
-		bool a = player.getUpgradeAvailable() > 0; //TODO Huni nezd meg hogy ha mukodik a fuggveny ez jo lesz-e
+		bool a = player.getUpgradeAvailable() > 0;
 		bool tmp[] = {player.getInvisibleAvailable(), player.getSpeedAvailable(), a, a, a, a};
 
 		for (unsigned i = 0; i < specalkeys_value.size(); i++) {
