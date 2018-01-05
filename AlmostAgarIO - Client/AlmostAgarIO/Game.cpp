@@ -57,6 +57,7 @@ Game::Game() : thread(&Game::func, this)
 	};
 	//Ranglistához:
 	if (!_font.loadFromFile("arial.ttf")) std::cout << "Couldn't load font file!" << std::endl;
+	_loaded = [&]() {};
 }
 
 Game::~Game()
