@@ -314,17 +314,41 @@ void Game::draw(sf::RenderWindow & window)
 			player.draw(window);
 		}
 		player.drawscore(window);
+
 		//Ranglista
 		float top_margin = 10;
+
+		sf::RectangleShape leaderboard_bg;
+		leaderboard_bg.setFillColor(sf::Color(0,0,0,50));
+		//-5 a padding, 185 a merete, -10 a right-margin
+		leaderboard_bg.setPosition(-5 + window.getView().getCenter().x + window.getView().getSize().x / 2 - 185 - 10, -5 + window.getView().getCenter().y - window.getView().getSize().y / 2 + top_margin);
+
+		sf::Text leaderboard_title;
+		leaderboard_title.setFont(_font);
+		leaderboard_title.setCharacterSize(16);
+		leaderboard_title.setString("Ranglista:");
+		leaderboard_title.setStyle(sf::Text::Bold);
+		leaderboard_title.setOutlineColor(sf::Color(25, 25, 25));
+		leaderboard_title.setOutlineThickness(1);
+		leaderboard_title.setPosition(window.getView().getCenter().x + window.getView().getSize().x / 2 - 185 - 10, window.getView().getCenter().y - window.getView().getSize().y / 2 + top_margin);
+		window.draw(leaderboard_title);
+		top_margin += leaderboard_title.getLocalBounds().height + 5;
+
 		bool player_drawed = false;
 		for (unsigned int i = 0; i <  leaderboard.size(); i++) {
 			if (player.getId() == leaderboard[i] || (i < 4) || (i<5 && player_drawed)) {
 				sf::Text draw_leaderboard;
 				draw_leaderboard.setFont(_font);
 				std::ostringstream ss_leaderboard;
-				ss_leaderboard << i + 1 << ". " << player.getEnemyName(leaderboard[i]) << " (" << player.getEnemyScore(leaderboard[i]) << ")";
+				std::string p_name = player.getEnemyName(leaderboard[i]);
+				if (p_name.length() > 10)
+					p_name = p_name.substr(0,9)+"...";
+				ss_leaderboard << i + 1 << ". " << p_name << " (" << player.getEnemyScore(leaderboard[i]) << ")";
 				draw_leaderboard.setCharacterSize(12);
 				draw_leaderboard.setString(ss_leaderboard.str());
+				if (draw_leaderboard.getLocalBounds().width > 185) {
+					draw_leaderboard.setCharacterSize(185 / ss_leaderboard.str().length());
+				}
 				if (player.getId() == leaderboard[i]) {
 					draw_leaderboard.setColor(sf::Color(255,80,80));
 					player_drawed = true;
@@ -335,11 +359,13 @@ void Game::draw(sf::RenderWindow & window)
 				draw_leaderboard.setStyle(sf::Text::Bold);
 				draw_leaderboard.setOutlineColor(sf::Color(25,25,25));
 				draw_leaderboard.setOutlineThickness(1);
-				draw_leaderboard.setPosition(window.getView().getCenter().x + window.getView().getSize().x / 2 - draw_leaderboard.getLocalBounds().width - 10, window.getView().getCenter().y - window.getView().getSize().y / 2 + top_margin);
+				draw_leaderboard.setPosition(window.getView().getCenter().x + window.getView().getSize().x / 2 - 185 - 10, window.getView().getCenter().y - window.getView().getSize().y / 2 + top_margin);
 				window.draw(draw_leaderboard);
 				top_margin += draw_leaderboard.getLocalBounds().height + 5;
 			}
 		}
+		leaderboard_bg.setSize(sf::Vector2f(185 +10, top_margin-10+10));//185(meret), 10(5+5 a padding); -10(top-margin),10(5+5 a padding)
+		window.draw(leaderboard_bg);
 
 		//ronda megoldas tudom :(
 		bool a = player.getUpgradeAvailable() > 0; //TODO Huni nezd meg hogy ha mukodik a fuggveny ez jo lesz-e
