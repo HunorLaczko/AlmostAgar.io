@@ -58,7 +58,7 @@ int main()
 			serverIp->setSelected(true);
 		}
 		else if (answer == "LOADING") {
-			errors->setValue("Próbálkozz késõbb, a játék, még töltödik!");
+			errors->setValue("Próbálkozz késõbb, a játék, még töltödik!");//Csúnya, de Windows.validate-be is át kell írni, ha itt átírod
 		}
 	}
 	, [&]() {});

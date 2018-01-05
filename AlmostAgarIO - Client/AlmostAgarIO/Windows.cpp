@@ -233,12 +233,22 @@ void Windows::initGame(sf::IpAddress _serverIp,sf::String _playerName)
 
 std::string Windows::validate()
 {
-	if (!game.testServer())
+	if (!game.testServer()) {
 		return "WRONGIP";
-	else if(!game.isLoeaded())
+	}
+	else if (!game.isLoeaded()) {
+		game.setLoeadedFunc([&]()
+		{
+			if (menu[2]->getValue() == "Próbálkozz késõbb, a játék, még töltödik!") {
+				menu[2]->setValue("Indulhat a játék!");
+			}
+		}
+		);
 		return "LOADING";
-	else
+	}
+	else{
 		return "OK";
+	}
 }
 
 void Windows::set(std::vector<Widget*>  _menu, std::vector<Widget*> _game_over)

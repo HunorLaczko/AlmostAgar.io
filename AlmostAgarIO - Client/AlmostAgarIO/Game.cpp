@@ -26,6 +26,7 @@ void Game::func() {
 	
 
 	finished = true;
+	_loaded();
 	std::cout << "Betolto szal leall!" << std::endl;
 
 
@@ -128,6 +129,11 @@ bool Game::testServer()
 bool Game::isLoeaded()
 {
 	return finished;
+}
+
+void Game::setLoeadedFunc(std::function<void()> loaded)
+{
+	_loaded = loaded;
 }
 
 void Game::resize(sf::Event::SizeEvent event_size, sf::Vector2u window_size) {

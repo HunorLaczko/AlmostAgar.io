@@ -4,6 +4,7 @@
 #include "Player.h"
 #include "Letter.h"
 #include<SFML/Network.hpp>
+#include <functional>
 
 class Network;
 
@@ -34,6 +35,7 @@ public:
 	void keyReleased(int key);
 	bool testServer();
 	bool isLoeaded();
+	void setLoeadedFunc(std::function<void()> loaded);
 private:
 	sf::Font _font;
 	sf::Vector2f vec;
@@ -46,6 +48,7 @@ private:
 	bool gameover;
 	std::map<int, bool> specalkeys;
 	std::vector<Letter*> specalkeys_value;
+	std::function<void()> _loaded;
 
 	std::vector<sf::CircleShape> food;
 	sf::Vector2f oldPos;
